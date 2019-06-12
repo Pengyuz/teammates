@@ -1,7 +1,11 @@
-<div class="card comment-box-card-body margin-top-7px">
-  <div class="text-secondary">
+<div class="card margin-top-7px">
+  <div class="card-header comment-box-card-header">
     Your comment about the above response
+    <button type="button" class="close" aria-label="Close" ngbTooltip='Discard changes to comment' (click)="triggerCloseCommentBox($event)">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
-  <span class="float-sm-right"><i class="fa-trash-o "></i></span>
-  <tm-rich-text-editor [richText]="" [isDisabled]="false" [minHeightInPx]="50"></tm-rich-text-editor>
+  <div class="card-body">
+    <input class="form-control"  type="text" [(ngModel)]=commentText (ngModelChange)="triggerFormChange($event)">
+  </div>
 </div>
