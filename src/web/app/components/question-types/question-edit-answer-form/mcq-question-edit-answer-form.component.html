@@ -19,3 +19,11 @@
     </div>
   </td>
 </tr>
+
+<div style="margin-top: 7px;">
+  <a href='#' *ngIf="isAddCommentButtonShown" (click)="isCommentBoxShown=true; isAddCommentButtonShown=false">Click here to add a comment to your response</a>
+</div>
+<div *ngIf="isCommentBoxShown">
+  <tm-comment-box (closeCommentBox)="isCommentBoxShown=false; isAddCommentButtonShown=true"></tm-comment-box>
+</div>
+
