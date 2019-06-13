@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommentBoxModule } from "../../comment-box/comment-box.module";
 import { RichTextEditorModule } from '../../rich-text-editor/rich-text-editor.module';
 import { ContributionPointDescriptionPipe } from './contribution-point-description.pipe';
 import { ContributionQuestionEditAnswerFormComponent } from './contribution-question-edit-answer-form.component';
@@ -34,7 +33,6 @@ import { TextQuestionEditAnswerFormComponent } from './text-question-edit-answer
     RankOptionsQuestionEditAnswerFormComponent,
   ],
   imports: [
-    CommentBoxModule,
     CommonModule,
     FormsModule,
     RichTextEditorModule,

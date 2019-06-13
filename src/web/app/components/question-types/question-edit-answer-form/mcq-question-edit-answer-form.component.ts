@@ -28,8 +28,6 @@ export class McqQuestionEditAnswerFormComponent
   id: string = '';
 
   isMcqOptionSelected: boolean[] = [];
-  isCommentBoxShown: boolean = false;
-  isAddCommentButtonShown: boolean = true;
 
   constructor() {
     super(DEFAULT_MCQ_QUESTION_DETAILS(), DEFAULT_MCQ_RESPONSE_DETAILS());

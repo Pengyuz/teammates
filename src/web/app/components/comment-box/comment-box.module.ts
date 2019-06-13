@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { RichTextEditorModule } from "../rich-text-editor/rich-text-editor.module";
-import { CommentBoxComponent } from './comment-box.component';
+import { CommentEditFormComponent } from './comment-edit-form.component';
 
 @NgModule({
-  declarations: [CommentBoxComponent],
+  declarations: [CommentEditFormComponent],
   imports: [
     CommonModule,
     RichTextEditorModule,
@@ -14,7 +14,7 @@ import { CommentBoxComponent } from './comment-box.component';
     FormsModule,
   ],
   exports: [
-      CommentBoxComponent,
+      CommentEditFormComponent,
   ]
 })
 export class CommentBoxModule { }
