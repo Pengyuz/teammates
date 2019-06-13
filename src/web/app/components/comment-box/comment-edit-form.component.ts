@@ -26,7 +26,7 @@ export class CommentEditFormComponent implements OnInit {
   }
 
   triggerCommentDetailsChange(data: any) {
-    console.log(data);
+    this.commentDetailsChange.emit(data);
   }
 
   triggerCloseCommentBox(data: any) {
