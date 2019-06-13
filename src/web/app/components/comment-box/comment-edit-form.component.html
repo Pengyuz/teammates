@@ -1,13 +1,11 @@
-<div *ngIf="!isHidden">
-  <div>
-    Your comment about the above response
-    <button type="button" class="close" aria-label="Close" ngbTooltip='Discard changes to this comment' (click)="triggerCloseCommentBox($event)">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div style="margin: 10px 0;">
-    <input class="form-control"  type="text" [(ngModel)]=commentText (ngModelChange)="triggerCommentDetailsChange($event)">
-  </div>
-  <button type="button" class="btn btn-secondary btn-sm float-right"  ngbTooltip='Save this comment'
-          (click)="triggerSaveComment()"><i class="fas fa-save"></i> Save</button>
+<div>
+  Your comment about the above response
+  <button type="button" class="close" aria-label="Close" ngbTooltip='Discard changes to this comment' (click)="triggerCloseCommentBox($event)">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
+<div style="margin: 10px 0;">
+  <input class="form-control"  type="text" [(ngModel)]=commentText (ngModelChange)="triggerCommentDetailsChange($event)">
+</div>
+<button type="button" class="btn btn-secondary btn-sm float-right"  ngbTooltip='Save this comment'
+        (click)="triggerSaveComment()"><i class="fas fa-save"></i> Save</button>

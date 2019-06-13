@@ -8,9 +8,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class CommentEditFormComponent implements OnInit {
 
   @Input()
-  isHidden: boolean = true;
-
-  @Input()
   commentText: string = 'placeholder text';
 
   @Output()
@@ -32,11 +29,7 @@ export class CommentEditFormComponent implements OnInit {
   }
 
   triggerCloseCommentBox(data: any) {
-    this.isHidden = true;
-
-    this.triggerCommentDetailsChange('');
     // TODO this should revert back to original comment which might not be empty
-    this.commentText = '';
 
     this.closeCommentBox.emit(data);
   }
