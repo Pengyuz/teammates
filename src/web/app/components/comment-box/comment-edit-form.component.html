@@ -5,7 +5,7 @@
   </button>
 </div>
 <div style="margin: 10px 0;">
-  <input class="form-control"  type="text" [(ngModel)]=commentText (ngModelChange)="triggerCommentDetailsChange($event)">
+  <input class="form-control"  placeholder={{placeholderText}} type="text" [(ngModel)]=commentText (ngModelChange)="triggerCommentDetailsChange($event)">
 </div>
 <button type="button" class="btn btn-secondary btn-sm float-right"  ngbTooltip='Save this comment'
         (click)="triggerSaveComment()"><i class="fas fa-save"></i> Save</button>

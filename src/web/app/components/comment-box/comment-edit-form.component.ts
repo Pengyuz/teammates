@@ -8,7 +8,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class CommentEditFormComponent implements OnInit {
 
   @Input()
-  commentText: string = 'Enter your comment here';
+  commentText: string = '';
+
+  @Input()
+  placeholderText: string = 'Enter your comment here';
 
   @Output()
   closeCommentBoxEvent: EventEmitter<any> = new EventEmitter();
