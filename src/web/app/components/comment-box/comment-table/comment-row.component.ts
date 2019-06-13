@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FeedbackResponseCommentModel } from "./comment-table-model";
 
 @Component({
   selector: 'tm-comment-row',
@@ -9,28 +10,36 @@ export class CommentRowComponent implements OnInit {
   @Input()
   isInEditMode: boolean = false;
 
+  @Input()
+  commentModel: FeedbackResponseCommentModel = {commentText: ''};
+
   @Output()
-  closeCommentEditForm: EventEmitter<any> = new EventEmitter<any>();
+  closeCommentEditFormEvent: EventEmitter<any> = new EventEmitter();
+
+  @Output()
+  deleteCommentEvent: EventEmitter<any> = new EventEmitter();
 
   commentText: string = 'COMMENT PLACEHOLDER';
   constructor() { }
 
   ngOnInit() {
+    this.commentText = this.commentModel.commentText;
   }
 
   triggerCloseCommentEditForm() {
-    this.closeCommentEditForm.emit();
-  }
-
-  triggerEditComment() {
-    this.isInEditMode = true;
-  }
-
-  triggerSaveComment() {
     this.isInEditMode = false;
   }
 
-  triggerDeleteComment() {
-    this.closeCommentEditForm.emit();
+  triggerSaveComment(data: any) {
+    this.commentText = data;
+    this.isInEditMode = false;
+  }
+
+  triggerEditCommentEvent() {
+    this.isInEditMode = true;
+  }
+
+  triggerDeleteCommentEvent() {
+    this.deleteCommentEvent.emit();
   }
 }

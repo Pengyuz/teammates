@@ -8,16 +8,16 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class CommentEditFormComponent implements OnInit {
 
   @Input()
-  commentText: string = 'placeholder text';
+  commentText: string = 'Enter your comment here';
 
   @Output()
-  closeCommentBox: EventEmitter<any> = new EventEmitter();
+  closeCommentBoxEvent: EventEmitter<any> = new EventEmitter();
 
   @Output()
-  commentDetailsChange: EventEmitter<any> = new EventEmitter();
+  commentDetailsChangeEvent: EventEmitter<any> = new EventEmitter();
 
   @Output()
-  saveComment: EventEmitter<any> = new EventEmitter();
+  saveCommentEvent: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -25,17 +25,15 @@ export class CommentEditFormComponent implements OnInit {
   }
 
   triggerCommentDetailsChange(data: any) {
-    this.commentDetailsChange.emit(data);
+    this.commentDetailsChangeEvent.emit(data);
   }
 
   triggerCloseCommentBox(data: any) {
-    // TODO this should revert back to original comment which might not be empty
-
-    this.closeCommentBox.emit(data);
+    this.closeCommentBoxEvent.emit(data);
   }
 
   triggerSaveComment(){
-    this.saveComment.emit();
+    this.saveCommentEvent.emit(this.commentText);
   }
 
 }

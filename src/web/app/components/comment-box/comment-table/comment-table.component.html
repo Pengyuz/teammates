@@ -8,6 +8,10 @@
     Comments
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item"><tm-comment-row [isInEditMode]="true" (closeCommentEditForm)="triggerCloseCommentEditForm()"></tm-comment-row></li>
+    <li class="list-group-item" *ngFor="let comment of comments; let i = index">
+      <tm-comment-row [isInEditMode]="false" [commentModel]="comment"
+                      (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent()"
+                      (deleteCommentEvent)="triggerDeleteCommentEvent(i)" ></tm-comment-row>
+    </li>
   </ul>
 </div>

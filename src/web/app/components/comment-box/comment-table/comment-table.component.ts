@@ -9,7 +9,12 @@ import { FeedbackResponseCommentModel } from "./comment-table-model";
 export class CommentTableComponent implements OnInit {
 
   @Input()
-  comments: FeedbackResponseCommentModel[] = [];
+  comments: FeedbackResponseCommentModel[] = [
+      {commentText: "this is a comment"},
+      {commentText: "this is another comment"},
+      {commentText: "comment"},
+    ];
+
   isTableHidden: boolean = true;
 
   constructor() { }
@@ -17,8 +22,12 @@ export class CommentTableComponent implements OnInit {
   ngOnInit() {
   }
 
-  triggerCloseCommentEditForm() {
+  triggerCloseCommentEditFormEvent() {
     this.isTableHidden = true;
     //TODO either close the whole table OR revert back to original comment
+  }
+
+  triggerDeleteCommentEvent(index: number) {
+    this.comments = this.comments.splice(index, 1);
   }
 }
