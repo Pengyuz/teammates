@@ -15,9 +15,11 @@
                       (saveCommentEvent)="triggerSaveCommentEvent(i, $event)"
       ></tm-comment-row>
     </li>
-    <li class="list-group-item" *ngIf="isTableEmpty()">
+    <li class="list-group-item">
       <tm-comment-row [isInEditMode]="true"
-                      (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent()" ></tm-comment-row>
+                      (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent()"
+                      (saveCommentEvent)="triggerSaveCommentEvent(comments.length, $event)"
+      ></tm-comment-row>
     </li>
   </ul>
 </div>

@@ -1,5 +1,5 @@
 <tm-comment-edit-form *ngIf="isInEditMode"
-                      [commentText]="commentText"
+                      [commentText]="commentModel.commentText"
                       (closeCommentBoxEvent)="triggerCloseCommentEditForm()"
                       (saveCommentEvent)="triggerSaveComment($event)"></tm-comment-edit-form>
 
@@ -12,5 +12,5 @@
     <button type="button" class="btn btn-secondary btn-sm" ngbTooltip='Delete this comment'
             (click)="triggerDeleteCommentEvent()"><i class="fas fa-trash"></i> Delete</button>
   </div>
-  <div>{{commentText}}</div>
+  <div>{{commentModel.commentText}}</div>
 </div>

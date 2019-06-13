@@ -22,12 +22,9 @@ export class CommentRowComponent implements OnInit {
   @Output()
   saveCommentEvent: EventEmitter<any> = new EventEmitter();
 
-  commentText: string = '';
-  
   constructor() { }
 
   ngOnInit() {
-    this.commentText = this.commentModel.commentText;
   }
 
   triggerCloseCommentEditForm() {
@@ -35,8 +32,6 @@ export class CommentRowComponent implements OnInit {
   }
 
   triggerSaveComment(data: any) {
-    this.commentText = data;
-    this.isInEditMode = false;
     this.saveCommentEvent.emit(data);
   }
 

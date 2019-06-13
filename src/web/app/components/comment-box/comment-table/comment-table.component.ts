@@ -34,12 +34,17 @@ export class CommentTableComponent implements OnInit {
       this.isTableHidden = true;
     }
   }
+
   triggerSaveCommentEvent(index: number, data: any) {
-    // TODO if new comment add to comments list else update current comment
-    console.log("saving comment");
+    if (index < this.comments.length) {
+      this.comments[index] = {commentText: data};
+    } else {
+      this.comments.push({commentText: data});
+    }
   }
 
+
   isTableEmpty(): boolean {
-    return this.comments.length == 0;
+    return this.comments === undefined || this.comments.length == 0;
   }
 }
