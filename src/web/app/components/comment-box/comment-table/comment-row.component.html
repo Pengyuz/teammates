@@ -1,9 +1,15 @@
-Comment by ... <i class="fa fa-eye-slash" aria-hidden="true" ngbTooltip="This comment is visible to ..."></i>
+<tm-comment-edit-form *ngIf="isInEditMode" [isHidden]="false"
+                      (closeCommentBox)="triggerCloseCommentEditForm()"
+                      (saveComment)="triggerSaveComment()"></tm-comment-edit-form>
 
-<div class="float-right comment-row">
-  <button type="button" class="btn btn-secondary btn-sm"  ngbTooltip='Edit this comment'
-          (click)="triggerEditComment()"><i class="fas fa-pencil-alt"></i> Edit</button>
-  <button type="button" class="btn btn-secondary btn-sm" ngbTooltip='Delete this comment'
-          (click)="triggerDeleteComment()"><i class="fas fa-trash"></i> Delete</button>
+<div *ngIf="!isInEditMode">
+  Comment by PLACEHOLDER
+  <i class="fa fa-eye-slash" aria-hidden="true" ngbTooltip="This comment is visible to PLACEHOLDER"></i>
+  <div class="float-right comment-row">
+    <button type="button" class="btn btn-secondary btn-sm"  ngbTooltip='Edit this comment'
+            (click)="triggerEditComment()"><i class="fas fa-pencil-alt"></i> Edit</button>
+    <button type="button" class="btn btn-secondary btn-sm" ngbTooltip='Delete this comment'
+            (click)="triggerDeleteComment()"><i class="fas fa-trash"></i> Delete</button>
+  </div>
+  <div>{{commentText}}</div>
 </div>
-<div>{{commentText}}</div>

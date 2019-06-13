@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FeedbackResponseComment } from "../../../../types/api-output";
+import { FeedbackResponseCommentModel } from "./comment-table-model";
 
 @Component({
   selector: 'tm-comment-table',
@@ -9,7 +9,7 @@ import { FeedbackResponseComment } from "../../../../types/api-output";
 export class CommentTableComponent implements OnInit {
 
   @Input()
-  commentsData: FeedbackResponseComment[] = [];
+  comments: FeedbackResponseCommentModel[] = [];
   isTableHidden: boolean = true;
 
   constructor() { }

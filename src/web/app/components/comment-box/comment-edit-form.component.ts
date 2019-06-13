@@ -19,7 +19,8 @@ export class CommentEditFormComponent implements OnInit {
   @Output()
   commentDetailsChange: EventEmitter<any> = new EventEmitter();
 
-
+  @Output()
+  saveComment: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
@@ -38,6 +39,10 @@ export class CommentEditFormComponent implements OnInit {
     this.commentText = '';
 
     this.closeCommentBox.emit(data);
+  }
+
+  triggerSaveComment(){
+    this.saveComment.emit();
   }
 
 }
