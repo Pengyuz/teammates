@@ -11,6 +11,9 @@ export class CommentEditFormComponent implements OnInit {
   commentText: string = '';
 
   @Input()
+  isDiscardButtonEnabled: boolean = true;
+
+  @Input()
   placeholderText: string = 'Enter your comment here';
 
   @Output()
@@ -37,6 +40,7 @@ export class CommentEditFormComponent implements OnInit {
 
   triggerSaveComment(){
     this.saveCommentEvent.emit(this.commentText);
+    this.commentText = '';
   }
 
 }

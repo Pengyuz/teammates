@@ -11,6 +11,9 @@ export class CommentRowComponent implements OnInit {
   isInEditMode: boolean = false;
 
   @Input()
+  isDiscardButtonEnabled: boolean = true;
+
+  @Input()
   commentModel: FeedbackResponseCommentModel = {commentText: ''};
 
   @Output()
@@ -32,6 +35,7 @@ export class CommentRowComponent implements OnInit {
   }
 
   triggerSaveComment(data: any) {
+    this.commentModel.commentText = '';
     this.saveCommentEvent.emit(data);
   }
 

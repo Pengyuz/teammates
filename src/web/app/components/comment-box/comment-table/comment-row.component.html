@@ -1,5 +1,6 @@
 <tm-comment-edit-form *ngIf="isInEditMode"
                       [commentText]="commentModel.commentText"
+                      [isDiscardButtonEnabled]="isDiscardButtonEnabled"
                       (closeCommentBoxEvent)="triggerCloseCommentEditForm()"
                       (saveCommentEvent)="triggerSaveComment($event)"></tm-comment-edit-form>
 

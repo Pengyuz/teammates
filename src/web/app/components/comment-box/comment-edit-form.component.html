@@ -1,6 +1,6 @@
 <div>
   Your comment about the above response
-  <button type="button" class="close" aria-label="Close" ngbTooltip='Discard changes to this comment' (click)="triggerCloseCommentBox($event)">
+  <button *ngIf=isDiscardButtonEnabled type="button" class="close" aria-label="Close" ngbTooltip='Discard changes to this comment' (click)="triggerCloseCommentBox($event)">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>

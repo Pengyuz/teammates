@@ -43,7 +43,6 @@ export class CommentTableComponent implements OnInit {
     }
   }
 
-
   isTableEmpty(): boolean {
     return this.comments === undefined || this.comments.length == 0;
   }

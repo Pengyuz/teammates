@@ -16,7 +16,7 @@
       ></tm-comment-row>
     </li>
     <li class="list-group-item">
-      <tm-comment-row [isInEditMode]="true"
+      <tm-comment-row [isInEditMode]="true" [isDiscardButtonEnabled]="false"
                       (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent()"
                       (saveCommentEvent)="triggerSaveCommentEvent(comments.length, $event)"
       ></tm-comment-row>
