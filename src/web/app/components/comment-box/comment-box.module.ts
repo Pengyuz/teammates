@@ -4,9 +4,15 @@ import { FormsModule } from "@angular/forms";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { RichTextEditorModule } from "../rich-text-editor/rich-text-editor.module";
 import { CommentEditFormComponent } from './comment-edit-form.component';
+import { CommentTableComponent } from "./comment-table/comment-table.component";
+import { CommentRowComponent } from './comment-table/comment-row.component';
 
 @NgModule({
-  declarations: [CommentEditFormComponent],
+  declarations: [
+    CommentEditFormComponent,
+    CommentTableComponent,
+    CommentRowComponent
+  ],
   imports: [
     CommonModule,
     RichTextEditorModule,
@@ -14,7 +20,8 @@ import { CommentEditFormComponent } from './comment-edit-form.component';
     FormsModule,
   ],
   exports: [
-      CommentEditFormComponent,
+    CommentEditFormComponent,
+    CommentTableComponent,
   ]
 })
 export class CommentBoxModule { }
