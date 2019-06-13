@@ -1,10 +1,13 @@
-<div class="card" style="margin-top: 7px;">
+<div style="margin-top: 7px;">
+  <a href='#' *ngIf="isTableHidden" (click)="isTableHidden=false;">
+    Click here to add a comment to your response</a>
+</div>
+
+<div class="card" style="margin-top: 7px;" *ngIf="!isTableHidden">
   <div class="card-header comment-table-header" *ngIf="false">
     Comments
   </div>
   <ul class="list-group list-group-flush">
-    <li class="list-group-item"><tm-comment-row></tm-comment-row></li>
-    <li class="list-group-item"><tm-comment-row></tm-comment-row></li>
-    <li class="list-group-item"><tm-comment-edit-form [isHidden]="false"></tm-comment-edit-form></li>
+    <li class="list-group-item"><tm-comment-edit-form [isHidden]="false" (closeCommentBox)="triggerCloseCommentEditForm()"></tm-comment-edit-form></li>
   </ul>
 </div>

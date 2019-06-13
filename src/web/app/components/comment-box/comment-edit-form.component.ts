@@ -10,20 +10,20 @@ export class CommentEditFormComponent implements OnInit {
   @Input()
   isHidden: boolean = true;
 
+  @Input()
+  commentText: string = 'placeholder text';
+
   @Output()
   closeCommentBox: EventEmitter<any> = new EventEmitter();
 
   @Output()
   commentDetailsChange: EventEmitter<any> = new EventEmitter();
 
-  commentText: string = '';
 
-  isAddCommentButtonShown: boolean = true;
 
   constructor() { }
 
   ngOnInit() {
-    this.isAddCommentButtonShown = this.isHidden;
   }
 
   triggerCommentDetailsChange(data: any) {
@@ -32,7 +32,6 @@ export class CommentEditFormComponent implements OnInit {
 
   triggerCloseCommentBox(data: any) {
     this.isHidden = true;
-    this.isAddCommentButtonShown = true;
 
     this.triggerCommentDetailsChange('');
     // TODO this should revert back to original comment which might not be empty
