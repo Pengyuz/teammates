@@ -11,7 +11,13 @@
     <li class="list-group-item" *ngFor="let comment of comments; let i = index">
       <tm-comment-row [isInEditMode]="false" [commentModel]="comment"
                       (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent()"
-                      (deleteCommentEvent)="triggerDeleteCommentEvent(i)" ></tm-comment-row>
+                      (deleteCommentEvent)="triggerDeleteCommentEvent(i)"
+                      (saveCommentEvent)="triggerSaveCommentEvent(i, $event)"
+      ></tm-comment-row>
+    </li>
+    <li class="list-group-item" *ngIf="isTableEmpty()">
+      <tm-comment-row [isInEditMode]="true"
+                      (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent()" ></tm-comment-row>
     </li>
   </ul>
 </div>

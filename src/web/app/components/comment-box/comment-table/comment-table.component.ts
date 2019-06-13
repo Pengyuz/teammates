@@ -28,6 +28,18 @@ export class CommentTableComponent implements OnInit {
   }
 
   triggerDeleteCommentEvent(index: number) {
-    this.comments = this.comments.splice(index, 1);
+    this.comments.splice(index, 1);
+
+    if (this.isTableEmpty()) {
+      this.isTableHidden = true;
+    }
+  }
+  triggerSaveCommentEvent(index: number, data: any) {
+    // TODO if new comment add to comments list else update current comment
+    console.log("saving comment");
+  }
+
+  isTableEmpty(): boolean {
+    return this.comments.length == 0;
   }
 }

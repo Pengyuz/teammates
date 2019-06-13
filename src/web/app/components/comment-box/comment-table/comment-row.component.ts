@@ -19,7 +19,11 @@ export class CommentRowComponent implements OnInit {
   @Output()
   deleteCommentEvent: EventEmitter<any> = new EventEmitter();
 
-  commentText: string = 'COMMENT PLACEHOLDER';
+  @Output()
+  saveCommentEvent: EventEmitter<any> = new EventEmitter();
+
+  commentText: string = '';
+  
   constructor() { }
 
   ngOnInit() {
@@ -33,6 +37,7 @@ export class CommentRowComponent implements OnInit {
   triggerSaveComment(data: any) {
     this.commentText = data;
     this.isInEditMode = false;
+    this.saveCommentEvent.emit(data);
   }
 
   triggerEditCommentEvent() {
