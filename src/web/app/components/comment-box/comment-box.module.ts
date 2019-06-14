@@ -7,13 +7,15 @@ import { CommentEditFormComponent } from './comment-edit-form.component';
 import { CommentTableComponent } from "./comment-table/comment-table.component";
 import { CommentRowComponent } from './comment-table/comment-row.component';
 import { ConfirmDeleteCommentModalComponent } from './confirm-delete-comment-modal/confirm-delete-comment-modal.component';
+import { CommentTableModalComponent } from './comment-table-modal/comment-table-modal.component';
 
 @NgModule({
   declarations: [
     CommentEditFormComponent,
     CommentTableComponent,
     CommentRowComponent,
-    ConfirmDeleteCommentModalComponent
+    ConfirmDeleteCommentModalComponent,
+    CommentTableModalComponent
   ],
   imports: [
     CommonModule,
