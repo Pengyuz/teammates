@@ -14,6 +14,9 @@ export class CommentEditFormComponent implements OnInit {
   isDiscardButtonEnabled: boolean = true;
 
   @Input()
+  isVisibilityOptionEnabled: boolean = true;
+
+  @Input()
   placeholderText: string = 'Enter your comment here';
 
   @Output()
