@@ -42,6 +42,10 @@ export class CommentEditFormComponent implements OnInit {
   }
 
   triggerSaveComment(){
+    if (this.commentText.trim() == '') {
+      return;
+    }
+
     this.saveCommentEvent.emit(this.commentText);
     this.commentText = '';
   }
