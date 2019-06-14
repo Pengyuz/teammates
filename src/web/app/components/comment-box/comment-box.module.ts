@@ -6,12 +6,14 @@ import { RichTextEditorModule } from "../rich-text-editor/rich-text-editor.modul
 import { CommentEditFormComponent } from './comment-edit-form.component';
 import { CommentTableComponent } from "./comment-table/comment-table.component";
 import { CommentRowComponent } from './comment-table/comment-row.component';
+import { ConfirmDeleteCommentModalComponent } from './confirm-delete-comment-modal/confirm-delete-comment-modal.component';
 
 @NgModule({
   declarations: [
     CommentEditFormComponent,
     CommentTableComponent,
-    CommentRowComponent
+    CommentRowComponent,
+    ConfirmDeleteCommentModalComponent
   ],
   imports: [
     CommonModule,
@@ -22,6 +24,9 @@ import { CommentRowComponent } from './comment-table/comment-row.component';
   exports: [
     CommentEditFormComponent,
     CommentTableComponent,
+  ],
+  entryComponents: [
+    ConfirmDeleteCommentModalComponent,
   ]
 })
 export class CommentBoxModule { }

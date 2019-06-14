@@ -1,4 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
+import { ConfirmDeleteCommentModalComponent } from "../confirm-delete-comment-modal/confirm-delete-comment-modal.component";
 import { FeedbackResponseCommentModel } from "./comment-table-model";
 
 @Component({
@@ -34,7 +36,7 @@ export class CommentTableComponent implements OnInit {
 
   isTableHidden: boolean = true;
 
-  constructor() { }
+  constructor(private modalService: NgbModal) { }
 
   ngOnInit() {
   }
@@ -45,14 +47,19 @@ export class CommentTableComponent implements OnInit {
   }
 
   triggerDeleteCommentEvent(index: number) {
-    // TODO: parent handling of event
-    this.deleteCommentEvent.emit(index);
+    const modalRef: NgbModalRef = this.modalService.open(ConfirmDeleteCommentModalComponent);
 
-    this.comments.splice(index, 1);
+    modalRef.result.then( () => {
+        // TODO: parent handling of event
+        this.deleteCommentEvent.emit(index);
 
-    if (this.isTableEmpty()) {
-      this.isTableHidden = true;
-    }
+        this.comments.splice(index, 1);
+
+        if (this.isTableEmpty()) {
+          this.isTableHidden = true;
+        }
+      }
+    , () => {});
   }
 
   triggerSaveCommentEvent(index: number, data: any) {
