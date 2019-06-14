@@ -14,7 +14,14 @@ export class CommentRowComponent implements OnInit {
   isDiscardButtonEnabled: boolean = true;
 
   @Input()
-  commentModel: FeedbackResponseCommentModel = {commentText: ''};
+  commentModel: FeedbackResponseCommentModel = {
+    commentText: '',
+    commentGiver: '',
+    createdAt: '',
+    editedAt: '',
+    responseGiver: '',
+    responseReceipient: '',
+  };
 
   @Output()
   closeCommentEditFormEvent: EventEmitter<any> = new EventEmitter();
