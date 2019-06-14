@@ -34,15 +34,12 @@ export class CommentTableComponent implements OnInit {
   @Output()
   deleteCommentEvent: EventEmitter<any> = new EventEmitter();
 
-  isTableHidden: boolean = true;
-
   constructor(private modalService: NgbModal) { }
 
   ngOnInit() {
   }
 
   triggerCloseCommentEditFormEvent() {
-    this.isTableHidden = true;
     //TODO either close the whole table OR revert back to original comment
   }
 
@@ -54,10 +51,6 @@ export class CommentTableComponent implements OnInit {
         this.deleteCommentEvent.emit(index);
 
         this.comments.splice(index, 1);
-
-        if (this.isTableEmpty()) {
-          this.isTableHidden = true;
-        }
       }
     , () => {});
   }
