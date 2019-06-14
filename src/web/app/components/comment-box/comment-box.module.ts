@@ -28,6 +28,7 @@ import { CommentTableModalComponent } from './comment-table-modal/comment-table-
     CommentTableComponent,
   ],
   entryComponents: [
+    CommentTableModalComponent,
     ConfirmDeleteCommentModalComponent,
   ]
 })

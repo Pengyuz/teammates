@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import {
-  InstructorSessionResultSectionType,
-} from '../../../pages-instructor/instructor-session-result-page/instructor-session-result-section-type.enum';
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { InstructorSessionResultSectionType, } from '../../../pages-instructor/instructor-session-result-page/instructor-session-result-section-type.enum';
+import { CommentTableModalComponent } from "../../comment-box/comment-table-modal/comment-table-modal.component";
 
 /**
  * Component to display list of responses for one question.
@@ -24,7 +24,7 @@ export class PerQuestionViewResponsesComponent implements OnInit, OnChanges {
 
   responsesToShow: any[] = [];
 
-  constructor() { }
+  constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.filterResponses();
@@ -65,4 +65,7 @@ export class PerQuestionViewResponsesComponent implements OnInit, OnChanges {
     this.responsesToShow = responsesToShow;
   }
 
+  triggerAddCommentEvent() {
+    this.modalService.open(CommentTableModalComponent);
+  }
 }
