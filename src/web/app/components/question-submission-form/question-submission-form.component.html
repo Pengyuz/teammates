@@ -96,12 +96,12 @@
             <div *ngIf="model.questionType === FeedbackQuestionType.MCQ">
               <div style="margin-top: 7px;">
                 <button class="btn btn-secondary btn-sm"
-                        *ngIf="!isCommentTableEnabled"
-                        (click)="isCommentTableEnabled=true;">
+                        *ngIf="!isCommentTableEnabled[i]"
+                        (click)="isCommentTableEnabled[i]=true;">
                   <i class="fas fa-comment"></i> Comment on your response
                 </button>
               </div>
-              <tm-comment-table *ngIf="isCommentTableEnabled"
+              <tm-comment-table *ngIf="isCommentTableEnabled[i]"
                                 (commentDetailsChange)="triggerRecipientSubmissionFormChange(i, 'commentDetails', $event)"
               ></tm-comment-table>
            <div>

@@ -83,7 +83,7 @@ export class QuestionSubmissionFormComponent implements OnInit {
 
   visibilityStateMachine: VisibilityStateMachine;
 
-  isCommentTableEnabled: boolean = false;
+  isCommentTableEnabled: boolean[] = [];
 
   constructor(private feedbackQuestionsService: FeedbackQuestionsService) {
     this.visibilityStateMachine =
