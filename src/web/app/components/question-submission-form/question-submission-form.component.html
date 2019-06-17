@@ -102,7 +102,7 @@
                 </button>
               </div>
               <tm-comment-table *ngIf="isCommentTableEnabled[i]"
-                                (commentDetailsChange)="triggerRecipientSubmissionFormChange(i, 'commentDetails', $event)"
+                                (saveCommentEvent)="triggerRecipientSubmissionFormChange(i, 'commentForms', $event)"
               ></tm-comment-table>
            <div>
             <tm-msq-question-edit-answer-form *ngIf="model.questionType === FeedbackQuestionType.MSQ" [questionDetails]="model.questionDetails"

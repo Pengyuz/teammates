@@ -57,8 +57,6 @@ export class CommentTableComponent implements OnInit {
 
   triggerSaveCommentEvent(index: number, data: any) {
     // TODO: parent handling of event and what data to pass through
-    this.saveCommentEvent.emit(data);
-
     if (index < this.comments.length) {
       this.comments[index] = {...this.comments[index], commentText: data};
     } else {
@@ -72,6 +70,8 @@ export class CommentTableComponent implements OnInit {
         responseReceipient: "receipient"
       });
     }
+
+    this.saveCommentEvent.emit(this.comments);
   }
 
   isTableEmpty(): boolean {
