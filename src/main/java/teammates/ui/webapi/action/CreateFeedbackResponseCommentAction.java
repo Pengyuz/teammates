@@ -5,12 +5,11 @@ import java.util.ArrayList;
 import org.apache.http.HttpStatus;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
-import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
-import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
-import teammates.common.datatransfer.attributes.InstructorAttributes;
+import teammates.common.datatransfer.attributes.*;
+import teammates.common.datatransfer.questions.FeedbackQuestionType;
 import teammates.common.exception.EntityAlreadyExistsException;
 import teammates.common.exception.EntityDoesNotExistException;
+import teammates.common.exception.InvalidHttpParameterException;
 import teammates.common.exception.InvalidParametersException;
 import teammates.common.util.Assumption;
 import teammates.common.util.Const;
@@ -35,14 +34,31 @@ public class CreateFeedbackResponseCommentAction extends Action {
 
         String courseId = response.courseId;
         String feedbackSessionName = response.feedbackSessionName;
+        FeedbackSessionAttributes session = logic.getFeedbackSession(feedbackSessionName,courseId);
+        Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
 
-        InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.id);
-        FeedbackSessionAttributes session = logic.getFeedbackSession(feedbackSessionName, courseId);
-
-        gateKeeper.verifyAccessible(instructor, session, response.giverSection,
-                Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
-        gateKeeper.verifyAccessible(instructor, session, response.recipientSection,
-                Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
+        switch (intent) {
+            case STUDENT_SUBMISSION:
+                StudentAttributes studentAttributes = logic.getStudentForGoogleId(courseId, userInfo.getId());
+                gateKeeper.verifyAccessible(studentAttributes,session);
+                break;
+            case INSTRUCTOR_SUBMISSION:
+                InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId,userInfo.getId());
+                gateKeeper.verifyAccessible(instructor,session,response.giverSection,
+                        Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
+                gateKeeper.verifyAccessible(instructor, session, response.recipientSection,
+                        Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
+                break;
+            case INSTRUCTOR_RESULT:
+                InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId,userInfo.getId());
+                gateKeeper.verifyAccessible(instructor1,session,response.giverSection,
+                        Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
+                gateKeeper.verifyAccessible(instructor1, session, response.recipientSection,
+                        Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
+                break;
+            default:
+                throw new InvalidHttpParameterException("Unknown intent " + intent);
+        }
     }
 
     @Override
@@ -62,13 +78,33 @@ public class CreateFeedbackResponseCommentAction extends Action {
         String courseId = response.courseId;
         String feedbackQuestionId = response.feedbackQuestionId;
         String feedbackSessionName = response.feedbackSessionName;
-        InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.id);
+        String email;
+//        InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.id);
+
+        Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
+
+        switch (intent) {
+            case STUDENT_SUBMISSION:
+                StudentAttributes student = logic.getStudentForGoogleId(courseId, userInfo.getId());
+                email = student.getEmail();
+                break;
+            case INSTRUCTOR_SUBMISSION:
+                InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId,userInfo.getId());
+                email = instructor.getEmail();
+                break;
+            case INSTRUCTOR_RESULT:
+                InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId,userInfo.getId());
+                email = instructor1.getEmail();
+                break;
+            default:
+                throw new InvalidHttpParameterException("Unknown intent " + intent);
+        }
 
         FeedbackResponseCommentAttributes feedbackResponseComment = FeedbackResponseCommentAttributes
                 .builder()
                 .withCourseId(courseId)
                 .withFeedbackSessionName(feedbackSessionName)
-                .withCommentGiver(instructor.email)
+                .withCommentGiver(email)
                 .withCommentText(commentText)
                 .withFeedbackQuestionId(feedbackQuestionId)
                 .withFeedbackResponseId(feedbackResponseId)
@@ -77,25 +113,27 @@ public class CreateFeedbackResponseCommentAction extends Action {
                 .withCommentFromFeedbackParticipant(false)
                 .withCommentGiverType(FeedbackParticipantType.INSTRUCTORS)
                 .withVisibilityFollowingFeedbackQuestion(false)
+                .withShowCommentTo(comment.getShowCommentTo())
+                .withShowGiverNameTo(comment.getShowGiverNameTo())
                 .build();
 
         // Set up visibility settings
-        String showCommentTo = comment.getShowCommentTo();
-        String showGiverNameTo = comment.getShowGiverNameTo();
-        feedbackResponseComment.showCommentTo = new ArrayList<>();
-        if (showCommentTo != null && !showCommentTo.isEmpty()) {
-            String[] showCommentToArray = showCommentTo.split(",");
-            for (String viewer : showCommentToArray) {
-                feedbackResponseComment.showCommentTo.add(FeedbackParticipantType.valueOf(viewer.trim()));
-            }
-        }
-        feedbackResponseComment.showGiverNameTo = new ArrayList<>();
-        if (showGiverNameTo != null && !showGiverNameTo.isEmpty()) {
-            String[] showGiverNameToArray = showGiverNameTo.split(",");
-            for (String viewer : showGiverNameToArray) {
-                feedbackResponseComment.showGiverNameTo.add(FeedbackParticipantType.valueOf(viewer.trim()));
-            }
-        }
+//        String showCommentTo = comment.getShowCommentTo();
+//        String showGiverNameTo = comment.getShowGiverNameTo();
+//        feedbackResponseComment.showCommentTo = new ArrayList<>();
+//        if (showCommentTo != null && !showCommentTo.isEmpty()) {
+//            String[] showCommentToArray = showCommentTo.split(",");
+//            for (String viewer : showCommentToArray) {
+//                feedbackResponseComment.showCommentTo.add(FeedbackParticipantType.valueOf(viewer.trim()));
+//            }
+//        }
+//        feedbackResponseComment.showGiverNameTo = new ArrayList<>();
+//        if (showGiverNameTo != null && !showGiverNameTo.isEmpty()) {
+//            String[] showGiverNameToArray = showGiverNameTo.split(",");
+//            for (String viewer : showGiverNameToArray) {
+//                feedbackResponseComment.showGiverNameTo.add(FeedbackParticipantType.valueOf(viewer.trim()));
+//            }
+//        }
 
         FeedbackResponseCommentAttributes createdComment = null;
         try {
