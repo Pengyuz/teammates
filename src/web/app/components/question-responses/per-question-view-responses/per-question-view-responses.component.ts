@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { InstructorSessionResultSectionType, } from '../../../pages-instructor/instructor-session-result-page/instructor-session-result-section-type.enum';
 import { CommentTableModalComponent } from "../../comment-box/comment-table-modal/comment-table-modal.component";
 
@@ -65,7 +65,10 @@ export class PerQuestionViewResponsesComponent implements OnInit, OnChanges {
     this.responsesToShow = responsesToShow;
   }
 
-  triggerAddCommentEvent() {
-    this.modalService.open(CommentTableModalComponent);
+  triggerAddCommentEvent(response: any) {
+    const modalRef: NgbModalRef = this.modalService.open(CommentTableModalComponent);
+    modalRef.componentInstance.response = response;
+    modalRef.componentInstance.questionDetails = this.questionDetails;
   }
+
 }

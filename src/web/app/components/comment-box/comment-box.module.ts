@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from "@angular/forms";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { SingleResponseModule } from "../question-responses/single-response/single-response.module";
 import { RichTextEditorModule } from "../rich-text-editor/rich-text-editor.module";
 import { CommentEditFormComponent } from './comment-edit-form.component';
 import { CommentTableComponent } from "./comment-table/comment-table.component";
@@ -19,6 +20,7 @@ import { CommentTableModalComponent } from './comment-table-modal/comment-table-
   ],
   imports: [
     CommonModule,
+    SingleResponseModule,
     RichTextEditorModule,
     NgbModule,
     FormsModule,
