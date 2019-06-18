@@ -28,4 +28,8 @@ public enum FeedbackVisibilityType {
      * Instructors in the course.
      */
     INSTRUCTORS,
+    /**
+     * Giver of response.
+     * */
+    GIVER,
 }

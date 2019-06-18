@@ -79,7 +79,6 @@ public class CreateFeedbackResponseCommentAction extends Action {
         String feedbackQuestionId = response.feedbackQuestionId;
         String feedbackSessionName = response.feedbackSessionName;
         String email;
-//        InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.id);
 
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
 
@@ -116,24 +115,6 @@ public class CreateFeedbackResponseCommentAction extends Action {
                 .withShowCommentTo(comment.getShowCommentTo())
                 .withShowGiverNameTo(comment.getShowGiverNameTo())
                 .build();
-
-        // Set up visibility settings
-//        String showCommentTo = comment.getShowCommentTo();
-//        String showGiverNameTo = comment.getShowGiverNameTo();
-//        feedbackResponseComment.showCommentTo = new ArrayList<>();
-//        if (showCommentTo != null && !showCommentTo.isEmpty()) {
-//            String[] showCommentToArray = showCommentTo.split(",");
-//            for (String viewer : showCommentToArray) {
-//                feedbackResponseComment.showCommentTo.add(FeedbackParticipantType.valueOf(viewer.trim()));
-//            }
-//        }
-//        feedbackResponseComment.showGiverNameTo = new ArrayList<>();
-//        if (showGiverNameTo != null && !showGiverNameTo.isEmpty()) {
-//            String[] showGiverNameToArray = showGiverNameTo.split(",");
-//            for (String viewer : showGiverNameToArray) {
-//                feedbackResponseComment.showGiverNameTo.add(FeedbackParticipantType.valueOf(viewer.trim()));
-//            }
-//        }
 
         FeedbackResponseCommentAttributes createdComment = null;
         try {

@@ -15,6 +15,8 @@ public class FeedbackResponseCommentData extends ApiOutput {
     private long feedbackResponseCommentId;
     private String commentText;
     private String commentGiver;
+    private String createdAt;
+    private String updatedAt;
 
     private List<FeedbackVisibilityType> showGiverNameTo;
     private List<FeedbackVisibilityType> showCommentTo;
@@ -25,6 +27,8 @@ public class FeedbackResponseCommentData extends ApiOutput {
         this.commentGiver = frc.getCommentGiver();
         this.showGiverNameTo = convertToFeedbackVisibilityType(frc.getShowGiverNameTo());
         this.showCommentTo = convertToFeedbackVisibilityType(frc.getShowCommentTo());
+        this.createdAt = frc.getCreatedAt().toString();
+        this.updatedAt = frc.getLastEditedAt().toString();
     }
 
     /**
@@ -34,16 +38,10 @@ public class FeedbackResponseCommentData extends ApiOutput {
             List<FeedbackParticipantType> feedbackParticipantTypeList) {
         return feedbackParticipantTypeList.stream().map(feedbackParticipantType -> {
             switch (feedbackParticipantType) {
-                case STUDENTS:
-                    return FeedbackVisibilityType.STUDENTS;
                 case INSTRUCTORS:
                     return FeedbackVisibilityType.INSTRUCTORS;
-                case RECEIVER:
-                    return FeedbackVisibilityType.RECIPIENT;
-                case OWN_TEAM_MEMBERS:
-                    return FeedbackVisibilityType.GIVER_TEAM_MEMBERS;
-                case RECEIVER_TEAM_MEMBERS:
-                    return FeedbackVisibilityType.RECIPIENT_TEAM_MEMBERS;
+                case GIVER:
+                    return FeedbackVisibilityType.GIVER;
                 default:
                     Assumption.fail("Unknown feedbackParticipantType" + feedbackParticipantType);
                     break;
@@ -72,4 +70,11 @@ public class FeedbackResponseCommentData extends ApiOutput {
         return showCommentTo;
     }
 
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
 }

@@ -81,33 +81,21 @@ public class UpdateFeedbackResponseCommentAction extends Action {
             return new JsonResult(Const.StatusMessages.FEEDBACK_RESPONSE_COMMENT_EMPTY, HttpStatus.SC_BAD_REQUEST);
         }
 
+        List<FeedbackParticipantType> showCommentTo = comment.getShowCommentTo();
+        List<FeedbackParticipantType> showGiverNameTo = comment.getShowGiverNameTo();
+
         String courseId = frc.courseId;
         InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.id);
         FeedbackResponseCommentAttributes.UpdateOptions.Builder commentUpdateOptions =
                 FeedbackResponseCommentAttributes.updateOptionsBuilder(feedbackResponseCommentId)
                         .withCommentText(commentText)
+                        .withShowCommentTo(showCommentTo)
+                        .withShowGiverNameTo(showGiverNameTo)
                         .withLastEditorEmail(instructor.email)
                         .withLastEditorAt(Instant.now());
 
         // edit visibility settings
-        String showCommentTo = comment.getShowCommentTo();
-        String showGiverNameTo = comment.getShowGiverNameTo();
-        if (showCommentTo != null && !showCommentTo.isEmpty()) {
-            String[] showCommentToArray = showCommentTo.split(",");
-            List<FeedbackParticipantType> showCommentToList = new ArrayList<>();
-            for (String viewer : showCommentToArray) {
-                showCommentToList.add(FeedbackParticipantType.valueOf(viewer.trim()));
-            }
-            commentUpdateOptions.withShowCommentTo(showCommentToList);
-        }
-        if (showGiverNameTo != null && !showGiverNameTo.isEmpty()) {
-            String[] showGiverNameToArray = showGiverNameTo.split(",");
-            List<FeedbackParticipantType> showGiverNameToList = new ArrayList<>();
-            for (String viewer : showGiverNameToArray) {
-                showGiverNameToList.add(FeedbackParticipantType.valueOf(viewer.trim()));
-            }
-            commentUpdateOptions.withShowGiverNameTo(showGiverNameToList);
-        }
+
 
         FeedbackResponseCommentAttributes updatedComment = null;
         try {
