@@ -1,4 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { VisibilityStateMachine } from "../../../services/visibility-state-machine";
+import { FeedbackParticipantType } from "../../../types/api-output";
+import { CommentVisibilityControl } from '../../../types/comment-visibility-control';
 
 @Component({
   selector: 'tm-comment-edit-form',
@@ -7,26 +10,18 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class CommentEditFormComponent implements OnInit {
 
-  @Input()
-  commentText: string = '';
+  //enum
+  CommentVisibilityControl: typeof CommentVisibilityControl = CommentVisibilityControl;
+  FeedbackParticipantType: typeof FeedbackParticipantType = FeedbackParticipantType;
 
-  @Input()
-  isDiscardButtonEnabled: boolean = true;
+  @Input() commentText: string = '';
+  @Input() isDiscardButtonEnabled: boolean = true;
+  @Input() isVisibilityOptionEnabled: boolean = true;
+  @Input() placeholderText: string = 'Enter your comment here';
 
-  @Input()
-  isVisibilityOptionEnabled: boolean = true;
-
-  @Input()
-  placeholderText: string = 'Enter your comment here';
-
-  @Output()
-  closeCommentBoxEvent: EventEmitter<any> = new EventEmitter();
-
-  @Output()
-  commentDetailsChangeEvent: EventEmitter<any> = new EventEmitter();
-
-  @Output()
-  saveCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() closeCommentBoxEvent: EventEmitter<any> = new EventEmitter();
+  @Output() commentDetailsChangeEvent: EventEmitter<any> = new EventEmitter();
+  @Output() saveCommentEvent: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 

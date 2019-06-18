@@ -16,6 +16,21 @@
   </div>
 </div>
 
+<table class="table margin-top-15px background-color-white table-striped" *ngIf="false">
+  <thead>
+  <tr>
+    <th scope="col" class="text-center">User/Group</th>
+    <th scope="col" class="text-center" *ngFor="let commentVisibilityControl of CommentVisibilityControl | enumToArray">{{ commentVisibilityControl | commentVisibilityControlName }}</th>
+  </tr>
+  </thead>
+  <tbody>
+  <ng-container *ngFor="let participantType of FeedbackParticipantType | enumToArray">
+    <tr>{{participantType}}
+    </tr>
+  </ng-container>
+  </tbody>
+</table>
+
 <div style="margin: 10px 0;">
   <input class="form-control"  placeholder={{placeholderText}} type="text" [(ngModel)]=commentText (ngModelChange)="triggerCommentDetailsChange($event)">
 </div>
