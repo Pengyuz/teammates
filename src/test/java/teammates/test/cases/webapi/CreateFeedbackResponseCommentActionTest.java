@@ -123,12 +123,14 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
                 Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ1S1C1.getId(),
         };
 
-        requestBody = new FeedbackResponseCommentUpdateRequest("Comment shown to receiver", "RECEIVER", null);
+        requestBody = new FeedbackResponseCommentUpdateRequest("Comment shown to receiver",
+                Arrays.asList(FeedbackVisibilityType.RECIPIENT), null);
         action = getAction(requestBody, submissionParams);
         getJsonResult(action);
 
         submissionParams = new String[] {
-                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response.getId(),
+                Const.ParamsNames.INTENT, Intent.INSTRUCTOR_RESULT.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ1S1C1.getId(),
         };
 
         requestBody =
@@ -137,7 +139,8 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
         getJsonResult(action);
 
         submissionParams = new String[] {
-                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response.getId(),
+                Const.ParamsNames.INTENT, Intent.INSTRUCTOR_RESULT.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ1S1C1.getId(),
         };
 
         requestBody = new FeedbackResponseCommentUpdateRequest(
@@ -146,7 +149,8 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
         getJsonResult(action);
 
         submissionParams = new String[] {
-                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response.getId(),
+                Const.ParamsNames.INTENT, Intent.INSTRUCTOR_RESULT.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ1S1C1.getId(),
         };
 
         requestBody = new FeedbackResponseCommentUpdateRequest("Comment shown to students", "STUDENTS", null);
