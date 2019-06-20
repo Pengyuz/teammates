@@ -134,7 +134,8 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
         };
 
         requestBody =
-                new FeedbackResponseCommentUpdateRequest("Comment shown to own team members", "OWN_TEAM_MEMBERS", null);
+                new FeedbackResponseCommentUpdateRequest("Comment shown to own team members",
+                        Arrays.asList(FeedbackVisibilityType.GIVER_TEAM_MEMBERS), null);
         action = getAction(requestBody, submissionParams);
         getJsonResult(action);
 
@@ -144,7 +145,8 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
         };
 
         requestBody = new FeedbackResponseCommentUpdateRequest(
-                "Comment shown to receiver team members", "RECEIVER_TEAM_MEMBERS", null);
+                "Comment shown to receiver team members",
+                Arrays.asList(FeedbackVisibilityType.GIVER_TEAM_MEMBERS), null);
         action = getAction(requestBody, submissionParams);
         getJsonResult(action);
 
@@ -153,13 +155,15 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
                 Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ1S1C1.getId(),
         };
 
-        requestBody = new FeedbackResponseCommentUpdateRequest("Comment shown to students", "STUDENTS", null);
+        requestBody = new FeedbackResponseCommentUpdateRequest("Comment shown to students",
+                Arrays.asList(FeedbackVisibilityType.STUDENTS), null);
         action = getAction(requestBody, submissionParams);
         getJsonResult(action);
 
         ______TS("typical successful case for published session");
 
-        FeedbackSessionsLogic.inst().publishFeedbackSession(session.getFeedbackSessionName(), session.getCourseId());
+        FeedbackSessionsLogic.inst().publishFeedbackSession(session1InCourse1.getFeedbackSessionName(),
+                session1InCourse1.getCourseId());
         submissionParams = new String[] {
                 Const.ParamsNames.FEEDBACK_RESPONSE_ID, response.getId(),
         };
