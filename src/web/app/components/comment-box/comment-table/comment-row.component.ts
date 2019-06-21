@@ -1,17 +1,18 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FeedbackResponseCommentModel } from "./comment-table-model";
+import { FeedbackResponseCommentModel } from './comment-table-model';
 
+/**
+ * Comment row component to be used in a comment table
+ */
 @Component({
   selector: 'tm-comment-row',
   templateUrl: './comment-row.component.html',
-  styleUrls: ['./comment-row.component.scss']
+  styleUrls: ['./comment-row.component.scss'],
 })
 export class CommentRowComponent implements OnInit {
-  @Input()
-  isInEditMode: boolean = false;
-
-  @Input()
-  isDiscardButtonEnabled: boolean = true;
+  @Input() isInEditMode: boolean = false;
+  @Input() isVisibilityOptionEnabled: boolean = true;
+  @Input() isDiscardButtonEnabled: boolean = true;
 
   @Input()
   commentModel: FeedbackResponseCommentModel = {
@@ -20,7 +21,7 @@ export class CommentRowComponent implements OnInit {
     createdAt: '',
     editedAt: '',
     responseGiver: '',
-    responseReceipient: '',
+    responseRecipient: '',
   };
 
   @Output()
@@ -34,23 +35,34 @@ export class CommentRowComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  triggerCloseCommentEditForm() {
+  /**
+   * Disable edit mode.
+   */
+  triggerCloseCommentEditForm(): void {
     this.isInEditMode = false;
   }
 
-  triggerSaveComment(data: any) {
-    this.commentModel.commentText = '';
-    this.saveCommentEvent.emit(data);
-  }
-
-  triggerEditCommentEvent() {
+  /**
+   * Change to edit mode.
+   */
+  triggerEditCommentEvent(): void {
     this.isInEditMode = true;
   }
 
-  triggerDeleteCommentEvent() {
+  /**
+   * Triggers the save comment event.
+   */
+  triggerSaveCommentEvent(data: any): void {
+    this.saveCommentEvent.emit(data);
+  }
+
+  /**
+   * Triggers the delete comment event
+   */
+  triggerDeleteCommentEvent(): void {
     this.deleteCommentEvent.emit();
   }
 }

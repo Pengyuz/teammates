@@ -8,7 +8,7 @@ describe('CommentTableModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CommentTableModalComponent ]
+      declarations: [CommentTableModalComponent],
     })
     .compileComponents();
   }));

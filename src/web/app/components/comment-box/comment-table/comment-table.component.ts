@@ -1,32 +1,57 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { ConfirmDeleteCommentModalComponent } from "../confirm-delete-comment-modal/confirm-delete-comment-modal.component";
-import { FeedbackResponseCommentModel } from "./comment-table-model";
+import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmDeleteCommentModalComponent,
+} from '../confirm-delete-comment-modal/confirm-delete-comment-modal.component';
+import { CommentTableMode, FeedbackResponseCommentModel } from './comment-table-model';
 
+/**
+ * Component for the comments table
+ */
 @Component({
   selector: 'tm-comment-table',
   templateUrl: './comment-table.component.html',
-  styleUrls: ['./comment-table.component.scss']
+  styleUrls: ['./comment-table.component.scss'],
 })
 export class CommentTableComponent implements OnInit {
 
+  // enum
+  CommentTableMode: typeof CommentTableMode = CommentTableMode;
+
+  // Determines the mode of the comments table.
+  // In SESSION_RESULT mode, the table shows multiple comments.
+  // In SESSION_SUBMISSION mode, the table only shows a single comment row.
+  @Input()
+  commentTableMode: CommentTableMode = CommentTableMode.SESSION_RESULT;
+
+  // The comments to be displayed in SESSION_RESULT mode.
   @Input()
   comments: FeedbackResponseCommentModel[] = [
-      { commentText: "this is a comment",
-        commentGiver: "Someone",
-        createdAt: "time",
-        editedAt: "time",
-        responseGiver: "responseGiver",
-        responseReceipient: "receipient",
-      },
-      { commentText: "this is another comment",
-        commentGiver: "Someone",
-        createdAt: "time",
-        editedAt: "time",
-        responseGiver: "responseGiver",
-        responseReceipient: "receipient",
-      },
-    ];
+    { commentText: 'this is a comment',
+      commentGiver: 'someone',
+      createdAt: 'time',
+      editedAt: 'time',
+      responseGiver: 'giver',
+      responseRecipient: 'recipient',
+    },
+    { commentText: 'another comment',
+      commentGiver: 'someone',
+      createdAt: 'created at',
+      editedAt: 'time',
+      responseGiver: 'giver',
+      responseRecipient: 'recipient',
+    },
+  ];
+
+  // The comment to be displayed in SESSION_SUBMISSION mode.
+  @Input()
+  comment: FeedbackResponseCommentModel = {
+    commentText: '',
+    commentGiver: '',
+    createdAt: '',
+    editedAt: '',
+    responseGiver: '',
+    responseRecipient: '',
+  };
 
   @Output()
   saveCommentEvent: EventEmitter<any> = new EventEmitter();
@@ -34,47 +59,57 @@ export class CommentTableComponent implements OnInit {
   @Output()
   deleteCommentEvent: EventEmitter<any> = new EventEmitter();
 
+  newComment: FeedbackResponseCommentModel = {
+    commentText: '',
+    commentGiver: '',
+    createdAt: '',
+    editedAt: '',
+    responseGiver: '',
+    responseRecipient: '',
+  };
+
   constructor(private modalService: NgbModal) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  triggerCloseCommentEditFormEvent() {
-    //TODO either close the whole table OR revert back to original comment
+  /**
+   * Triggers the close comment edit form event.
+   */
+  triggerCloseCommentEditFormEvent(): void {
+    // TODO either close the whole table OR revert back to original comment
   }
 
-  triggerDeleteCommentEvent(index: number) {
+  /**
+   * Triggers the delete comment event
+   */
+  triggerDeleteCommentEvent(index: number): void {
     const modalRef: NgbModalRef = this.modalService.open(ConfirmDeleteCommentModalComponent);
 
-    modalRef.result.then( () => {
-        // TODO: parent handling of event
-        this.deleteCommentEvent.emit(index);
+    modalRef.result.then(() => {
+      // TODO: parent handling of event
+      this.deleteCommentEvent.emit(index);
 
-        this.comments.splice(index, 1);
-      }
+      this.comments.splice(index, 1);
+    }
     , () => {});
   }
 
-  triggerSaveCommentEvent(index: number, data: any) {
+  /**
+   * Triggers the save comment event.
+   */
+  triggerSaveCommentEvent(index: number, data: any): void {
     // TODO: parent handling of event and what data to pass through
-    if (index < this.comments.length) {
-      this.comments[index] = {...this.comments[index], commentText: data};
-    } else {
-      // TODO handle new comments
-      // properties other that commentGiver should be handled by parent
-      this.comments.push({ commentText: data,
-        commentGiver: "Someone",
-        createdAt: "time",
-        editedAt: "time",
-        responseGiver: "responseGiver",
-        responseReceipient: "receipient"
-      });
-    }
-
-    this.saveCommentEvent.emit(this.comments);
+    const comments: FeedbackResponseCommentModel[] = this.comments.slice();
+    comments[index] = { ...comments[index], commentText: data };
+    this.saveCommentEvent.emit(comments);
   }
 
-  isTableEmpty(): boolean {
-    return this.comments === undefined || this.comments.length == 0;
+  /**
+   * Triggers the add new comment event.
+   */
+  triggerAddNewComment(data: any): void {
+    // TODO parent handling of new comment
+    this.saveCommentEvent.emit(data);
   }
 }

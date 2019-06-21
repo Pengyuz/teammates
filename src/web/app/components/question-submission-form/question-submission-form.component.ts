@@ -8,6 +8,7 @@ import {
   NumberOfEntitiesToGiveFeedbackToSetting,
 } from '../../../types/api-output';
 import { VisibilityControl } from '../../../types/visibility-control';
+import { CommentTableMode } from '../comment-box/comment-table/comment-table-model';
 import {
   FeedbackResponseRecipient,
   FeedbackResponseRecipientSubmissionFormModel,
@@ -30,6 +31,7 @@ export class QuestionSubmissionFormComponent implements OnInit {
   FeedbackQuestionType: typeof FeedbackQuestionType = FeedbackQuestionType;
   FeedbackParticipantType: typeof FeedbackParticipantType = FeedbackParticipantType;
   FeedbackVisibilityType: typeof FeedbackVisibilityType = FeedbackVisibilityType;
+  CommentTableMode: typeof CommentTableMode = CommentTableMode;
 
   @Input()
   formMode: QuestionSubmissionFormMode = QuestionSubmissionFormMode.FIXED_RECIPIENT;

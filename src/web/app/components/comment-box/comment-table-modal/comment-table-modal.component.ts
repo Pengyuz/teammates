@@ -1,10 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
+/**
+ * Modal for the comments table
+ */
 @Component({
   selector: 'tm-comment-table-modal',
   templateUrl: './comment-table-modal.component.html',
-  styleUrls: ['./comment-table-modal.component.scss']
+  styleUrls: ['./comment-table-modal.component.scss'],
 })
 export class CommentTableModalComponent implements OnInit {
 
@@ -13,7 +16,7 @@ export class CommentTableModalComponent implements OnInit {
 
   constructor(public activeModal: NgbActiveModal) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
 }

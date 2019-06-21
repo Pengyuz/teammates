@@ -2,7 +2,8 @@
   <div class="card-header comment-table-header" *ngIf="false">
     Comments
   </div>
-  <ul class="list-group list-group-flush">
+
+  <ul class="list-group list-group-flush" *ngIf="commentTableMode === CommentTableMode.SESSION_RESULT">
     <li class="list-group-item" *ngFor="let comment of comments; let i = index">
       <tm-comment-row [isInEditMode]="false" [commentModel]="comment"
                       (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent()"
@@ -10,10 +11,22 @@
                       (saveCommentEvent)="triggerSaveCommentEvent(i, $event)"
       ></tm-comment-row>
     </li>
+    <!-- Add new comment row -->
+    <li class="list-group-item">
+      <tm-comment-row [isInEditMode]="true" [isDiscardButtonEnabled]="false" [commentModel]="newComment"
+                      (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent()"
+                      (saveCommentEvent)="triggerAddNewComment($event)"
+      ></tm-comment-row>
+    </li>
+  </ul>
+
+  <ul class="list-group list-group-flush" *ngIf="commentTableMode === CommentTableMode.SESSION_SUBMISSION">
     <li class="list-group-item">
       <tm-comment-row [isInEditMode]="true" [isDiscardButtonEnabled]="false"
+                      [commentModel]="comment"
+                      [isVisibilityOptionEnabled]="false"
                       (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent()"
-                      (saveCommentEvent)="triggerSaveCommentEvent(comments.length, $event)"
+                      (saveCommentEvent)="triggerAddNewComment($event)"
       ></tm-comment-row>
     </li>
   </ul>

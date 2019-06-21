@@ -8,7 +8,7 @@ describe('ConfirmDeleteCommentModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfirmDeleteCommentModalComponent ]
+      declarations: [ConfirmDeleteCommentModalComponent],
     })
     .compileComponents();
   }));

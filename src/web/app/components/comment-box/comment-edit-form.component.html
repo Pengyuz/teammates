@@ -5,10 +5,12 @@
   <div class="col-sm-6">
     <div class="float-right">
       <span>
-        <button *ngIf="isVisibilityOptionEnabled" class="btn btn-info btn-sm"><i class="fas fa-eye-slash"></i> Show Visibility Options</button>
+        <button *ngIf="isVisibilityOptionEnabled" class="btn btn-info btn-sm">
+          <i class="fas fa-eye-slash"></i> Show Visibility Options</button>
       </span>
       <span *ngIf=isDiscardButtonEnabled style="margin-left: 10px;">
-        <button type="button" class="close" aria-label="Close" ngbTooltip='Discard changes to this comment' (click)="triggerCloseCommentBox($event)">
+        <button type="button" class="close" aria-label="Close" ngbTooltip='Discard changes to this comment'
+                (click)="triggerCloseCommentBox($event)">
           <span aria-hidden="true">&times;</span>
         </button>
       </span>
@@ -16,11 +18,13 @@
   </div>
 </div>
 
+<!–– Visibility options table. TODO implement this -->
 <table class="table margin-top-15px background-color-white table-striped" *ngIf="false">
   <thead>
   <tr>
     <th scope="col" class="text-center">User/Group</th>
-    <th scope="col" class="text-center" *ngFor="let commentVisibilityControl of CommentVisibilityControl | enumToArray">{{ commentVisibilityControl | commentVisibilityControlName }}</th>
+    <th scope="col" class="text-center" *ngFor="let commentVisibilityControl of CommentVisibilityControl | enumToArray">
+      {{ commentVisibilityControl | commentVisibilityControlName }}</th>
   </tr>
   </thead>
   <tbody>
@@ -32,7 +36,8 @@
 </table>
 
 <div style="margin: 10px 0;">
-  <input class="form-control"  placeholder={{placeholderText}} type="text" [(ngModel)]=commentText (ngModelChange)="triggerCommentDetailsChange($event)">
+  <input class="form-control"  placeholder={{placeholderText}} type="text" [ngModel]=commentText
+         (ngModelChange)="triggerCommentTextChange($event)">
 </div>
 
 <button type="button" class="btn btn-secondary btn-sm float-right"  ngbTooltip='Save this comment'

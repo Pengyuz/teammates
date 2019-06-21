@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { FeedbackParticipantType, FeedbackVisibilityType } from '../../../types/api-output';
-import { CommentVisibilityControl } from "../../../types/comment-visibility-control";
+import { CommentVisibilityControl } from '../../../types/comment-visibility-control';
 
 /**
  * Pipe to handle the simple display of {@link CommentVisibilityControl}.

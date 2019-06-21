@@ -101,7 +101,7 @@
                   <i class="fas fa-comment"></i> Comment on your response
                 </button>
               </div>
-              <tm-comment-table *ngIf="isCommentTableEnabled[i]"
+              <tm-comment-table *ngIf="isCommentTableEnabled[i]" [commentTableMode]="CommentTableMode.SESSION_SUBMISSION"
                                 (saveCommentEvent)="triggerRecipientSubmissionFormChange(i, 'commentForms', $event)"
               ></tm-comment-table>
            <div>

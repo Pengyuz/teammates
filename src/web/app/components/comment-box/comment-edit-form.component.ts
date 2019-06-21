@@ -1,16 +1,18 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { VisibilityStateMachine } from "../../../services/visibility-state-machine";
-import { FeedbackParticipantType } from "../../../types/api-output";
+import { FeedbackParticipantType } from '../../../types/api-output';
 import { CommentVisibilityControl } from '../../../types/comment-visibility-control';
 
+/**
+ * Comment edit form component
+ */
 @Component({
   selector: 'tm-comment-edit-form',
   templateUrl: './comment-edit-form.component.html',
-  styleUrls: ['./comment-edit-form.component.scss']
+  styleUrls: ['./comment-edit-form.component.scss'],
 })
 export class CommentEditFormComponent implements OnInit {
 
-  //enum
+  // enum
   CommentVisibilityControl: typeof CommentVisibilityControl = CommentVisibilityControl;
   FeedbackParticipantType: typeof FeedbackParticipantType = FeedbackParticipantType;
 
@@ -23,26 +25,36 @@ export class CommentEditFormComponent implements OnInit {
   @Output() commentDetailsChangeEvent: EventEmitter<any> = new EventEmitter();
   @Output() saveCommentEvent: EventEmitter<any> = new EventEmitter();
 
+  updatedCommentText: string = '';
+
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
   }
 
-  triggerCommentDetailsChange(data: any) {
-    this.commentDetailsChangeEvent.emit(data);
+  /**
+   * Updates the comment text
+   */
+  triggerCommentTextChange(data: any): void {
+    this.updatedCommentText = data;
   }
 
-  triggerCloseCommentBox(data: any) {
+  /**
+   * Triggers close comment box event.
+   */
+  triggerCloseCommentBox(data: any): void {
     this.closeCommentBoxEvent.emit(data);
   }
 
-  triggerSaveComment(){
-    if (this.commentText.trim() == '') {
+  /**
+   * Triggers save comment event.
+   */
+  triggerSaveComment(): void {
+    if (this.updatedCommentText.trim() === '') {
       return;
     }
 
-    this.saveCommentEvent.emit(this.commentText);
-    this.commentText = '';
+    this.saveCommentEvent.emit(this.updatedCommentText);
   }
 
 }
