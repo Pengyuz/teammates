@@ -30,31 +30,26 @@ export class CommentEditFormComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-  }
-
-  /**
-   * Updates the comment text
-   */
-  triggerCommentTextChange(data: any): void {
-    this.updatedCommentText = data;
+    this.updatedCommentText = this.commentText;
   }
 
   /**
    * Triggers close comment box event.
    */
-  triggerCloseCommentBox(data: any): void {
+  triggerCloseCommentBoxEvent(data: any): void {
     this.closeCommentBoxEvent.emit(data);
   }
 
   /**
    * Triggers save comment event.
    */
-  triggerSaveComment(): void {
+  triggerSaveCommentEvent(): void {
     if (this.updatedCommentText.trim() === '') {
       return;
     }
 
     this.saveCommentEvent.emit(this.updatedCommentText);
+    this.updatedCommentText = '';
   }
 
 }

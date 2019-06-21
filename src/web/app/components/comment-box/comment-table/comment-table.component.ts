@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmDeleteCommentModalComponent,
-} from '../confirm-delete-comment-modal/confirm-delete-comment-modal.component';
+import { ConfirmDeleteCommentModalComponent } from '../confirm-delete-comment-modal/confirm-delete-comment-modal.component';
 import { CommentTableMode, FeedbackResponseCommentModel } from './comment-table-model';
 
 /**
@@ -22,7 +21,6 @@ export class CommentTableComponent implements OnInit {
   // In SESSION_SUBMISSION mode, the table only shows a single comment row.
   @Input() commentTableMode: CommentTableMode = CommentTableMode.SESSION_RESULT;
 
-  // The comments to be displayed in SESSION_RESULT mode.
   @Input()
   comments: FeedbackResponseCommentModel[] = [
     { commentText: 'this is a comment',
@@ -31,43 +29,19 @@ export class CommentTableComponent implements OnInit {
       editedAt: 'time',
       responseGiver: 'giver',
       responseRecipient: 'recipient',
-    },
-    { commentText: 'another comment',
-      commentGiver: 'someone',
-      createdAt: 'created at',
-      editedAt: 'time',
-      responseGiver: 'giver',
-      responseRecipient: 'recipient',
+      isInEditMode: false,
+      isEditable: true,
     },
   ];
 
-  // The comment to be displayed in SESSION_SUBMISSION mode.
-  @Input()
-  comment: FeedbackResponseCommentModel = {
-    commentText: '',
-    commentGiver: '',
-    createdAt: '',
-    editedAt: '',
-    responseGiver: '',
-    responseRecipient: '',
-  };
-
   @Output()
-  saveCommentEvent: EventEmitter<any> = new EventEmitter();
+  saveNewCommentEvent: EventEmitter<any> = new EventEmitter();
 
   @Output()
   deleteCommentEvent: EventEmitter<any> = new EventEmitter();
 
-  newComment: FeedbackResponseCommentModel = {
-    commentText: '',
-    commentGiver: '',
-    createdAt: '',
-    editedAt: '',
-    responseGiver: '',
-    responseRecipient: '',
-  };
-
-  isInEditMode: boolean[] = [];
+  @Output()
+  updateCommentEvent: EventEmitter<any> = new EventEmitter();
 
   constructor(private modalService: NgbModal) { }
 
@@ -77,16 +51,8 @@ export class CommentTableComponent implements OnInit {
   /**
    * Triggers the close comment edit form event.
    */
-  triggerCloseCommentEditFormEvent(index: number): void {
-    // TODO either close the whole table OR revert back to original comment
-    this.isInEditMode[index] = false;
-  }
-
-  /**
-   * Triggers the edit form event
-   */
-  triggerEditFormEvent(index: number): void {
-    this.isInEditMode[index] = true;
+  triggerCloseCommentEditFormEvent(comment: FeedbackResponseCommentModel): void {
+    comment.isInEditMode = false;
   }
 
   /**
@@ -99,26 +65,35 @@ export class CommentTableComponent implements OnInit {
       // TODO: parent handling of event
       this.deleteCommentEvent.emit(index);
 
+      // TODO: remove this
       this.comments.splice(index, 1);
     }
     , () => {});
   }
 
   /**
-   * Triggers the save comment event.
+   * Triggers the update comment event.
    */
-  triggerSaveCommentEvent(index: number, data: any): void {
-    // TODO: parent handling of event and what data to pass through
+  triggerUpdateCommentEvent(index: number, data: any): void {
+    // TODO: parent handling of event
     const comments: FeedbackResponseCommentModel[] = this.comments.slice();
-    comments[index] = { ...comments[index], commentText: data };
-    this.saveCommentEvent.emit(comments);
+    comments[index] = { ...comments[index], commentText: data , isInEditMode: false};
+    this.updateCommentEvent.emit(comments);
+  }
+
+  /**
+   * Toggles the comment model to edit mode.
+   */
+  triggerEditCommentEvent(comment: FeedbackResponseCommentModel): void {
+    comment.isInEditMode = true;
   }
 
   /**
    * Triggers the add new comment event.
    */
-  triggerAddNewComment(data: any): void {
+  triggerSaveNewCommentEvent(data: any): void {
     // TODO parent handling of new comment
-    this.saveCommentEvent.emit(data);
+
+    this.saveNewCommentEvent.emit(data);
   }
 }

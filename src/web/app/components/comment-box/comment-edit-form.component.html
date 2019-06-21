@@ -10,7 +10,7 @@
       </span>
       <span *ngIf=isDiscardButtonEnabled style="margin-left: 10px;">
         <button type="button" class="close" aria-label="Close" ngbTooltip='Discard changes to this comment'
-                (click)="triggerCloseCommentBox($event)">
+                (click)="triggerCloseCommentBoxEvent($event)">
           <span aria-hidden="true">&times;</span>
         </button>
       </span>
@@ -36,9 +36,8 @@
 </table>
 
 <div style="margin: 10px 0;">
-  <input class="form-control"  placeholder={{placeholderText}} type="text" [ngModel]=commentText
-         (ngModelChange)="triggerCommentTextChange($event)">
+  <input class="form-control"  placeholder={{placeholderText}} type="text" [(ngModel)]=updatedCommentText>
 </div>
 
 <button type="button" class="btn btn-secondary btn-sm float-right"  ngbTooltip='Save this comment'
-        (click)="triggerSaveComment()"><i class="fas fa-save"></i> Save</button>
+        (click)="triggerSaveCommentEvent()"><i class="fas fa-save"></i> Save</button>

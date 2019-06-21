@@ -22,6 +22,8 @@ export class CommentRowComponent implements OnInit {
     editedAt: '',
     responseGiver: '',
     responseRecipient: '',
+    isInEditMode: false,
+    isEditable: false,
   };
 
   @Output()

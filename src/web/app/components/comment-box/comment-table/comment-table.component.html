@@ -5,29 +5,28 @@
 
   <ul class="list-group list-group-flush" *ngIf="commentTableMode === CommentTableMode.SESSION_RESULT">
     <li class="list-group-item" *ngFor="let comment of comments; let i = index">
-      <tm-comment-row [isInEditMode]="isInEditMode[i]" [commentModel]="comment"
-                      (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent(i)"
-                      (editCommentEvent)="triggerEditFormEvent(i)"
+      <tm-comment-row [isInEditMode]="comment.isInEditMode" [commentModel]="comment"
+                      (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent(comment)"
+                      (editCommentEvent)="triggerEditCommentEvent(comment)"
                       (deleteCommentEvent)="triggerDeleteCommentEvent(i)"
-                      (saveCommentEvent)="triggerSaveCommentEvent(i, $event)"
+                      (saveCommentEvent)="triggerUpdateCommentEvent(i, $event)"
       ></tm-comment-row>
     </li>
-    <!-- Add new comment row -->
+    <!-- "Add new comment" row -->
     <li class="list-group-item">
-      <tm-comment-row [isInEditMode]="true" [isDiscardButtonEnabled]="false" [commentModel]="newComment"
-                      (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent()"
-                      (saveCommentEvent)="triggerAddNewComment($event)"
+      <tm-comment-row [isInEditMode]="true" [isDiscardButtonEnabled]="false"
+                      (saveCommentEvent)="triggerSaveNewCommentEvent($event)"
       ></tm-comment-row>
     </li>
   </ul>
 
   <ul class="list-group list-group-flush" *ngIf="commentTableMode === CommentTableMode.SESSION_SUBMISSION">
     <li class="list-group-item">
-      <tm-comment-row [isInEditMode]="true" [isDiscardButtonEnabled]="false"
-                      [commentModel]="comment"
+      <tm-comment-row [isInEditMode]="comments[0].isInEditMode" [isDiscardButtonEnabled]="false"
+                      [commentModel]="comments[0]"
                       [isVisibilityOptionEnabled]="false"
-                      (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent()"
-                      (saveCommentEvent)="triggerAddNewComment($event)"
+                      (editCommentEvent)="triggerEditCommentEvent(comments[0])"
+                      (saveCommentEvent)="triggerUpdateCommentEvent(0, $event)"
       ></tm-comment-row>
     </li>
   </ul>
