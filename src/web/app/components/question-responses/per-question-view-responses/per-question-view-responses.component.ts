@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { InstructorSessionResultSectionType,
+import {
+  InstructorSessionResultSectionType,
 } from '../../../pages-instructor/instructor-session-result-page/instructor-session-result-section-type.enum';
 import { CommentTableModalComponent } from '../../comment-box/comment-table-modal/comment-table-modal.component';
 
