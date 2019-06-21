@@ -20,8 +20,7 @@ export class CommentTableComponent implements OnInit {
   // Determines the mode of the comments table.
   // In SESSION_RESULT mode, the table shows multiple comments.
   // In SESSION_SUBMISSION mode, the table only shows a single comment row.
-  @Input()
-  commentTableMode: CommentTableMode = CommentTableMode.SESSION_RESULT;
+  @Input() commentTableMode: CommentTableMode = CommentTableMode.SESSION_RESULT;
 
   // The comments to be displayed in SESSION_RESULT mode.
   @Input()
@@ -68,6 +67,8 @@ export class CommentTableComponent implements OnInit {
     responseRecipient: '',
   };
 
+  isInEditMode: boolean[] = [];
+
   constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
@@ -76,8 +77,16 @@ export class CommentTableComponent implements OnInit {
   /**
    * Triggers the close comment edit form event.
    */
-  triggerCloseCommentEditFormEvent(): void {
+  triggerCloseCommentEditFormEvent(index: number): void {
     // TODO either close the whole table OR revert back to original comment
+    this.isInEditMode[index] = false;
+  }
+
+  /**
+   * Triggers the edit form event
+   */
+  triggerEditFormEvent(index: number): void {
+    this.isInEditMode[index] = true;
   }
 
   /**

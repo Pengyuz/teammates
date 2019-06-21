@@ -5,8 +5,9 @@
 
   <ul class="list-group list-group-flush" *ngIf="commentTableMode === CommentTableMode.SESSION_RESULT">
     <li class="list-group-item" *ngFor="let comment of comments; let i = index">
-      <tm-comment-row [isInEditMode]="false" [commentModel]="comment"
-                      (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent()"
+      <tm-comment-row [isInEditMode]="isInEditMode[i]" [commentModel]="comment"
+                      (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent(i)"
+                      (editCommentEvent)="triggerEditFormEvent(i)"
                       (deleteCommentEvent)="triggerDeleteCommentEvent(i)"
                       (saveCommentEvent)="triggerSaveCommentEvent(i, $event)"
       ></tm-comment-row>
