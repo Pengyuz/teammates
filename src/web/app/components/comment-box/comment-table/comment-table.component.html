@@ -3,7 +3,7 @@
     Comments
   </div>
 
-  <ul class="list-group list-group-flush" *ngIf="commentTableMode === CommentTableMode.SESSION_RESULT">
+  <ul class="list-group list-group-flush">
     <li class="list-group-item" *ngFor="let comment of comments; let i = index">
       <tm-comment-row [isInEditMode]="comment.isInEditMode" [commentModel]="comment"
                       (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent(comment)"
@@ -20,14 +20,4 @@
     </li>
   </ul>
 
-  <ul class="list-group list-group-flush" *ngIf="commentTableMode === CommentTableMode.SESSION_SUBMISSION">
-    <li class="list-group-item">
-      <tm-comment-row [isInEditMode]="comments[0].isInEditMode" [isDiscardButtonEnabled]="false"
-                      [commentModel]="comments[0]"
-                      [isVisibilityOptionEnabled]="false"
-                      (editCommentEvent)="triggerEditCommentEvent(comments[0])"
-                      (saveCommentEvent)="triggerUpdateCommentEvent(0, $event)"
-      ></tm-comment-row>
-    </li>
-  </ul>
 </div>

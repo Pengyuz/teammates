@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmDeleteCommentModalComponent } from '../confirm-delete-comment-modal/confirm-delete-comment-modal.component';
-import { CommentTableMode, FeedbackResponseCommentModel } from './comment-table-model';
+import { FeedbackResponseCommentModel } from './comment-table-model';
 
 /**
  * Component for the comments table
@@ -12,14 +12,6 @@ import { CommentTableMode, FeedbackResponseCommentModel } from './comment-table-
   styleUrls: ['./comment-table.component.scss'],
 })
 export class CommentTableComponent implements OnInit {
-
-  // enum
-  CommentTableMode: typeof CommentTableMode = CommentTableMode;
-
-  // Determines the mode of the comments table.
-  // In SESSION_RESULT mode, the table shows multiple comments.
-  // In SESSION_SUBMISSION mode, the table only shows a single comment row.
-  @Input() commentTableMode: CommentTableMode = CommentTableMode.SESSION_RESULT;
 
   @Input()
   comments: FeedbackResponseCommentModel[] = [
