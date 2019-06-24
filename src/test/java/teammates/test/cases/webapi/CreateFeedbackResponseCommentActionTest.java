@@ -45,11 +45,11 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
 
     @Override
     protected void prepareTestData() {
+        removeAndRestoreTypicalDataBundle();
+        session1InCourse1 = typicalBundle.feedbackSessions.get("session1InCourse1");
         FeedbackQuestionAttributes qn1InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 1);
         StudentAttributes student1InCourse1 = typicalBundle.students.get("student1InCourse1");
-        removeAndRestoreTypicalDataBundle();
-        session1InCourse1 = typicalBundle.feedbackSessions.get("session1InCourse1");
         response1ForQ1S1C1 = logic.getFeedbackResponse(qn1InSession1InCourse1.getId(),
                 student1InCourse1.getEmail(), student1InCourse1.getEmail());
         instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
