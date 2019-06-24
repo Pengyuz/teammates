@@ -123,6 +123,17 @@ public class FeedbackResponseCommentsDb extends EntitiesDb<FeedbackResponseComme
     }
 
     /**
+     *  Gets all response comments for a response from participant.
+     */
+    public List<FeedbackResponseCommentAttributes> getFeedbackResponseCommentForResponseFromParticipant(
+            String feedbackResponseId, boolean isFromParticipant) {
+        Assumption.assertNotNull(Const.StatusCodes.DBLEVEL_NULL_INPUT, feedbackResponseId);
+        Assumption.assertNotNull(Const.StatusCodes.DBLEVEL_NULL_INPUT, isFromParticipant);
+        return makeAttributes(getFeedbackResponseCommentEntitiesForResponseFromParticipant(feedbackResponseId,
+                isFromParticipant));
+    }
+
+    /**
      * Gets all comments in a feedback session of a course.
      */
     public List<FeedbackResponseCommentAttributes> getFeedbackResponseCommentsForSession(
@@ -359,6 +370,14 @@ public class FeedbackResponseCommentsDb extends EntitiesDb<FeedbackResponseComme
 
     private Query<FeedbackResponseComment> getFeedbackResponseCommentsForResponseQuery(String feedbackResponseId) {
         return load().filter("feedbackResponseId =", feedbackResponseId);
+    }
+
+    private List<FeedbackResponseComment> getFeedbackResponseCommentEntitiesForResponseFromParticipant(
+            String feedbackResponseId, boolean isFromParticipant) {
+        return load()
+                .filter("feedbackResponseId =", feedbackResponseId)
+                .filter("isCommentFromFeedbackParticipant =", Boolean.toString(isFromParticipant))
+                .list();
     }
 
     private List<FeedbackResponseComment> getFeedbackResponseCommentEntitiesForResponse(String feedbackResponseId) {

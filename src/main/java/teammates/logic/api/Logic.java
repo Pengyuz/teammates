@@ -1870,6 +1870,20 @@ public class Logic {
         return feedbackResponseCommentsLogic.getFeedbackResponseCommentsForGiver(courseId, giverEmail);
     }
 
+    public List<FeedbackResponseCommentAttributes> getFeedbackResponseCommentsForResponse(String feedbackResponseId) {
+        Assumption.assertNotNull(feedbackResponseId);
+
+        return feedbackResponseCommentsLogic.getFeedbackResponseCommentForResponse(feedbackResponseId);
+    }
+
+    public List<FeedbackResponseCommentAttributes> getFeedbackResponseCommentsForResponseFromParticipant(
+            String feedbackResponseId, Boolean isFromParticipant) {
+        Assumption.assertNotNull(feedbackResponseId);
+        Assumption.assertNotNull(isFromParticipant);
+        return feedbackResponseCommentsLogic.getFeedbackResponseCommentForResponseFromParticipant(feedbackResponseId,
+                isFromParticipant);
+    }
+
     /**
      * Creates or updates document for the given comment.
      *

@@ -1,7 +1,6 @@
 package teammates.ui.webapi.action;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpStatus;
@@ -11,8 +10,10 @@ import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
+import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.EntityNotFoundException;
+import teammates.common.exception.InvalidHttpParameterException;
 import teammates.common.exception.InvalidParametersException;
 import teammates.common.util.Assumption;
 import teammates.common.util.Const;
@@ -41,21 +42,35 @@ public class UpdateFeedbackResponseCommentAction extends Action {
 
         String courseId = frc.courseId;
         String feedbackResponseId = frc.feedbackResponseId;
-
-        InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.id);
         FeedbackResponseAttributes response = logic.getFeedbackResponse(feedbackResponseId);
-        Assumption.assertNotNull(response);
-
-        if (instructor != null && frc.commentGiver.equals(instructor.email)) { // giver, allowed by default
-            return;
-        }
-
         String feedbackSessionName = frc.feedbackSessionName;
         FeedbackSessionAttributes session = logic.getFeedbackSession(feedbackSessionName, courseId);
-        gateKeeper.verifyAccessible(instructor, session, response.giverSection,
-                Const.ParamsNames.INSTRUCTOR_PERMISSION_MODIFY_SESSION_COMMENT_IN_SECTIONS);
-        gateKeeper.verifyAccessible(instructor, session, response.recipientSection,
-                Const.ParamsNames.INSTRUCTOR_PERMISSION_MODIFY_SESSION_COMMENT_IN_SECTIONS);
+        Assumption.assertNotNull(response);
+        Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
+        switch (intent) {
+        case STUDENT_SUBMISSION:
+            StudentAttributes student = logic.getStudentForGoogleId(courseId, userInfo.id);
+            Assumption.assertNotNull(student);
+            gateKeeper.verifyOwnership(frc, student.email);
+            break;
+        case INSTRUCTOR_SUBMISSION:
+            InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId, userInfo.id);
+            Assumption.assertNotNull(instructor1);
+            gateKeeper.verifyOwnership(frc, instructor1.email);
+            break;
+        case INSTRUCTOR_RESULT:
+            InstructorAttributes instructor2 = logic.getInstructorForGoogleId(courseId, userInfo.id);
+            if (instructor2 != null && frc.commentGiver.equals(instructor2.email)) { // giver, allowed by default
+                return;
+            }
+            gateKeeper.verifyAccessible(instructor2, session, response.giverSection,
+                    Const.ParamsNames.INSTRUCTOR_PERMISSION_MODIFY_SESSION_COMMENT_IN_SECTIONS);
+            gateKeeper.verifyAccessible(instructor2, session, response.recipientSection,
+                    Const.ParamsNames.INSTRUCTOR_PERMISSION_MODIFY_SESSION_COMMENT_IN_SECTIONS);
+            break;
+        default:
+            throw new InvalidHttpParameterException("Unknown intent " + intent);
+        }
     }
 
     @Override
@@ -69,9 +84,26 @@ public class UpdateFeedbackResponseCommentAction extends Action {
         }
 
         String feedbackResponseId = frc.feedbackResponseId;
-
+        String courseId = frc.courseId;
         FeedbackResponseAttributes response = logic.getFeedbackResponse(feedbackResponseId);
         Assumption.assertNotNull(response);
+
+        Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
+        String email;
+
+        switch (intent) {
+        case STUDENT_SUBMISSION:
+            StudentAttributes student = logic.getStudentForGoogleId(courseId, userInfo.id);
+            email = student.getEmail();
+            break;
+        case INSTRUCTOR_SUBMISSION:
+        case INSTRUCTOR_RESULT:
+            InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.id);
+            email = instructor.getEmail();
+            break;
+        default:
+            throw new InvalidHttpParameterException("Unknown intent " + intent);
+        }
 
         FeedbackResponseCommentUpdateRequest comment = getAndValidateRequestBody(FeedbackResponseCommentUpdateRequest.class);
 
@@ -84,18 +116,15 @@ public class UpdateFeedbackResponseCommentAction extends Action {
         List<FeedbackParticipantType> showCommentTo = comment.getShowCommentTo();
         List<FeedbackParticipantType> showGiverNameTo = comment.getShowGiverNameTo();
 
-        String courseId = frc.courseId;
-        InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.id);
         FeedbackResponseCommentAttributes.UpdateOptions.Builder commentUpdateOptions =
                 FeedbackResponseCommentAttributes.updateOptionsBuilder(feedbackResponseCommentId)
                         .withCommentText(commentText)
                         .withShowCommentTo(showCommentTo)
                         .withShowGiverNameTo(showGiverNameTo)
-                        .withLastEditorEmail(instructor.email)
+                        .withLastEditorEmail(email)
                         .withLastEditorAt(Instant.now());
 
         // edit visibility settings
-
 
         FeedbackResponseCommentAttributes updatedComment = null;
         try {

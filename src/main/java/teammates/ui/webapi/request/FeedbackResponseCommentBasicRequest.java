@@ -1,11 +1,11 @@
 package teammates.ui.webapi.request;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.util.Assumption;
 import teammates.ui.webapi.output.FeedbackVisibilityType;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The basic request of modifying a feedback response comment.
@@ -28,8 +28,6 @@ public class FeedbackResponseCommentBasicRequest extends BasicRequest {
     @Override
     public void validate() {
         assertTrue(commentText != null, "Comment Text can't be null");
-//        assertTrue(showCommentTo != null, "showCommentTo can't be null");
-//        assertTrue( showGiverNameTo != null, "showGiverNameTo can't be null");
     }
 
     public String getCommentText() {
@@ -51,13 +49,21 @@ public class FeedbackResponseCommentBasicRequest extends BasicRequest {
             List<FeedbackVisibilityType> feedbackVisibilityTypes) {
         return feedbackVisibilityTypes.stream().map(feedbackVisibilityType -> {
             switch (feedbackVisibilityType) {
-                case INSTRUCTORS:
-                    return FeedbackParticipantType.INSTRUCTORS;
-                case GIVER:
-                    return FeedbackParticipantType.GIVER;
-                default:
-                    Assumption.fail("Unknown feedbackVisibilityType" + feedbackVisibilityType);
-                    break;
+            case INSTRUCTORS:
+                return FeedbackParticipantType.INSTRUCTORS;
+            case STUDENTS:
+                return FeedbackParticipantType.STUDENTS;
+            case GIVER:
+                return FeedbackParticipantType.GIVER;
+            case RECIPIENT:
+                return FeedbackParticipantType.RECEIVER;
+            case GIVER_TEAM_MEMBERS:
+                return FeedbackParticipantType.OWN_TEAM_MEMBERS;
+            case RECIPIENT_TEAM_MEMBERS:
+                return FeedbackParticipantType.RECEIVER_TEAM_MEMBERS;
+            default:
+                Assumption.fail("Unknown feedbackVisibilityType" + feedbackVisibilityType);
+                break;
             }
             return null;
         }).collect(Collectors.toList());

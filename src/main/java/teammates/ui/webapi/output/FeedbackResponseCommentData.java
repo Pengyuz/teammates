@@ -1,11 +1,11 @@
 package teammates.ui.webapi.output;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.util.Assumption;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The API output format of {@link teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes}.
@@ -38,13 +38,21 @@ public class FeedbackResponseCommentData extends ApiOutput {
             List<FeedbackParticipantType> feedbackParticipantTypeList) {
         return feedbackParticipantTypeList.stream().map(feedbackParticipantType -> {
             switch (feedbackParticipantType) {
-                case INSTRUCTORS:
-                    return FeedbackVisibilityType.INSTRUCTORS;
-                case GIVER:
-                    return FeedbackVisibilityType.GIVER;
-                default:
-                    Assumption.fail("Unknown feedbackParticipantType" + feedbackParticipantType);
-                    break;
+            case INSTRUCTORS:
+                return FeedbackVisibilityType.INSTRUCTORS;
+            case STUDENTS:
+                return FeedbackVisibilityType.STUDENTS;
+            case GIVER:
+                return FeedbackVisibilityType.GIVER;
+            case OWN_TEAM_MEMBERS:
+                return FeedbackVisibilityType.GIVER_TEAM_MEMBERS;
+            case RECEIVER:
+                return FeedbackVisibilityType.RECIPIENT;
+            case RECEIVER_TEAM_MEMBERS:
+                return FeedbackVisibilityType.RECIPIENT_TEAM_MEMBERS;
+            default:
+                Assumption.fail("Unknown feedbackParticipantType" + feedbackParticipantType);
+                break;
             }
             return null;
         }).collect(Collectors.toList());

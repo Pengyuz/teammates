@@ -1,12 +1,13 @@
 package teammates.ui.webapi.action;
 
-import java.util.ArrayList;
-
 import org.apache.http.HttpStatus;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.*;
-import teammates.common.datatransfer.questions.FeedbackQuestionType;
+import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
+import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
+import teammates.common.datatransfer.attributes.InstructorAttributes;
+import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.exception.EntityAlreadyExistsException;
 import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.InvalidHttpParameterException;
@@ -34,30 +35,30 @@ public class CreateFeedbackResponseCommentAction extends Action {
 
         String courseId = response.courseId;
         String feedbackSessionName = response.feedbackSessionName;
-        FeedbackSessionAttributes session = logic.getFeedbackSession(feedbackSessionName,courseId);
+        FeedbackSessionAttributes session = logic.getFeedbackSession(feedbackSessionName, courseId);
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
 
         switch (intent) {
-            case STUDENT_SUBMISSION:
-                StudentAttributes studentAttributes = logic.getStudentForGoogleId(courseId, userInfo.getId());
-                gateKeeper.verifyAccessible(studentAttributes,session);
-                break;
-            case INSTRUCTOR_SUBMISSION:
-                InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId,userInfo.getId());
-                gateKeeper.verifyAccessible(instructor,session,response.giverSection,
-                        Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
-                gateKeeper.verifyAccessible(instructor, session, response.recipientSection,
-                        Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
-                break;
-            case INSTRUCTOR_RESULT:
-                InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId,userInfo.getId());
-                gateKeeper.verifyAccessible(instructor1,session,response.giverSection,
-                        Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
-                gateKeeper.verifyAccessible(instructor1, session, response.recipientSection,
-                        Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
-                break;
-            default:
-                throw new InvalidHttpParameterException("Unknown intent " + intent);
+        case STUDENT_SUBMISSION:
+            StudentAttributes studentAttributes = logic.getStudentForGoogleId(courseId, userInfo.getId());
+            gateKeeper.verifyAccessible(studentAttributes, session);
+            break;
+        case INSTRUCTOR_SUBMISSION:
+            InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.getId());
+            gateKeeper.verifyAccessible(instructor, session, response.giverSection,
+                    Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
+            gateKeeper.verifyAccessible(instructor, session, response.recipientSection,
+                    Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
+            break;
+        case INSTRUCTOR_RESULT:
+            InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId, userInfo.getId());
+            gateKeeper.verifyAccessible(instructor1, session, response.giverSection,
+                    Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
+            gateKeeper.verifyAccessible(instructor1, session, response.recipientSection,
+                    Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
+            break;
+        default:
+            throw new InvalidHttpParameterException("Unknown intent " + intent);
         }
     }
 
@@ -76,28 +77,29 @@ public class CreateFeedbackResponseCommentAction extends Action {
         }
 
         String courseId = response.courseId;
-        String feedbackQuestionId = response.feedbackQuestionId;
-        String feedbackSessionName = response.feedbackSessionName;
         String email;
 
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
 
         switch (intent) {
-            case STUDENT_SUBMISSION:
-                StudentAttributes student = logic.getStudentForGoogleId(courseId, userInfo.getId());
-                email = student.getEmail();
-                break;
-            case INSTRUCTOR_SUBMISSION:
-                InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId,userInfo.getId());
-                email = instructor.getEmail();
-                break;
-            case INSTRUCTOR_RESULT:
-                InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId,userInfo.getId());
-                email = instructor1.getEmail();
-                break;
-            default:
-                throw new InvalidHttpParameterException("Unknown intent " + intent);
+        case STUDENT_SUBMISSION:
+            StudentAttributes student = logic.getStudentForGoogleId(courseId, userInfo.getId());
+            email = student.getEmail();
+            break;
+        case INSTRUCTOR_SUBMISSION:
+            InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.getId());
+            email = instructor.getEmail();
+            break;
+        case INSTRUCTOR_RESULT:
+            InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId, userInfo.getId());
+            email = instructor1.getEmail();
+            break;
+        default:
+            throw new InvalidHttpParameterException("Unknown intent " + intent);
         }
+
+        String feedbackQuestionId = response.feedbackQuestionId;
+        String feedbackSessionName = response.feedbackSessionName;
 
         FeedbackResponseCommentAttributes feedbackResponseComment = FeedbackResponseCommentAttributes
                 .builder()

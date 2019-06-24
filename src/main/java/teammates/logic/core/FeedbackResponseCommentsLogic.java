@@ -76,6 +76,11 @@ public final class FeedbackResponseCommentsLogic {
         return frcDb.getFeedbackResponseCommentsForResponse(feedbackResponseId);
     }
 
+    public List<FeedbackResponseCommentAttributes> getFeedbackResponseCommentForResponseFromParticipant(
+            String feedbackResponseId, boolean isFromParticipant) {
+        return frcDb.getFeedbackResponseCommentForResponseFromParticipant(feedbackResponseId, isFromParticipant);
+    }
+
     public List<FeedbackResponseCommentAttributes> getFeedbackResponseCommentForSession(String courseId,
                                                                                         String feedbackSessionName) {
         return frcDb.getFeedbackResponseCommentsForSession(courseId, feedbackSessionName);

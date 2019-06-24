@@ -1,8 +1,8 @@
 package teammates.ui.webapi.request;
 
-import teammates.ui.webapi.output.FeedbackVisibilityType;
-
 import java.util.List;
+
+import teammates.ui.webapi.output.FeedbackVisibilityType;
 
 /**
  * The create request of a feedback response comment.
