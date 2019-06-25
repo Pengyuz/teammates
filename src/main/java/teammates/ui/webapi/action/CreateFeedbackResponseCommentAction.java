@@ -20,7 +20,7 @@ import teammates.ui.webapi.request.FeedbackResponseCommentCreateRequest;
 /**
  * Creates a new feedback response comment.
  */
-public class CreateFeedbackResponseCommentAction extends Action {
+public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmissionAction {
 
     @Override
     protected AuthType getMinAuthLevel() {

@@ -32,6 +32,8 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
     private FeedbackSessionAttributes session1InCourse1;
     private InstructorAttributes instructor1OfCourse1;
     private FeedbackResponseAttributes response1ForQ1S1C1;
+    private StudentAttributes student1InCourse1;
+    private FeedbackQuestionAttributes qn1InSession1InCourse1;
 
     @Override
     protected String getActionUri() {
@@ -47,13 +49,12 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
     protected void prepareTestData() {
         removeAndRestoreTypicalDataBundle();
         session1InCourse1 = typicalBundle.feedbackSessions.get("session1InCourse1");
-        FeedbackQuestionAttributes qn1InSession1InCourse1 = logic.getFeedbackQuestion(
+        qn1InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 1);
-        StudentAttributes student1InCourse1 = typicalBundle.students.get("student1InCourse1");
+        student1InCourse1 = typicalBundle.students.get("student1InCourse1");
         response1ForQ1S1C1 = logic.getFeedbackResponse(qn1InSession1InCourse1.getId(),
                 student1InCourse1.getEmail(), student1InCourse1.getEmail());
         instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
-
     }
 
     @Override
@@ -209,22 +210,14 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
     @Override
     @Test
     protected void testAccessControl() throws Exception {
-        int questionNumber = 1;
-        FeedbackSessionAttributes fs = typicalBundle.feedbackSessions.get("session1InCourse1");
-        FeedbackQuestionAttributes question = logic.getFeedbackQuestion(
-                fs.getFeedbackSessionName(), fs.getCourseId(), questionNumber);
-        String giverEmail = "student1InCourse1@gmail.tmt";
-        String receiverEmail = "student1InCourse1@gmail.tmt";
-        FeedbackResponseAttributes response = logic.getFeedbackResponse(question.getId(),
-                giverEmail, receiverEmail);
         FeedbackResponseCommentAttributes comment = FeedbackResponseCommentAttributes
                 .builder()
-                .withCourseId(fs.getCourseId())
-                .withFeedbackSessionName(fs.getFeedbackSessionName())
-                .withCommentGiver(giverEmail)
+                .withCourseId(session1InCourse1.getCourseId())
+                .withFeedbackSessionName(session1InCourse1.getFeedbackSessionName())
+                .withCommentGiver(student1InCourse1.getEmail())
                 .withCommentText("")
-                .withFeedbackQuestionId(question.getId())
-                .withFeedbackResponseId(response.getId())
+                .withFeedbackQuestionId(qn1InSession1InCourse1.getId())
+                .withFeedbackResponseId(response1ForQ1S1C1.getId())
                 .build();
 
         String[] submissionParams = new String[] {
