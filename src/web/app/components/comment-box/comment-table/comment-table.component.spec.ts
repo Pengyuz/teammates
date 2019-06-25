@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { CommentEditFormComponent } from '../comment-edit-form.component';
 import { CommentRowComponent } from './comment-row.component';
-
 import { CommentTableComponent } from './comment-table.component';
 
 describe('CommentTableComponent', () => {
@@ -13,7 +13,11 @@ describe('CommentTableComponent', () => {
       declarations: [
         CommentTableComponent,
         CommentRowComponent,
-        CommentEditFormComponent,],
+        CommentEditFormComponent,
+      ],
+      imports: [
+        FormsModule,
+      ],
     })
     .compileComponents();
   }));

@@ -1,4 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { SingleResponseModule } from '../../question-responses/single-response/single-response.module';
+import { CommentEditFormComponent } from '../comment-edit-form.component';
+import { CommentRowComponent } from '../comment-table/comment-row.component';
+import { CommentTableComponent } from '../comment-table/comment-table.component';
 
 import { CommentTableModalComponent } from './comment-table-modal.component';
 
@@ -8,7 +14,17 @@ describe('CommentTableModalComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CommentTableModalComponent],
+      declarations: [
+        CommentTableModalComponent,
+        CommentTableComponent,
+        CommentRowComponent,
+        CommentEditFormComponent,
+      ],
+      imports: [
+        FormsModule,
+        SingleResponseModule,
+      ],
+      providers: [NgbActiveModal],
     })
     .compileComponents();
   }));
