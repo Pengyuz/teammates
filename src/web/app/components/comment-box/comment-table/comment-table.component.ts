@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmDeleteCommentModalComponent } from '../confirm-delete-comment-modal/confirm-delete-comment-modal.component';
+import { ConfirmDeleteCommentModalComponent,
+} from '../confirm-delete-comment-modal/confirm-delete-comment-modal.component';
 import { FeedbackResponseCommentModel } from './comment-table-model';
 
 /**
@@ -69,7 +70,7 @@ export class CommentTableComponent implements OnInit {
   triggerUpdateCommentEvent(index: number, data: any): void {
     // TODO: parent handling of event
     const comments: FeedbackResponseCommentModel[] = this.comments.slice();
-    comments[index] = { ...comments[index], commentText: data , isInEditMode: false};
+    comments[index] = { ...comments[index], commentText: data , isInEditMode: false };
     this.updateCommentEvent.emit(comments);
   }
 
