@@ -1,4 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { CommentEditFormComponent } from '../comment-edit-form.component';
+import { CommentRowComponent } from './comment-row.component';
 
 import { CommentTableComponent } from './comment-table.component';
 
@@ -8,7 +10,10 @@ describe('CommentTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [CommentTableComponent],
+      declarations: [
+        CommentTableComponent,
+        CommentRowComponent,
+        CommentEditFormComponent,],
     })
     .compileComponents();
   }));

@@ -10,11 +10,6 @@ import { CommentTableModalComponent } from './comment-table-modal/comment-table-
 import { CommentRowComponent } from './comment-table/comment-row.component';
 import { CommentTableComponent } from './comment-table/comment-table.component';
 import {
-  CommentVisibilityControlNamePipe,
-  CommentVisibilityTypeDescriptionPipe,
-  CommentVisibilityTypeNamePipe,
-} from './comment-visibility-setting.pipe';
-import {
   ConfirmDeleteCommentModalComponent,
 } from './confirm-delete-comment-modal/confirm-delete-comment-modal.component';
 
@@ -23,9 +18,6 @@ import {
  */
 @NgModule({
   declarations: [
-    CommentVisibilityControlNamePipe,
-    CommentVisibilityTypeDescriptionPipe,
-    CommentVisibilityTypeNamePipe,
     CommentEditFormComponent,
     CommentTableComponent,
     CommentRowComponent,
