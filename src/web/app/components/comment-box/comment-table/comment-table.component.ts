@@ -84,7 +84,7 @@ export class CommentTableComponent implements OnInit {
   /**
    * Triggers the add new comment event.
    */
-  triggerSaveNewCommentEvent(data: any): void {
-    this.saveNewCommentEvent.emit(data);
+  triggerSaveNewCommentEvent(commentText: any): void {
+    this.saveNewCommentEvent.emit(commentText);
   }
 }
