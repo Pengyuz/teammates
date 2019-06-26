@@ -4,9 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommentBoxModule } from '../comment-box/comment-box.module';
 import { QuestionConstraintModule } from '../question-types/question-constraint/question-constraint.module';
-import { QuestionEditAnswerFormModule } from '../question-types/question-edit-answer-form/question-edit-answer-form.module';
 import {
-  QuestionInstructionModule
+  QuestionEditAnswerFormModule,
+} from '../question-types/question-edit-answer-form/question-edit-answer-form.module';
+import {
+  QuestionInstructionModule,
 } from '../question-types/question-instruction/question-instruction.module';
 import { RichTextEditorModule } from '../rich-text-editor/rich-text-editor.module';
 import { TeammatesCommonModule } from '../teammates-common/teammates-common.module';
