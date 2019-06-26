@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FeedbackParticipantType } from '../../../types/api-output';
-import { CommentVisibilityControl } from '../../../types/comment-visibility-control';
 
 /**
  * Comment edit form component
@@ -13,7 +12,6 @@ import { CommentVisibilityControl } from '../../../types/comment-visibility-cont
 export class CommentEditFormComponent implements OnInit {
 
   // enum
-  CommentVisibilityControl: typeof CommentVisibilityControl = CommentVisibilityControl;
   FeedbackParticipantType: typeof FeedbackParticipantType = FeedbackParticipantType;
 
   @Input() commentText: string = '';
