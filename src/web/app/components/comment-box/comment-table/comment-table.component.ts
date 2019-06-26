@@ -16,12 +16,12 @@ export class CommentTableComponent implements OnInit {
 
   @Input()
   comments: FeedbackResponseCommentModel[] = [
-    { commentText: 'this is a comment',
-      commentGiver: 'someone',
-      createdAt: 'time',
-      editedAt: 'time',
-      responseGiver: 'giver',
-      responseRecipient: 'recipient',
+    { commentText: '',
+      commentGiver: '',
+      createdAt: '',
+      editedAt: '',
+      responseGiver: '',
+      responseRecipient: '',
       isInEditMode: false,
       isEditable: true,
     },
