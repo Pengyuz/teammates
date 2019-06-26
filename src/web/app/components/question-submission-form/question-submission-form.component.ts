@@ -148,6 +148,6 @@ export class QuestionSubmissionFormComponent implements OnInit {
    */
   triggerSaveComment(index: number, commentText: any): void {
     const responseId: string = this.model.recipientSubmissionForms[index].responseId;
-    this.saveCommentEvent.emit({responseId, commentText});
+    this.saveCommentEvent.emit({ responseId, commentText });
   }
 }

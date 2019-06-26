@@ -13,13 +13,15 @@ import {
   FeedbackQuestion,
   FeedbackQuestionRecipient,
   FeedbackQuestionRecipients,
-  FeedbackResponse,
+  FeedbackResponse, FeedbackResponseComment,
+  FeedbackResponseComments,
   FeedbackSession,
   FeedbackSessionSubmissionStatus,
   Instructor,
   NumberOfEntitiesToGiveFeedbackToSetting,
   Student,
 } from '../../../types/api-output';
+import { FeedbackResponseCommentModel } from '../../components/comment-box/comment-table/comment-table-model';
 import {
   FeedbackResponseRecipient,
   FeedbackResponseRecipientSubmissionFormModel,
@@ -410,7 +412,7 @@ export class SessionSubmissionPageComponent implements OnInit {
   /**
    * Saves a comment.
    */
-  saveComment(comment: any): void {
+  saveComment(index: number, comment: any): void {
     this.httpRequestService.post('/responsecomment',{
       responseid: comment.responseId,
       intent: this.intent,
@@ -418,7 +420,34 @@ export class SessionSubmissionPageComponent implements OnInit {
       commentText: comment.commentText,
       showCommentTo: [],
       showGiverNameTo: [],
-    }).subscribe()
+    }).subscribe();
+  }
+
+  /**
+   * Loads comments for a feedback response.
+   */
+  loadComments(responseId: string): FeedbackResponseCommentModel[] {
+    const commentsModel: FeedbackResponseCommentModel[] = [];
+    this.httpRequestService.get('/responsecomment',{
+      responseid: responseId,
+      intent: this.intent,
+    }).subscribe((comments: FeedbackResponseComments) =>
+        comments.comments.forEach((comment: FeedbackResponseComment) => {
+            console.log("some comment loaded");
+            commentsModel.push({
+              responseGiver: 'responseGiver',
+              responseRecipient: 'responseRecipient',
+              createdAt: comment.createdAt,
+              editedAt: comment.updatedAt,
+              commentGiver: comment.commentGiver,
+              commentText: comment.commentText,
+              isInEditMode: false,
+              isEditable: true,
+            })}
+        )
+    );
+
+    return commentsModel;
   }
 
   /**
