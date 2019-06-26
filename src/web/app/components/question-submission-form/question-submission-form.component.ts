@@ -82,6 +82,9 @@ export class QuestionSubmissionFormComponent implements OnInit {
     showResponsesTo: [],
   };
 
+  @Output()
+  saveCommentEvent: EventEmitter<any> = new EventEmitter();
+
   visibilityStateMachine: VisibilityStateMachine;
 
   isCommentTableExpanded: boolean[] = [];
@@ -138,5 +141,13 @@ export class QuestionSubmissionFormComponent implements OnInit {
       ...this.model,
       recipientSubmissionForms,
     });
+  }
+
+  /**
+   * Triggers save comment event
+   */
+  triggerSaveComment(index: number, commentText: any): void {
+    const responseId: string = this.model.recipientSubmissionForms[index].responseId;
+    this.saveCommentEvent.emit({responseId, commentText});
   }
 }

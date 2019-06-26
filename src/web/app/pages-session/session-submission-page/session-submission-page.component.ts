@@ -408,6 +408,20 @@ export class SessionSubmissionPageComponent implements OnInit {
   }
 
   /**
+   * Saves a comment.
+   */
+  saveComment(comment: any): void {
+    this.httpRequestService.post('/responsecomment',{
+      responseid: comment.responseId,
+      intent: this.intent,
+    },{
+      commentText: comment.commentText,
+      showCommentTo: [],
+      showGiverNameTo: [],
+    }).subscribe()
+  }
+
+  /**
    * Saves all feedback response.
    *
    * <p>All empty feedback response will be deleted; For non-empty responses, update/create them if necessary.
