@@ -426,7 +426,7 @@ export class SessionSubmissionPageComponent implements OnInit {
   /**
    * Loads comments for a feedback response.
    */
-  loadComments(responseId: string): FeedbackResponseCommentModel[] {
+  loadComments(responseId: string): void {
     const commentsModel: FeedbackResponseCommentModel[] = [];
     this.httpRequestService.get('/responsecomment',{
       responseid: responseId,
@@ -446,8 +446,6 @@ export class SessionSubmissionPageComponent implements OnInit {
             })}
         )
     );
-
-    return commentsModel;
   }
 
   /**
