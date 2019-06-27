@@ -52,11 +52,11 @@ export class CommentTableComponent implements OnInit {
   /**
    * Triggers the delete comment event
    */
-  triggerDeleteCommentEvent(commentId: number): void {
+  triggerDeleteCommentEvent(index: number): void {
     const modalRef: NgbModalRef = this.modalService.open(ConfirmDeleteCommentModalComponent);
 
     modalRef.result.then(() => {
-      this.deleteCommentEvent.emit(commentId);
+      this.deleteCommentEvent.emit(index);
     }, () => {});
   }
 

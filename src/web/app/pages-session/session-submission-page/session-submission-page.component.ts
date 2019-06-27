@@ -572,11 +572,23 @@ export class SessionSubmissionPageComponent implements OnInit {
   /**
    * Deletes a comment.
    */
-  deleteComment(commentId: number): void {
-    this.httpRequestService.post('/responsecomment', {
-      responseid: commentId.toString(),
-      intent: this.intent,
-    }).subscribe();
+  deleteComment(questionIndex: number, deleteCommentData: any): void {
+    const comments: FeedbackResponseCommentModel[] | undefined =
+        this.questionSubmissionForms[questionIndex].recipientSubmissionForms[deleteCommentData.recipientIndex].comments;
+
+    if (!comments) {
+      return
+    }
+
+    const comment: FeedbackResponseCommentModel = comments[deleteCommentData.commentIndex];
+
+    this.httpRequestService.delete('/responsecomment', {
+      responsecommentid: comment.commentId.toString(),
+    }).subscribe(() => {
+
+      comments.splice(deleteCommentData.commentIndex, 1);
+      this.questionSubmissionForms[questionIndex].recipientSubmissionForms[deleteCommentData.recipientIndex].comments = comments;
+    });
   }
 
   /**

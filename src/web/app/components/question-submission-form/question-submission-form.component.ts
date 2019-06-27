@@ -144,9 +144,9 @@ export class QuestionSubmissionFormComponent implements OnInit {
   }
 
   /**
-   * Trigers deletion of a comment
+   * Triggers deletion of a comment
    */
-  triggerDeleteCommentEvent(index: number) {
-    this.deleteCommentEvent.emit(index);
+  triggerDeleteCommentEvent(index: number, commentIndex: number): void {
+    this.deleteCommentEvent.emit({ recipientIndex: index, commentIndex: commentIndex });
   }
 }
