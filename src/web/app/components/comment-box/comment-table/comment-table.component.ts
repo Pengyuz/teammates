@@ -19,8 +19,9 @@ export class CommentTableComponent implements OnInit {
   @Input() commentTableMode: CommentTableMode = CommentTableMode.SESSION_SUBMISSION;
 
   @Input()
-  comments: FeedbackResponseCommentModel[] = [
-    { commentText: '',
+  comments: FeedbackResponseCommentModel[] = [{
+      commentId: -1,
+      commentText: '',
       commentGiver: '',
       createdAt: '',
       editedAt: '',
@@ -51,17 +52,12 @@ export class CommentTableComponent implements OnInit {
   /**
    * Triggers the delete comment event
    */
-  triggerDeleteCommentEvent(index: number): void {
+  triggerDeleteCommentEvent(commentId: number): void {
     const modalRef: NgbModalRef = this.modalService.open(ConfirmDeleteCommentModalComponent);
 
     modalRef.result.then(() => {
-      // TODO: parent handling of event
-      this.deleteCommentEvent.emit(index);
-
-      // TODO: remove this
-      this.comments.splice(index, 1);
-    }
-    , () => {});
+      this.deleteCommentEvent.emit(commentId);
+    }, () => {});
   }
 
   /**

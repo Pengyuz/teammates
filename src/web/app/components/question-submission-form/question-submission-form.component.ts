@@ -82,8 +82,8 @@ export class QuestionSubmissionFormComponent implements OnInit {
     showResponsesTo: [],
   };
 
-  @Output()
-  saveCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() saveCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() deleteCommentEvent: EventEmitter<any> = new EventEmitter();
 
   visibilityStateMachine: VisibilityStateMachine;
 
@@ -144,10 +144,9 @@ export class QuestionSubmissionFormComponent implements OnInit {
   }
 
   /**
-   * Triggers save comment event
+   * Trigers deletion of a comment
    */
-  triggerSaveComment(index: number, commentText: any): void {
-    const responseId: string = this.model.recipientSubmissionForms[index].responseId;
-    this.saveCommentEvent.emit({ responseId, commentText });
+  triggerDeleteCommentEvent(index: number) {
+    this.deleteCommentEvent.emit(index);
   }
 }

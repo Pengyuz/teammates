@@ -8,7 +8,7 @@
       <tm-comment-row [isInEditMode]="comment.isInEditMode" [commentModel]="comment"
                       (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent(comment)"
                       (editCommentEvent)="triggerEditCommentEvent(comment)"
-                      (deleteCommentEvent)="triggerDeleteCommentEvent(i)"
+                      (deleteCommentEvent)="triggerDeleteCommentEvent(comment.commentId)"
                       (saveCommentEvent)="triggerUpdateCommentEvent(i, $event)"
       ></tm-comment-row>
     </li>

@@ -570,6 +570,16 @@ export class SessionSubmissionPageComponent implements OnInit {
   }
 
   /**
+   * Deletes a comment.
+   */
+  deleteComment(commentId: number): void {
+    this.httpRequestService.post('/responsecomment', {
+      responseid: commentId.toString(),
+      intent: this.intent,
+    }).subscribe();
+  }
+
+  /**
    * Saves a comment.
    */
   saveComment(responseId: string, commentText: string): void {
@@ -607,6 +617,7 @@ export class SessionSubmissionPageComponent implements OnInit {
       comments.comments.forEach((comment: FeedbackResponseComment) => {
         console.log("comment loaded");
         commentsModel.push({
+          commentId: comment.feedbackResponseCommentId,
           responseGiver: 'responseGiver',
           responseRecipient: 'responseRecipient',
           createdAt: comment.createdAt,

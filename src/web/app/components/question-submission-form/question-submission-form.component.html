@@ -103,6 +103,7 @@
               </div>
               <tm-comment-table *ngIf="isCommentTableExpanded[i]"
                                 [comments] = recipientSubmissionFormModel.comments
+                                (deleteCommentEvent)="triggerDeleteCommentEvent($event)"
                                 (newCommentFormChangeEvent)="triggerRecipientSubmissionFormChange(i, 'newComment', $event)"
               ></tm-comment-table>
             </div>

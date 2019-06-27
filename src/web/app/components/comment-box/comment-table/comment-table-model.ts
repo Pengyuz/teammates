@@ -2,6 +2,7 @@
  * Model for a comment to be displayed in the comment table
  */
 export interface FeedbackResponseCommentModel {
+  commentId: number;
   responseGiver: string;
   responseRecipient: string;
   createdAt: string;
