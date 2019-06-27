@@ -82,24 +82,28 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
         boolean isFromParticipant;
         boolean isFollowingQuestionVisibility;
+        FeedbackParticipantType commentGiverType;
         switch (intent) {
         case STUDENT_SUBMISSION:
             StudentAttributes student = logic.getStudentForGoogleId(courseId, userInfo.getId());
             email = student.getEmail();
             isFromParticipant = true;
             isFollowingQuestionVisibility = true;
+            commentGiverType = FeedbackParticipantType.STUDENTS;
             break;
         case INSTRUCTOR_SUBMISSION:
             InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.getId());
             email = instructor.getEmail();
             isFromParticipant = true;
             isFollowingQuestionVisibility = true;
+            commentGiverType = FeedbackParticipantType.INSTRUCTORS;
             break;
         case INSTRUCTOR_RESULT:
             InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId, userInfo.getId());
             email = instructor1.getEmail();
             isFromParticipant = false;
             isFollowingQuestionVisibility = false;
+            commentGiverType = FeedbackParticipantType.INSTRUCTORS;
             break;
         default:
             throw new InvalidHttpParameterException("Unknown intent " + intent);
@@ -119,7 +123,7 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
                 .withGiverSection(response.giverSection)
                 .withReceiverSection(response.recipientSection)
                 .withCommentFromFeedbackParticipant(isFromParticipant)
-                .withCommentGiverType(FeedbackParticipantType.INSTRUCTORS)
+                .withCommentGiverType(commentGiverType)
                 .withVisibilityFollowingFeedbackQuestion(isFollowingQuestionVisibility)
                 .withShowCommentTo(comment.getShowCommentTo())
                 .withShowGiverNameTo(comment.getShowGiverNameTo())
