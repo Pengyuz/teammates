@@ -24,7 +24,6 @@ export class CommentRowComponent implements OnInit {
     editedAt: '',
     responseGiver: '',
     responseRecipient: '',
-    isInEditMode: false,
     isEditable: false,
   };
 
@@ -57,7 +56,7 @@ export class CommentRowComponent implements OnInit {
    * Change to edit mode.
    */
   triggerEditCommentEvent(): void {
-    this.editCommentEvent.emit();
+    this.isInEditMode = true;
   }
 
   /**

@@ -9,7 +9,6 @@ export interface FeedbackResponseCommentModel {
   editedAt: string;
   commentGiver: string;
   commentText: string;
-  isInEditMode: boolean;
   isEditable: boolean;
 }
 

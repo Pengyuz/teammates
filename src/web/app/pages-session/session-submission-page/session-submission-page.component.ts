@@ -466,6 +466,13 @@ export class SessionSubmissionPageComponent implements OnInit {
                         recipientSubmissionFormModel.responseDetails = resp.responseDetails;
                         recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
 
+                        // Update comment.
+                        if (recipientSubmissionFormModel.comments) {
+                          this.updateComment(recipientSubmissionFormModel.comments[0].commentId,
+                              recipientSubmissionFormModel.comments[0].commentText);
+                        }
+
+                        // Save a new comment.
                         if (recipientSubmissionFormModel.newComment) {
                           this.saveComment(recipientSubmissionFormModel.responseId, recipientSubmissionFormModel.newComment)
                         }
@@ -607,6 +614,20 @@ export class SessionSubmissionPageComponent implements OnInit {
   }
 
   /**
+   * Updates a comment.
+   */
+  updateComment(commentId: number, commentText: string): void {
+    this.httpRequestService.put('/responsecomment', {
+      responsecommentid: commentId.toString(),
+      intent: this.intent,
+    }, {
+      commentText: commentText,
+      showCommentTo: [],
+      showGiverNameTo: [],
+    }).subscribe();
+  }
+
+  /**
    * Loads comments for responses
    */
   loadCommentsForResponses(model: QuestionSubmissionFormModel, feedbackResponses: FeedbackResponse[]) {
@@ -627,7 +648,6 @@ export class SessionSubmissionPageComponent implements OnInit {
       intent: this.intent,
     }).subscribe((comments: FeedbackResponseComments) => {
       comments.comments.forEach((comment: FeedbackResponseComment) => {
-        console.log("comment loaded");
         commentsModel.push({
           commentId: comment.feedbackResponseCommentId,
           responseGiver: 'responseGiver',
@@ -636,7 +656,6 @@ export class SessionSubmissionPageComponent implements OnInit {
           editedAt: comment.updatedAt,
           commentGiver: comment.commentGiver,
           commentText: comment.commentText,
-          isInEditMode: false,
           isEditable: true,
         });
       });

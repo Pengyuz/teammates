@@ -19,18 +19,7 @@ export class CommentTableComponent implements OnInit {
   @Input() commentTableMode: CommentTableMode = CommentTableMode.SESSION_SUBMISSION;
 
   @Input()
-  comments: FeedbackResponseCommentModel[] = [{
-      commentId: -1,
-      commentText: '',
-      commentGiver: '',
-      createdAt: '',
-      editedAt: '',
-      responseGiver: '',
-      responseRecipient: '',
-      isInEditMode: false,
-      isEditable: true,
-    },
-  ];
+  comments: FeedbackResponseCommentModel[] = [];
 
   @Output() saveNewCommentEvent: EventEmitter<any> = new EventEmitter();
   @Output() deleteCommentEvent: EventEmitter<any> = new EventEmitter();
@@ -40,13 +29,6 @@ export class CommentTableComponent implements OnInit {
   constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
-  }
-
-  /**
-   * Triggers the close comment edit form event.
-   */
-  triggerCloseCommentEditFormEvent(comment: FeedbackResponseCommentModel): void {
-    comment.isInEditMode = false;
   }
 
   /**
@@ -66,15 +48,8 @@ export class CommentTableComponent implements OnInit {
   triggerUpdateCommentEvent(index: number, data: any): void {
     // TODO: parent handling of event
     const comments: FeedbackResponseCommentModel[] = this.comments.slice();
-    comments[index] = { ...comments[index], commentText: data , isInEditMode: false };
+    comments[index] = { ...comments[index], commentText: data};
     this.updateCommentEvent.emit(comments);
-  }
-
-  /**
-   * Toggles the comment model to edit mode.
-   */
-  triggerEditCommentEvent(comment: FeedbackResponseCommentModel): void {
-    comment.isInEditMode = true;
   }
 
   /**
