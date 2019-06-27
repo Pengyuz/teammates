@@ -13,13 +13,15 @@ import {
   FeedbackQuestion,
   FeedbackQuestionRecipient,
   FeedbackQuestionRecipients,
-  FeedbackResponse,
+  FeedbackResponse, FeedbackResponseComment,
+  FeedbackResponseComments,
   FeedbackSession,
   FeedbackSessionSubmissionStatus,
   Instructor,
   NumberOfEntitiesToGiveFeedbackToSetting,
   Student,
 } from '../../../types/api-output';
+import { FeedbackResponseCommentModel } from '../../components/comment-box/comment-table/comment-table-model';
 import {
   FeedbackResponseRecipient,
   FeedbackResponseRecipientSubmissionFormModel,
@@ -408,6 +410,55 @@ export class SessionSubmissionPageComponent implements OnInit {
   }
 
   /**
+   * Saves a comment.
+   */
+  saveComment(index: number, comment: any): void {
+    console.log(index);
+    this.httpRequestService.post('/responsecomment',{
+      responseid: comment.responseId,
+      intent: this.intent,
+    },{
+      commentText: comment.commentText,
+      showCommentTo: [],
+      showGiverNameTo: [],
+    }).subscribe(() => this.loadComments(index, comment.responseId));
+
+  }
+
+  /**
+   * Loads comments for a feedback response.
+   */
+  loadComments(index: number, responseId: string): void {
+    const commentsModel: FeedbackResponseCommentModel[] = [];
+    this.httpRequestService.get('/responsecomment',{
+      responseid: responseId,
+      intent: this.intent,
+    }).subscribe((comments: FeedbackResponseComments) => {
+      comments.comments.forEach((comment: FeedbackResponseComment) => {
+            console.log("some comment loaded");
+            commentsModel.push({
+              responseGiver: 'responseGiver',
+              responseRecipient: 'responseRecipient',
+              createdAt: comment.createdAt,
+              editedAt: comment.updatedAt,
+              commentGiver: comment.commentGiver,
+              commentText: comment.commentText,
+              isInEditMode: false,
+              isEditable: true,
+            })
+          }
+      )
+
+      const recipientSubmissionFormIndex: number = this.questionSubmissionForms[index].recipientSubmissionForms.findIndex(
+          (rsf: FeedbackResponseRecipientSubmissionFormModel) => rsf.responseId === responseId
+      );
+      let updatedForms: FeedbackResponseRecipientSubmissionFormModel[] = this.questionSubmissionForms[index].recipientSubmissionForms.slice();
+      updatedForms[recipientSubmissionFormIndex] = {...updatedForms[recipientSubmissionFormIndex], comments: commentsModel};
+      this.questionSubmissionForms[index] = {...this.questionSubmissionForms[index], recipientSubmissionForms: updatedForms};
+    })
+  }
+
+  /**
    * Saves all feedback response.
    *
    * <p>All empty feedback response will be deleted; For non-empty responses, update/create them if necessary.
@@ -458,16 +509,16 @@ export class SessionSubmissionPageComponent implements OnInit {
                     questionType: questionSubmissionFormModel.questionType,
                     responseDetails: recipientSubmissionFormModel.responseDetails,
                   }).pipe(
-                    tap((resp: FeedbackResponse) => {
-                      recipientSubmissionFormModel.responseId = resp.feedbackResponseId;
-                      recipientSubmissionFormModel.responseDetails = resp.responseDetails;
-                      recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
-                    }),
-                    catchError((error: any) => {
-                      this.statusMessageService.showErrorMessage((error as ErrorMessageOutput).error.message);
-                      failToSaveQuestions.add(questionSubmissionFormModel.questionNumber);
-                      return of(error);
-                    }),
+                      tap((resp: FeedbackResponse) => {
+                        recipientSubmissionFormModel.responseId = resp.feedbackResponseId;
+                        recipientSubmissionFormModel.responseDetails = resp.responseDetails;
+                        recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
+                      }),
+                      catchError((error: any) => {
+                        this.statusMessageService.showErrorMessage((error as ErrorMessageOutput).error.message);
+                        failToSaveQuestions.add(questionSubmissionFormModel.questionNumber);
+                        return of(error);
+                      }),
                   ));
             }
 
@@ -483,16 +534,16 @@ export class SessionSubmissionPageComponent implements OnInit {
                     questionType: questionSubmissionFormModel.questionType,
                     responseDetails: recipientSubmissionFormModel.responseDetails,
                   }).pipe(
-                    tap((resp: FeedbackResponse) => {
-                      recipientSubmissionFormModel.responseId = resp.feedbackResponseId;
-                      recipientSubmissionFormModel.responseDetails = resp.responseDetails;
-                      recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
-                    }),
-                    catchError((error: any) => {
-                      this.statusMessageService.showErrorMessage((error as ErrorMessageOutput).error.message);
-                      failToSaveQuestions.add(questionSubmissionFormModel.questionNumber);
-                      return of(error);
-                    }),
+                      tap((resp: FeedbackResponse) => {
+                        recipientSubmissionFormModel.responseId = resp.feedbackResponseId;
+                        recipientSubmissionFormModel.responseDetails = resp.responseDetails;
+                        recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
+                      }),
+                      catchError((error: any) => {
+                        this.statusMessageService.showErrorMessage((error as ErrorMessageOutput).error.message);
+                        failToSaveQuestions.add(questionSubmissionFormModel.questionNumber);
+                        return of(error);
+                      }),
                   ));
             }
           });

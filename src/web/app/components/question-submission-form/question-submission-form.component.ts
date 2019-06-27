@@ -3,7 +3,8 @@ import { FeedbackQuestionsService } from '../../../services/feedback-questions.s
 import { VisibilityStateMachine } from '../../../services/visibility-state-machine';
 import {
   FeedbackParticipantType,
-  FeedbackQuestionType, FeedbackTextQuestionDetails,
+  FeedbackQuestionType,
+  FeedbackTextQuestionDetails,
   FeedbackVisibilityType,
   NumberOfEntitiesToGiveFeedbackToSetting,
 } from '../../../types/api-output';
@@ -81,7 +82,12 @@ export class QuestionSubmissionFormComponent implements OnInit {
     showResponsesTo: [],
   };
 
+  @Output()
+  saveCommentEvent: EventEmitter<any> = new EventEmitter();
+
   visibilityStateMachine: VisibilityStateMachine;
+
+  isCommentTableExpanded: boolean[] = [];
 
   constructor(private feedbackQuestionsService: FeedbackQuestionsService) {
     this.visibilityStateMachine =
@@ -135,5 +141,13 @@ export class QuestionSubmissionFormComponent implements OnInit {
       ...this.model,
       recipientSubmissionForms,
     });
+  }
+
+  /**
+   * Triggers save comment event
+   */
+  triggerSaveComment(index: number, commentText: any): void {
+    const responseId: string = this.model.recipientSubmissionForms[index].responseId;
+    this.saveCommentEvent.emit({ responseId, commentText });
   }
 }
