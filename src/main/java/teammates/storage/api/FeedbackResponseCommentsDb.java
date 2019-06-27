@@ -376,7 +376,7 @@ public class FeedbackResponseCommentsDb extends EntitiesDb<FeedbackResponseComme
             String feedbackResponseId, boolean isFromParticipant) {
         return load()
                 .filter("feedbackResponseId =", feedbackResponseId)
-                .filter("isCommentFromFeedbackParticipant =", Boolean.toString(isFromParticipant))
+                .filter("isCommentFromFeedbackParticipant =", isFromParticipant)
                 .list();
     }
 
