@@ -21,6 +21,7 @@ import teammates.storage.api.FeedbackResponseCommentsDb;
 import teammates.ui.webapi.action.CreateFeedbackResponseCommentAction;
 import teammates.ui.webapi.action.Intent;
 import teammates.ui.webapi.action.JsonResult;
+import teammates.ui.webapi.output.FeedbackResponseCommentData;
 import teammates.ui.webapi.output.FeedbackVisibilityType;
 import teammates.ui.webapi.output.MessageOutput;
 import teammates.ui.webapi.request.FeedbackResponseCommentUpdateRequest;
@@ -55,6 +56,44 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
         response1ForQ1S1C1 = logic.getFeedbackResponse(qn1InSession1InCourse1.getId(),
                 student1InCourse1.getEmail(), student1InCourse1.getEmail());
         instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
+    }
+
+    @Test
+    public void testExecute_InvalidHttpParameters_ShouldFail() {
+        loginAsInstructor(instructor1OfCourse1.getGoogleId());
+
+        ______TS("not enough parameters");
+        verifyHttpParameterFailure();
+    }
+
+    @Test
+    public void testExecute_UnpublishedSessionForInstructorResult_ShouldPass() {
+        loginAsInstructor(instructor1OfCourse1.getGoogleId());
+        ______TS("successful case for unpublished session for INSTRUCTOR_RESULT");
+        String[] submissionParams = new String[] {
+                Const.ParamsNames.INTENT, Intent.INSTRUCTOR_RESULT.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ1S1C1.getId(),
+        };
+        FeedbackResponseCommentUpdateRequest requestBody =
+                new FeedbackResponseCommentUpdateRequest("Comment to first response",
+                        Arrays.asList(FeedbackVisibilityType.INSTRUCTORS),
+                        Arrays.asList(FeedbackVisibilityType.INSTRUCTORS, FeedbackVisibilityType.GIVER));
+        CreateFeedbackResponseCommentAction action = getAction(requestBody, submissionParams);
+        JsonResult r = getJsonResult(action);
+        assertEquals(HttpStatus.SC_OK, r.getStatusCode());
+        FeedbackResponseCommentData commentData = (FeedbackResponseCommentData) r.getOutput();
+        assertEquals("Comment to first response", commentData.getFeedbackCommentText());
+
+        List<FeedbackResponseCommentAttributes> frcList =
+                getInstructorComments(response1ForQ1S1C1.getId(), "Comment to first response");
+        assertEquals(1, frcList.size());
+        FeedbackResponseCommentAttributes frc = frcList.get(0);
+        assertEquals(FeedbackParticipantType.INSTRUCTORS, frc.commentGiverType);
+        assertEquals(instructor1OfCourse1.getEmail(), frc.commentGiver);
+        assertFalse(frc.isCommentFromFeedbackParticipant);
+        assertFalse(frc.isVisibilityFollowingFeedbackQuestion);
+//        ______TS("successful case for unpublished session for STUDENT_SUBMISSION");
+//        String[]
     }
 
     @Override

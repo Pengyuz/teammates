@@ -3,15 +3,9 @@ package teammates.ui.webapi.action;
 import java.util.List;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
-import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
-import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
-import teammates.common.datatransfer.attributes.InstructorAttributes;
-import teammates.common.datatransfer.attributes.StudentAttributes;
-import teammates.common.exception.EntityDoesNotExistException;
-import teammates.common.exception.EntityNotFoundException;
-import teammates.common.exception.InvalidHttpRequestBodyException;
-import teammates.common.exception.UnauthorizedAccessException;
+import teammates.common.datatransfer.attributes.*;
+import teammates.common.datatransfer.questions.FeedbackQuestionType;
+import teammates.common.exception.*;
 import teammates.common.util.Assumption;
 import teammates.common.util.Const;
 import teammates.common.util.StringHelper;
@@ -189,6 +183,29 @@ public abstract class BasicFeedbackSubmissionAction extends Action {
 
         // validate responses of the question
         // TODO: implement this when other type of questions are integrated
+    }
+
+    /**
+     * Validates the questionType of the corresponding question
+     */
+    protected void validQuestionTypeForCommentInSubmission(FeedbackQuestionType questionType){
+        if(questionType != FeedbackQuestionType.MCQ && questionType != FeedbackQuestionType.MSQ) {
+            throw new InvalidHttpParameterException("Invalid question type for comment in submission");
+        }
+    }
+
+    /**
+     * Validates comment doesn't exist of corresponding response
+     */
+    protected void verifyCommentNotExist(String feedbackResponseId){
+        List<FeedbackResponseCommentAttributes> comments = logic.getFeedbackResponseCommentsForResponseFromParticipant(
+                feedbackResponseId, true);
+
+        if(!comments.isEmpty()){
+            throw new InvalidHttpParameterException("Comment has been created for the response in submission");
+        }
+
+
     }
 
 }

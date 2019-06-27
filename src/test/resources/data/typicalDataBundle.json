@@ -1147,6 +1147,34 @@
         "INSTRUCTORS"
       ]
     },
+    "qn6InSession1InCourse1": {
+      "feedbackSessionName": "First feedback session",
+      "courseId": "idOfTypicalCourse1",
+      "questionDetails": {
+        "questionType": "TEXT",
+        "questionText": "Mcq Question",
+        "hasAssignedWeights": false,
+        "mcqWeights": [],
+        "numOfMcqChoices": 2,
+        "mcqChoices": ["a", "b"],
+        "otherEnabled": false,
+        "mcqOtherWeight": 0,
+        "generateOptionsFor": "NONE"
+      },
+      "questionNumber": 6,
+      "giverType": "SELF",
+      "recipientType": "NONE",
+      "numberOfEntitiesToGiveFeedbackTo": -100,
+      "showResponsesTo": [
+        "INSTRUCTORS"
+      ],
+      "showGiverNameTo": [
+        "INSTRUCTORS"
+      ],
+      "showRecipientNameTo": [
+        "INSTRUCTORS"
+      ]
+    },
     "team.feedback": {
       "feedbackSessionName": "Second feedback session",
       "courseId": "idOfTypicalCourse1",
