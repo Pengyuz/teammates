@@ -3,11 +3,9 @@
     Comments
   </div>
 
-  <ul class="list-group list-group-flush">
+  <ul class="list-group list-group-flush" *ngIf="commentTableMode === CommentTableMode.SESSION_RESULT">
     <li class="list-group-item" *ngFor="let comment of comments; let i = index">
-      <tm-comment-row [isInEditMode]="comment.isInEditMode" [commentModel]="comment"
-                      (closeCommentEditFormEvent)="triggerCloseCommentEditFormEvent(comment)"
-                      (editCommentEvent)="triggerEditCommentEvent(comment)"
+      <tm-comment-row [isInEditMode]="false" [commentModel]="comment"
                       (deleteCommentEvent)="triggerDeleteCommentEvent(i)"
                       (saveCommentEvent)="triggerUpdateCommentEvent(i, $event)"
       ></tm-comment-row>
@@ -15,7 +13,28 @@
     <!-- "Add new comment" row -->
     <li class="list-group-item">
       <tm-comment-row [isInEditMode]="true" [isDiscardButtonEnabled]="false"
+                      (commentFormChangeEvent)="triggerNewCommentFormChangeEvent($event)"
                       (saveCommentEvent)="triggerSaveNewCommentEvent($event)"
+      ></tm-comment-row>
+    </li>
+  </ul>
+
+  <ul class="list-group list-group-flush" *ngIf="commentTableMode === CommentTableMode.SESSION_SUBMISSION">
+    <li class="list-group-item">
+      <tm-comment-row *ngIf="!comments || comments.length === 0"
+                      [isInEditMode]="true" [isDiscardButtonEnabled]="false"
+                      [isSaveButtonEnabled]="false"
+                      [isVisibilityOptionEnabled]="false"
+                      (commentFormChangeEvent)="triggerNewCommentFormChangeEvent($event)"
+      ></tm-comment-row>
+
+      <tm-comment-row *ngIf="comments && comments.length > 0"
+                      [isInEditMode]="false" [isDiscardButtonEnabled]="false"
+                      [commentModel]="comments[0]"
+                      [isSaveButtonEnabled]="false"
+                      [isVisibilityOptionEnabled]="false"
+                      (deleteCommentEvent)="triggerDeleteCommentEvent(0)"
+                      (commentFormChangeEvent)="triggerUpdateCommentEvent(0, $event)"
       ></tm-comment-row>
     </li>
   </ul>

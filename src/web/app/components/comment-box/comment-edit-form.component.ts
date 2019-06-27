@@ -19,18 +19,26 @@ export class CommentEditFormComponent implements OnInit {
   @Input() commentText: string = '';
   @Input() isDiscardButtonEnabled: boolean = true;
   @Input() isVisibilityOptionEnabled: boolean = true;
+  @Input() isSaveButtonEnabled: boolean = true;
   @Input() placeholderText: string = 'Enter your comment here';
 
   @Output() closeCommentBoxEvent: EventEmitter<any> = new EventEmitter();
   @Output() commentDetailsChangeEvent: EventEmitter<any> = new EventEmitter();
   @Output() saveCommentEvent: EventEmitter<any> = new EventEmitter();
-
+  @Output() commentFormChangeEvent: EventEmitter<any> = new EventEmitter();
   updatedCommentText: string = '';
 
   constructor() { }
 
   ngOnInit(): void {
     this.updatedCommentText = this.commentText;
+  }
+
+  /**
+   * Trigger comment form change event.
+   */
+  triggerCommentFormChangeEvent(commentText: any): void {
+    this.commentFormChangeEvent.emit(commentText);
   }
 
   /**

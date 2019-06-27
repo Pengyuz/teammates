@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmDeleteCommentModalComponent,
-} from '../confirm-delete-comment-modal/confirm-delete-comment-modal.component';
-import { FeedbackResponseCommentModel } from './comment-table-model';
+import { ConfirmDeleteCommentModalComponent } from '../confirm-delete-comment-modal/confirm-delete-comment-modal.component';
+import { CommentTableMode, FeedbackResponseCommentModel } from './comment-table-model';
 
 /**
  * Component for the comments table
@@ -14,38 +13,22 @@ import { FeedbackResponseCommentModel } from './comment-table-model';
 })
 export class CommentTableComponent implements OnInit {
 
+  // enum
+  CommentTableMode: typeof CommentTableMode = CommentTableMode;
+
+  @Input() commentTableMode: CommentTableMode = CommentTableMode.SESSION_SUBMISSION;
+
   @Input()
-  comments: FeedbackResponseCommentModel[] = [
-    { commentText: '',
-      commentGiver: '',
-      createdAt: '',
-      editedAt: '',
-      responseGiver: '',
-      responseRecipient: '',
-      isInEditMode: false,
-      isEditable: true,
-    },
-  ];
+  comments: FeedbackResponseCommentModel[] = [];
 
-  @Output()
-  saveNewCommentEvent: EventEmitter<any> = new EventEmitter();
-
-  @Output()
-  deleteCommentEvent: EventEmitter<any> = new EventEmitter();
-
-  @Output()
-  updateCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() saveNewCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() deleteCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() updateCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() newCommentFormChangeEvent: EventEmitter<any> = new EventEmitter();
 
   constructor(private modalService: NgbModal) { }
 
   ngOnInit(): void {
-  }
-
-  /**
-   * Triggers the close comment edit form event.
-   */
-  triggerCloseCommentEditFormEvent(comment: FeedbackResponseCommentModel): void {
-    comment.isInEditMode = false;
   }
 
   /**
@@ -55,13 +38,8 @@ export class CommentTableComponent implements OnInit {
     const modalRef: NgbModalRef = this.modalService.open(ConfirmDeleteCommentModalComponent);
 
     modalRef.result.then(() => {
-      // TODO: parent handling of event
       this.deleteCommentEvent.emit(index);
-
-      // TODO: remove this
-      this.comments.splice(index, 1);
-    }
-    , () => {});
+    }, () => {});
   }
 
   /**
@@ -70,15 +48,8 @@ export class CommentTableComponent implements OnInit {
   triggerUpdateCommentEvent(index: number, data: any): void {
     // TODO: parent handling of event
     const comments: FeedbackResponseCommentModel[] = this.comments.slice();
-    comments[index] = { ...comments[index], commentText: data , isInEditMode: false };
+    comments[index] = { ...comments[index], commentText: data};
     this.updateCommentEvent.emit(comments);
-  }
-
-  /**
-   * Toggles the comment model to edit mode.
-   */
-  triggerEditCommentEvent(comment: FeedbackResponseCommentModel): void {
-    comment.isInEditMode = true;
   }
 
   /**
@@ -87,4 +58,12 @@ export class CommentTableComponent implements OnInit {
   triggerSaveNewCommentEvent(commentText: any): void {
     this.saveNewCommentEvent.emit(commentText);
   }
+
+  /**
+   * Triggers comment form change event.
+   */
+  triggerNewCommentFormChangeEvent(commentText: any): void {
+    this.newCommentFormChangeEvent.emit(commentText);
+  }
+
 }

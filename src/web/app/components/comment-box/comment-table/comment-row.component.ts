@@ -13,34 +13,36 @@ export class CommentRowComponent implements OnInit {
   @Input() isInEditMode: boolean = false;
   @Input() isVisibilityOptionEnabled: boolean = true;
   @Input() isDiscardButtonEnabled: boolean = true;
+  @Input() isSaveButtonEnabled: boolean = true;
 
   @Input()
   commentModel: FeedbackResponseCommentModel = {
+    commentId: -1,
     commentText: '',
     commentGiver: '',
     createdAt: '',
     editedAt: '',
     responseGiver: '',
     responseRecipient: '',
-    isInEditMode: false,
     isEditable: false,
   };
 
-  @Output()
-  closeCommentEditFormEvent: EventEmitter<any> = new EventEmitter();
-
-  @Output()
-  editCommentEvent: EventEmitter<any> = new EventEmitter();
-
-  @Output()
-  deleteCommentEvent: EventEmitter<any> = new EventEmitter();
-
-  @Output()
-  saveCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() closeCommentEditFormEvent: EventEmitter<any> = new EventEmitter();
+  @Output() editCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() deleteCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() saveCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() commentFormChangeEvent: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  /**
+   * Triggers comment form change.
+   */
+  triggerCommentFormChange(commentText: any): void {
+    this.commentFormChangeEvent.emit(commentText);
   }
 
   /**
@@ -54,7 +56,7 @@ export class CommentRowComponent implements OnInit {
    * Change to edit mode.
    */
   triggerEditCommentEvent(): void {
-    this.editCommentEvent.emit();
+    this.isInEditMode = true;
   }
 
   /**

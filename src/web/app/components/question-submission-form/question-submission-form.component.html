@@ -96,16 +96,18 @@
             <div *ngIf="model.questionType === FeedbackQuestionType.MCQ">
               <div style="margin-top: 7px;">
                 <button class="btn btn-secondary btn-sm"
-                        *ngIf="!isCommentTableExpanded[i]"
+                        *ngIf="!isCommentTableExpanded[i] "
                         (click)="isCommentTableExpanded[i]=true;">
                   <i class="fas fa-comment"></i> Comment on your response
                 </button>
               </div>
               <tm-comment-table *ngIf="isCommentTableExpanded[i]"
                                 [comments] = recipientSubmissionFormModel.comments
-                                (saveNewCommentEvent)="triggerSaveComment(i, $event)"
+                                (deleteCommentEvent)="triggerDeleteCommentEvent(i, $event)"
+                                (newCommentFormChangeEvent)="triggerRecipientSubmissionFormChange(i, 'newComment', $event)"
+                                (updateCommentEvent)="triggerRecipientSubmissionFormChange(i, 'comments', $event)"
               ></tm-comment-table>
-           <div>
+            </div>
             <tm-msq-question-edit-answer-form *ngIf="model.questionType === FeedbackQuestionType.MSQ" [questionDetails]="model.questionDetails"
                                               [responseDetails]="recipientSubmissionFormModel.responseDetails"
                                               (responseDetailsChange)="triggerRecipientSubmissionFormChange(i, 'responseDetails', $event)"
