@@ -398,6 +398,7 @@ export class SessionSubmissionPageComponent implements OnInit {
           numberOfRecipientSubmissionFormsNeeded -= 1;
         }
       }
+      this.loadCommentsForResponses(model, existingResponses.responses);
     }, (resp: ErrorMessageOutput) => this.statusMessageService.showErrorMessage(resp.error.message));
   }
 
@@ -407,58 +408,6 @@ export class SessionSubmissionPageComponent implements OnInit {
   get hasAnyResponseToSubmit(): boolean {
     return this.questionSubmissionForms
         .some((model: QuestionSubmissionFormModel) => model.recipientSubmissionForms.length !== 0);
-  }
-
-  /**
-   * Saves a comment.
-   */
-  saveComment(responseId: string, commentText: string): void {
-    this.httpRequestService.post('/responsecomment', {
-      responseid: responseId,
-      intent: this.intent,
-    }, {
-      commentText: commentText,
-      showCommentTo: [],
-      showGiverNameTo: [],
-    }).subscribe();
-
-  }
-
-  /**
-   * Loads comments for a feedback response.
-   */
-  loadComments(index: number, responseId: string): void {
-    const commentsModel: FeedbackResponseCommentModel[] = [];
-    this.httpRequestService.get('/responsecomment', {
-      responseid: responseId,
-      intent: this.intent,
-    }).subscribe((comments: FeedbackResponseComments) => {
-      comments.comments.forEach((comment: FeedbackResponseComment) => {
-        commentsModel.push({
-          responseGiver: 'responseGiver',
-          responseRecipient: 'responseRecipient',
-          createdAt: comment.createdAt,
-          editedAt: comment.updatedAt,
-          commentGiver: comment.commentGiver,
-          commentText: comment.commentText,
-          isInEditMode: false,
-          isEditable: true,
-        });
-      });
-
-      const recipientSubmissionFormIndex: number =
-          this.questionSubmissionForms[index].recipientSubmissionForms
-              .findIndex((rsf: FeedbackResponseRecipientSubmissionFormModel) => rsf.responseId === responseId);
-
-      const updatedForms: FeedbackResponseRecipientSubmissionFormModel[] =
-          this.questionSubmissionForms[index].recipientSubmissionForms.slice();
-
-      updatedForms[recipientSubmissionFormIndex] = {
-        ...updatedForms[recipientSubmissionFormIndex], comments: commentsModel };
-
-      this.questionSubmissionForms[index] = {
-        ...this.questionSubmissionForms[index], recipientSubmissionForms: updatedForms };
-    });
   }
 
   /**
@@ -617,6 +566,69 @@ export class SessionSubmissionPageComponent implements OnInit {
     }, (resp: ErrorMessageOutput) => {
       hasSubmissionConfirmationError = true;
       this.statusMessageService.showErrorMessage(resp.error.message);
+    });
+  }
+
+  /**
+   * Saves a comment.
+   */
+  saveComment(responseId: string, commentText: string): void {
+    this.httpRequestService.post('/responsecomment', {
+      responseid: responseId,
+      intent: this.intent,
+    }, {
+      commentText: commentText,
+      showCommentTo: [],
+      showGiverNameTo: [],
+    }).subscribe();
+
+  }
+
+  /**
+   * Loads comments for responses
+   */
+  loadCommentsForResponses(model: QuestionSubmissionFormModel, feedbackResponses: FeedbackResponse[]) {
+    feedbackResponses.forEach((feedbackResponse: FeedbackResponse) => {
+      if (feedbackResponse.feedbackResponseId !== '') {
+        this.loadCommentsForResponse(model, feedbackResponse.feedbackResponseId)
+      }
+    });
+  }
+
+  /**
+   * Loads comments for a feedback response.
+   */
+  loadCommentsForResponse(model: QuestionSubmissionFormModel, responseId: string): void {
+    const commentsModel: FeedbackResponseCommentModel[] = [];
+    this.httpRequestService.get('/responsecomment', {
+      responseid: responseId,
+      intent: this.intent,
+    }).subscribe((comments: FeedbackResponseComments) => {
+      comments.comments.forEach((comment: FeedbackResponseComment) => {
+        console.log("comment loaded");
+        commentsModel.push({
+          responseGiver: 'responseGiver',
+          responseRecipient: 'responseRecipient',
+          createdAt: comment.createdAt,
+          editedAt: comment.updatedAt,
+          commentGiver: comment.commentGiver,
+          commentText: comment.commentText,
+          isInEditMode: false,
+          isEditable: true,
+        });
+      });
+
+      const recipientSubmissionFormIndex: number =
+          model.recipientSubmissionForms
+              .findIndex((rsf: FeedbackResponseRecipientSubmissionFormModel) => rsf.responseId === responseId);
+
+      const updatedForms: FeedbackResponseRecipientSubmissionFormModel[] =
+          model.recipientSubmissionForms.slice();
+
+      updatedForms[recipientSubmissionFormIndex] = {
+        ...updatedForms[recipientSubmissionFormIndex], comments: commentsModel };
+
+      model.recipientSubmissionForms = updatedForms;
     });
   }
 }
