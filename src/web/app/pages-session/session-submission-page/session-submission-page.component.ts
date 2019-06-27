@@ -412,15 +412,15 @@ export class SessionSubmissionPageComponent implements OnInit {
   /**
    * Saves a comment.
    */
-  saveComment(index: number, comment: any): void {
+  saveComment(responseId: string, commentText: string): void {
     this.httpRequestService.post('/responsecomment', {
-      responseid: comment.responseId,
+      responseid: responseId,
       intent: this.intent,
     }, {
-      commentText: comment.commentText,
+      commentText: commentText,
       showCommentTo: [],
       showGiverNameTo: [],
-    }).subscribe(() => this.loadComments(index, comment.responseId));
+    }).subscribe();
 
   }
 
@@ -516,6 +516,11 @@ export class SessionSubmissionPageComponent implements OnInit {
                         recipientSubmissionFormModel.responseId = resp.feedbackResponseId;
                         recipientSubmissionFormModel.responseDetails = resp.responseDetails;
                         recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
+
+                        if (recipientSubmissionFormModel.newComment) {
+                          this.saveComment(recipientSubmissionFormModel.responseId, recipientSubmissionFormModel.newComment)
+                        }
+
                       }),
                       catchError((error: any) => {
                         this.statusMessageService.showErrorMessage((error as ErrorMessageOutput).error.message);
@@ -541,6 +546,10 @@ export class SessionSubmissionPageComponent implements OnInit {
                         recipientSubmissionFormModel.responseId = resp.feedbackResponseId;
                         recipientSubmissionFormModel.responseDetails = resp.responseDetails;
                         recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
+
+                        if (recipientSubmissionFormModel.newComment) {
+                          this.saveComment(recipientSubmissionFormModel.responseId, recipientSubmissionFormModel.newComment)
+                        }
                       }),
                       catchError((error: any) => {
                         this.statusMessageService.showErrorMessage((error as ErrorMessageOutput).error.message);
@@ -549,6 +558,7 @@ export class SessionSubmissionPageComponent implements OnInit {
                       }),
                   ));
             }
+
           });
 
       if (!isQuestionFullyAnswered) {

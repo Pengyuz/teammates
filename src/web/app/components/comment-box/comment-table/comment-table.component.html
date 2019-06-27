@@ -15,6 +15,7 @@
     <!-- "Add new comment" row -->
     <li class="list-group-item">
       <tm-comment-row [isInEditMode]="true" [isDiscardButtonEnabled]="false"
+                      (commentFormChangeEvent)="triggerNewCommentFormChangeEvent($event)"
                       (saveCommentEvent)="triggerSaveNewCommentEvent($event)"
       ></tm-comment-row>
     </li>

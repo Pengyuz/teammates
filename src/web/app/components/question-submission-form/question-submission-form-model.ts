@@ -65,4 +65,5 @@ export interface FeedbackResponseRecipientSubmissionFormModel {
   recipientIdentifier: string;
   responseDetails: FeedbackResponseDetails;
   comments?: FeedbackResponseCommentModel[];
+  newComment?: string;
 }

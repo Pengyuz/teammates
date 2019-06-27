@@ -2,6 +2,8 @@
                       [commentText]="commentModel.commentText"
                       [isVisibilityOptionEnabled]="isVisibilityOptionEnabled"
                       [isDiscardButtonEnabled]="isDiscardButtonEnabled"
+                      [isSaveButtonEnabled]="isSaveButtonEnabled"
+                      (commentFormChangeEvent)="triggerCommentFormChange($event)"
                       (closeCommentBoxEvent)="triggerCloseCommentEditForm()"
                       (saveCommentEvent)="triggerSaveCommentEvent($event)"></tm-comment-edit-form>
 

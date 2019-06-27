@@ -27,14 +27,10 @@ export class CommentTableComponent implements OnInit {
     },
   ];
 
-  @Output()
-  saveNewCommentEvent: EventEmitter<any> = new EventEmitter();
-
-  @Output()
-  deleteCommentEvent: EventEmitter<any> = new EventEmitter();
-
-  @Output()
-  updateCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() saveNewCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() deleteCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() updateCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() newCommentFormChangeEvent: EventEmitter<any> = new EventEmitter();
 
   constructor(private modalService: NgbModal) { }
 
@@ -87,4 +83,12 @@ export class CommentTableComponent implements OnInit {
   triggerSaveNewCommentEvent(commentText: any): void {
     this.saveNewCommentEvent.emit(commentText);
   }
+
+  /**
+   * Triggers comment form change event.
+   */
+  triggerNewCommentFormChangeEvent(commentText: any): void {
+    this.newCommentFormChangeEvent.emit(commentText);
+  }
+
 }
