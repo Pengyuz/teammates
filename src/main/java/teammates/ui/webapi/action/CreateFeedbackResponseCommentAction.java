@@ -80,19 +80,26 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
         String email;
 
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
-
+        boolean isFromParticipant;
+        boolean isFollowingQuestionVisibility;
         switch (intent) {
         case STUDENT_SUBMISSION:
             StudentAttributes student = logic.getStudentForGoogleId(courseId, userInfo.getId());
             email = student.getEmail();
+            isFromParticipant = true;
+            isFollowingQuestionVisibility = true;
             break;
         case INSTRUCTOR_SUBMISSION:
             InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.getId());
             email = instructor.getEmail();
+            isFromParticipant = true;
+            isFollowingQuestionVisibility = true;
             break;
         case INSTRUCTOR_RESULT:
             InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId, userInfo.getId());
             email = instructor1.getEmail();
+            isFromParticipant = false;
+            isFollowingQuestionVisibility = false;
             break;
         default:
             throw new InvalidHttpParameterException("Unknown intent " + intent);
@@ -111,9 +118,9 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
                 .withFeedbackResponseId(feedbackResponseId)
                 .withGiverSection(response.giverSection)
                 .withReceiverSection(response.recipientSection)
-                .withCommentFromFeedbackParticipant(false)
+                .withCommentFromFeedbackParticipant(isFromParticipant)
                 .withCommentGiverType(FeedbackParticipantType.INSTRUCTORS)
-                .withVisibilityFollowingFeedbackQuestion(false)
+                .withVisibilityFollowingFeedbackQuestion(isFollowingQuestionVisibility)
                 .withShowCommentTo(comment.getShowCommentTo())
                 .withShowGiverNameTo(comment.getShowGiverNameTo())
                 .build();
