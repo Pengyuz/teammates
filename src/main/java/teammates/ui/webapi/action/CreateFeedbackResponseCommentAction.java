@@ -3,11 +3,8 @@ package teammates.ui.webapi.action;
 import org.apache.http.HttpStatus;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
-import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
-import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
-import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
-import teammates.common.datatransfer.attributes.InstructorAttributes;
-import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.attributes.*;
+import teammates.common.datatransfer.questions.FeedbackQuestionType;
 import teammates.common.exception.EntityAlreadyExistsException;
 import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.InvalidHttpParameterException;
@@ -36,12 +33,17 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
         String courseId = response.courseId;
         String feedbackSessionName = response.feedbackSessionName;
         FeedbackSessionAttributes session = logic.getFeedbackSession(feedbackSessionName, courseId);
+        String questionId = response.feedbackQuestionId;
+        FeedbackQuestionAttributes question = logic.getFeedbackQuestion(questionId);
+        FeedbackQuestionType questionType = question.getQuestionType();
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
 
         switch (intent) {
         case STUDENT_SUBMISSION:
             StudentAttributes studentAttributes = logic.getStudentForGoogleId(courseId, userInfo.getId());
             gateKeeper.verifyAccessible(studentAttributes, session);
+            validQuestionTypeForCommentInSubmission(questionType);
+            verifyCommentNotExist(feedbackResponseId);
             break;
         case INSTRUCTOR_SUBMISSION:
             InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.getId());
@@ -49,6 +51,8 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
                     Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
             gateKeeper.verifyAccessible(instructor, session, response.recipientSection,
                     Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
+            validQuestionTypeForCommentInSubmission(questionType);
+            verifyCommentNotExist(feedbackResponseId);
             break;
         case INSTRUCTOR_RESULT:
             InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId, userInfo.getId());
