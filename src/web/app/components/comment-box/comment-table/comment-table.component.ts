@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmDeleteCommentModalComponent,
-} from '../confirm-delete-comment-modal/confirm-delete-comment-modal.component';
-import { FeedbackResponseCommentModel } from './comment-table-model';
+import { ConfirmDeleteCommentModalComponent } from '../confirm-delete-comment-modal/confirm-delete-comment-modal.component';
+import { CommentTableMode, FeedbackResponseCommentModel } from './comment-table-model';
 
 /**
  * Component for the comments table
@@ -13,6 +12,11 @@ import { FeedbackResponseCommentModel } from './comment-table-model';
   styleUrls: ['./comment-table.component.scss'],
 })
 export class CommentTableComponent implements OnInit {
+
+  // enum
+  CommentTableMode: typeof CommentTableMode = CommentTableMode;
+
+  @Input() commentTableMode: CommentTableMode = CommentTableMode.SESSION_SUBMISSION;
 
   @Input()
   comments: FeedbackResponseCommentModel[] = [

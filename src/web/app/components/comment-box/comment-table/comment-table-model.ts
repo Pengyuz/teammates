@@ -11,3 +11,17 @@ export interface FeedbackResponseCommentModel {
   isInEditMode: boolean;
   isEditable: boolean;
 }
+
+/**
+ * The display mode of the comments table
+ */
+export enum CommentTableMode {
+  /**
+   * Session submission mode.
+   */
+  SESSION_SUBMISSION,
+  /**
+   * Session result mode.
+   */
+  SESSION_RESULT,
+}
