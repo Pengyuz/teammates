@@ -49,7 +49,7 @@ export class CommentTableComponent implements OnInit {
    */
   triggerUpdateCommentEvent(index: number, data: any): void {
     const comments: FeedbackResponseCommentModel[] = this.comments.slice();
-    comments[index] = { ...comments[index], commentText: data};
+    comments[index] = { ...comments[index], commentText: data };
     this.updateCommentEvent.emit(comments);
   }
 

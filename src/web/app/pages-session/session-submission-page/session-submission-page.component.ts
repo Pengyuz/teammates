@@ -467,7 +467,7 @@ export class SessionSubmissionPageComponent implements OnInit {
                         recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
 
                         // Update comment.
-                        if (recipientSubmissionFormModel.comments) {
+                        if (recipientSubmissionFormModel.comments && recipientSubmissionFormModel.comments.length > 0) {
                           this.updateComment(recipientSubmissionFormModel.comments[0].commentId,
                               recipientSubmissionFormModel.comments[0].commentText);
                         }
@@ -661,6 +661,10 @@ export class SessionSubmissionPageComponent implements OnInit {
           isEditable: true,
         });
       });
+
+      if (commentsModel.length === 0) {
+        return;
+      }
 
       const recipientSubmissionFormIndex: number =
           model.recipientSubmissionForms
