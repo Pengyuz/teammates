@@ -22,7 +22,7 @@
   <ul class="list-group list-group-flush" *ngIf="commentTableMode === CommentTableMode.SESSION_SUBMISSION">
     <li class="list-group-item">
       <!-- Add new comment form -->
-      <tm-comment-row *ngIf="!comment || comment.commentText === ''"
+      <tm-comment-row *ngIf="!comment, else existingCommentRow"
                       [isInEditMode]="true" [isDiscardButtonEnabled]="false"
                       [isSaveButtonEnabled]="false"
                       [isVisibilityOptionEnabled]="false"
@@ -30,14 +30,16 @@
       ></tm-comment-row>
 
       <!-- Existing comment row -->
-      <tm-comment-row *ngIf="comment && comment.commentText != ''"
-                      [isInEditMode]="false" [isDiscardButtonEnabled]="false"
-                      [commentModel]="comment"
-                      [isSaveButtonEnabled]="false"
-                      [isVisibilityOptionEnabled]="false"
-                      (deleteCommentEvent)="triggerDeleteCommentEvent(comment.commentId)"
-                      (commentFormChangeEvent)="triggerUpdateCommentEvent($event)"
-      ></tm-comment-row>
+      <ng-template #existingCommentRow>
+        <tm-comment-row
+                        [isInEditMode]="false" [isDiscardButtonEnabled]="false"
+                        [commentModel]="comment"
+                        [isSaveButtonEnabled]="false"
+                        [isVisibilityOptionEnabled]="false"
+                        (deleteCommentEvent)="triggerDeleteCommentEvent(comment.commentId)"
+                        (commentFormChangeEvent)="triggerUpdateCommentEvent($event)"
+        ></tm-comment-row>
+      </ng-template>
     </li>
   </ul>
 

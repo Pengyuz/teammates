@@ -96,9 +96,8 @@
             <div *ngIf="model.questionType === FeedbackQuestionType.MCQ">
               <div style="margin-top: 7px;">
                 <button class="btn btn-secondary btn-sm"
-                        *ngIf="!isCommentTableExpanded[i] && !(recipientSubmissionFormModel.comment && recipientSubmissionFormModel.comment.commentText !== ''),
+                        *ngIf="!isCommentTableExpanded[i] && !(recipientSubmissionFormModel.comment),
                         else commentTable"
-
                         (click)="isCommentTableExpanded[i]=true;">
                   <i class="fas fa-comment"></i> Comment on your response
                 </button>
