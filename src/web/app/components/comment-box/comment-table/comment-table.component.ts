@@ -20,8 +20,17 @@ export class CommentTableComponent implements OnInit {
 
   @Input() commentTableMode: CommentTableMode = CommentTableMode.SESSION_SUBMISSION;
 
-  @Input()
-  comments: FeedbackResponseCommentModel[] = [];
+  @Input() comments: FeedbackResponseCommentModel[] = [];
+  @Input() comment: FeedbackResponseCommentModel = {
+    commentId: -999999,
+    responseGiver: '',
+    responseRecipient: '',
+    createdAt: '',
+    editedAt: '',
+    commentGiver: '',
+    commentText: '',
+    isEditable: true,
+  };
 
   @Output() saveNewCommentEvent: EventEmitter<any> = new EventEmitter();
   @Output() deleteCommentEvent: EventEmitter<any> = new EventEmitter();
@@ -36,21 +45,26 @@ export class CommentTableComponent implements OnInit {
   /**
    * Triggers the delete comment event
    */
-  triggerDeleteCommentEvent(index: number): void {
+  triggerDeleteCommentEvent(commentId: number): void {
     const modalRef: NgbModalRef = this.modalService.open(ConfirmDeleteCommentModalComponent);
 
     modalRef.result.then(() => {
-      this.deleteCommentEvent.emit(index);
+      this.deleteCommentEvent.emit(commentId);
     }, () => {});
   }
 
   /**
    * Triggers the update comment event.
    */
-  triggerUpdateCommentEvent(index: number, data: any): void {
-    const comments: FeedbackResponseCommentModel[] = this.comments.slice();
-    comments[index] = { ...comments[index], commentText: data };
-    this.updateCommentEvent.emit(comments);
+  triggerUpdateCommentEvent(data: any, index?: number): void {
+    if (index) {
+      const comments: FeedbackResponseCommentModel[] = this.comments.slice();
+      comments[index] = { ...comments[index], commentText: data };
+      this.updateCommentEvent.emit(comments);
+    } else {
+      const updatedComment: FeedbackResponseCommentModel = { ...this.comment, commentText: data };
+      this.updateCommentEvent.emit(updatedComment);
+    }
   }
 
   /**

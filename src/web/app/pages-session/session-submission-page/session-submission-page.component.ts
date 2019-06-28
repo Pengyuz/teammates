@@ -467,9 +467,10 @@ export class SessionSubmissionPageComponent implements OnInit {
                         recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
 
                         // Update comment.
-                        if (recipientSubmissionFormModel.comments && recipientSubmissionFormModel.comments.length > 0) {
-                          this.updateComment(recipientSubmissionFormModel.comments[0].commentId,
-                              recipientSubmissionFormModel.comments[0].commentText);
+                        if (recipientSubmissionFormModel.comment &&
+                            recipientSubmissionFormModel.comment.commentText !== '') {
+                          this.updateComment(recipientSubmissionFormModel.comment.commentId,
+                              recipientSubmissionFormModel.comment.commentText);
                         }
 
                         // Save a new comment.
@@ -582,21 +583,18 @@ export class SessionSubmissionPageComponent implements OnInit {
    * Deletes a comment.
    */
   deleteComment(questionIndex: number, deleteCommentData: any): void {
-    const comments: FeedbackResponseCommentModel[] | undefined =
-        this.questionSubmissionForms[questionIndex].recipientSubmissionForms[deleteCommentData.recipientIndex].comments;
+    const comment: FeedbackResponseCommentModel | undefined =
+        this.questionSubmissionForms[questionIndex].recipientSubmissionForms[deleteCommentData.recipientIndex].comment;
 
-    if (!comments) {
+    if (!comment) {
       return;
     }
-
-    const comment: FeedbackResponseCommentModel = comments[deleteCommentData.commentIndex];
 
     this.httpRequestService.delete('/responsecomment', {
       responsecommentid: comment.commentId.toString(),
     }).subscribe(() => {
-      comments.splice(deleteCommentData.commentIndex, 1);
       this.questionSubmissionForms[questionIndex].recipientSubmissionForms[deleteCommentData.recipientIndex]
-          .comments = comments;
+          .comment = undefined;
     });
   }
 
@@ -644,13 +642,14 @@ export class SessionSubmissionPageComponent implements OnInit {
    * Loads comments for a feedback response.
    */
   loadCommentsForResponse(model: QuestionSubmissionFormModel, responseId: string): void {
-    const commentsModel: FeedbackResponseCommentModel[] = [];
+    let commentModel: FeedbackResponseCommentModel | undefined;
+
     this.httpRequestService.get('/responsecomment', {
       responseid: responseId,
       intent: this.intent,
     }).subscribe((comments: FeedbackResponseComments) => {
       comments.comments.forEach((comment: FeedbackResponseComment) => {
-        commentsModel.push({
+        commentModel = {
           commentId: comment.feedbackResponseCommentId,
           responseGiver: 'responseGiver',
           responseRecipient: 'responseRecipient',
@@ -659,10 +658,10 @@ export class SessionSubmissionPageComponent implements OnInit {
           commentGiver: comment.commentGiver,
           commentText: comment.commentText,
           isEditable: true,
-        });
+        };
       });
 
-      if (commentsModel.length === 0) {
+      if (!commentModel) {
         return;
       }
 
@@ -670,11 +669,10 @@ export class SessionSubmissionPageComponent implements OnInit {
           model.recipientSubmissionForms
               .findIndex((rsf: FeedbackResponseRecipientSubmissionFormModel) => rsf.responseId === responseId);
 
-      const updatedForms: FeedbackResponseRecipientSubmissionFormModel[] =
-          model.recipientSubmissionForms.slice();
+      const updatedForms: FeedbackResponseRecipientSubmissionFormModel[] = model.recipientSubmissionForms.slice();
 
       updatedForms[recipientSubmissionFormIndex] = {
-        ...updatedForms[recipientSubmissionFormIndex], comments: commentsModel };
+        ...updatedForms[recipientSubmissionFormIndex], comment: commentModel };
 
       model.recipientSubmissionForms = updatedForms;
     });
