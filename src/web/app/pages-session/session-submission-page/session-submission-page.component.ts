@@ -648,31 +648,34 @@ export class SessionSubmissionPageComponent implements OnInit {
       responseid: responseId,
       intent: this.intent,
     }).subscribe((comments: FeedbackResponseComments) => {
-      comments.comments.forEach((comment: FeedbackResponseComment) => {
-        commentModel = {
-          commentId: comment.feedbackResponseCommentId,
-          responseGiver: 'responseGiver',
-          responseRecipient: 'responseRecipient',
-          createdAt: comment.createdAt,
-          editedAt: comment.updatedAt,
-          commentGiver: comment.commentGiver,
-          commentText: comment.commentText,
-          isEditable: true,
-        };
-      });
 
-      if (!commentModel) {
+      // For submission, responsecomment/GET will return a list of a single comment.
+      const comment: FeedbackResponseComment = comments.comments[0];
+
+      if (!comment) {
         return;
       }
 
-      const recipientSubmissionFormIndex: number =
-          model.recipientSubmissionForms
-              .findIndex((rsf: FeedbackResponseRecipientSubmissionFormModel) => rsf.responseId === responseId);
+      commentModel = {
+        commentId: comment.feedbackResponseCommentId,
+        responseGiver: 'responseGiver',
+        responseRecipient: 'responseRecipient',
+        createdAt: comment.createdAt,
+        editedAt: comment.updatedAt,
+        commentGiver: comment.commentGiver,
+        commentText: comment.commentText,
+        isEditable: true,
+      };
+
+      const recipientSubmissionFormIndex: number = model.recipientSubmissionForms.findIndex(
+          (rsf: FeedbackResponseRecipientSubmissionFormModel) => rsf.responseId === responseId);
 
       const updatedForms: FeedbackResponseRecipientSubmissionFormModel[] = model.recipientSubmissionForms.slice();
 
       updatedForms[recipientSubmissionFormIndex] = {
-        ...updatedForms[recipientSubmissionFormIndex], comment: commentModel };
+        ...updatedForms[recipientSubmissionFormIndex],
+        comment: commentModel,
+      };
 
       model.recipientSubmissionForms = updatedForms;
     });
