@@ -96,17 +96,22 @@
             <div *ngIf="model.questionType === FeedbackQuestionType.MCQ">
               <div style="margin-top: 7px;">
                 <button class="btn btn-secondary btn-sm"
-                        *ngIf="!isCommentTableExpanded[i] "
+                        *ngIf="!isCommentTableExpanded[i] && !(recipientSubmissionFormModel.comment && recipientSubmissionFormModel.comment.commentText !== ''),
+                        else commentTable"
+
                         (click)="isCommentTableExpanded[i]=true;">
                   <i class="fas fa-comment"></i> Comment on your response
                 </button>
+                <ng-template #commentTable>
+                  <tm-comment-table
+                                    [commentTableMode] = CommentTableMode.SESSION_SUBMISSION
+                                    [comment] = recipientSubmissionFormModel.comment
+                                    (deleteCommentEvent)="triggerDeleteCommentEvent(i, $event)"
+                                    (newCommentFormChangeEvent)="triggerRecipientSubmissionFormChange(i, 'newComment', $event)"
+                                    (updateCommentEvent)="triggerRecipientSubmissionFormChange(i, 'comment', $event)"
+                  ></tm-comment-table>
+                </ng-template>
               </div>
-              <tm-comment-table *ngIf="isCommentTableExpanded[i]"
-                                [comments] = recipientSubmissionFormModel.comments
-                                (deleteCommentEvent)="triggerDeleteCommentEvent(i, $event)"
-                                (newCommentFormChangeEvent)="triggerRecipientSubmissionFormChange(i, 'newComment', $event)"
-                                (updateCommentEvent)="triggerRecipientSubmissionFormChange(i, 'comments', $event)"
-              ></tm-comment-table>
             </div>
             <tm-msq-question-edit-answer-form *ngIf="model.questionType === FeedbackQuestionType.MSQ" [questionDetails]="model.questionDetails"
                                               [responseDetails]="recipientSubmissionFormModel.responseDetails"

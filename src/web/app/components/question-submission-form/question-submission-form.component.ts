@@ -9,6 +9,7 @@ import {
   NumberOfEntitiesToGiveFeedbackToSetting,
 } from '../../../types/api-output';
 import { VisibilityControl } from '../../../types/visibility-control';
+import { CommentTableMode } from '../comment-box/comment-table/comment-table-model';
 import {
   FeedbackResponseRecipient,
   FeedbackResponseRecipientSubmissionFormModel,
@@ -28,6 +29,7 @@ export class QuestionSubmissionFormComponent implements OnInit {
 
   // enum
   QuestionSubmissionFormMode: typeof QuestionSubmissionFormMode = QuestionSubmissionFormMode;
+  CommentTableMode: typeof CommentTableMode = CommentTableMode;
   FeedbackQuestionType: typeof FeedbackQuestionType = FeedbackQuestionType;
   FeedbackParticipantType: typeof FeedbackParticipantType = FeedbackParticipantType;
   FeedbackVisibilityType: typeof FeedbackVisibilityType = FeedbackVisibilityType;
@@ -146,7 +148,7 @@ export class QuestionSubmissionFormComponent implements OnInit {
   /**
    * Triggers deletion of a comment
    */
-  triggerDeleteCommentEvent(index: number, commentIndex: number): void {
-    this.deleteCommentEvent.emit({ commentIndex, recipientIndex: index });
+  triggerDeleteCommentEvent(index: number, commentId: number): void {
+    this.deleteCommentEvent.emit({ commentId, recipientIndex: index });
   }
 }

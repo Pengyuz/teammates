@@ -1,4 +1,4 @@
-<div class="card" style="margin-top: 7px;">
+<div class="card">
   <div class="card-header comment-table-header" *ngIf="false">
     Comments
   </div>
@@ -6,7 +6,7 @@
   <ul class="list-group list-group-flush" *ngIf="commentTableMode === CommentTableMode.SESSION_RESULT">
     <li class="list-group-item" *ngFor="let comment of comments; let i = index">
       <tm-comment-row [isInEditMode]="false" [commentModel]="comment"
-                      (deleteCommentEvent)="triggerDeleteCommentEvent(i)"
+                      (deleteCommentEvent)="triggerDeleteCommentEvent(comment.commentId)"
                       (saveCommentEvent)="triggerUpdateCommentEvent(i, $event)"
       ></tm-comment-row>
     </li>
@@ -21,20 +21,22 @@
 
   <ul class="list-group list-group-flush" *ngIf="commentTableMode === CommentTableMode.SESSION_SUBMISSION">
     <li class="list-group-item">
-      <tm-comment-row *ngIf="!comments || comments.length === 0"
+      <!-- Add new comment form -->
+      <tm-comment-row *ngIf="!comment || comment.commentText === ''"
                       [isInEditMode]="true" [isDiscardButtonEnabled]="false"
                       [isSaveButtonEnabled]="false"
                       [isVisibilityOptionEnabled]="false"
                       (commentFormChangeEvent)="triggerNewCommentFormChangeEvent($event)"
       ></tm-comment-row>
 
-      <tm-comment-row *ngIf="comments && comments.length > 0"
+      <!-- Existing comment row -->
+      <tm-comment-row *ngIf="comment && comment.commentText != ''"
                       [isInEditMode]="false" [isDiscardButtonEnabled]="false"
-                      [commentModel]="comments[0]"
+                      [commentModel]="comment"
                       [isSaveButtonEnabled]="false"
                       [isVisibilityOptionEnabled]="false"
-                      (deleteCommentEvent)="triggerDeleteCommentEvent(0)"
-                      (commentFormChangeEvent)="triggerUpdateCommentEvent(0, $event)"
+                      (deleteCommentEvent)="triggerDeleteCommentEvent(comment.commentId)"
+                      (commentFormChangeEvent)="triggerUpdateCommentEvent($event)"
       ></tm-comment-row>
     </li>
   </ul>
