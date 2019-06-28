@@ -666,8 +666,6 @@ export class SessionSubmissionPageComponent implements OnInit {
 
       commentModel = {
         commentId: comment.feedbackResponseCommentId,
-        responseGiver: 'responseGiver',
-        responseRecipient: 'responseRecipient',
         createdAt: comment.createdAt,
         editedAt: comment.updatedAt,
         commentGiver: comment.commentGiver,

@@ -3,8 +3,6 @@
  */
 export interface FeedbackResponseCommentModel {
   commentId: number;
-  responseGiver: string;
-  responseRecipient: string;
   createdAt: string;
   editedAt: string;
   commentGiver: string;
