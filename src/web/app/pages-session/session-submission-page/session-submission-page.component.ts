@@ -467,14 +467,15 @@ export class SessionSubmissionPageComponent implements OnInit {
                         recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
 
                         // Update comment.
-                        if (recipientSubmissionFormModel.comments) {
+                        if (recipientSubmissionFormModel.comments && recipientSubmissionFormModel.comments.length > 0) {
                           this.updateComment(recipientSubmissionFormModel.comments[0].commentId,
                               recipientSubmissionFormModel.comments[0].commentText);
                         }
 
                         // Save a new comment.
                         if (recipientSubmissionFormModel.newComment) {
-                          this.saveComment(recipientSubmissionFormModel.responseId, recipientSubmissionFormModel.newComment)
+                          this.saveComment(
+                              recipientSubmissionFormModel.responseId, recipientSubmissionFormModel.newComment);
                         }
 
                       }),
@@ -504,7 +505,8 @@ export class SessionSubmissionPageComponent implements OnInit {
                         recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
 
                         if (recipientSubmissionFormModel.newComment) {
-                          this.saveComment(recipientSubmissionFormModel.responseId, recipientSubmissionFormModel.newComment)
+                          this.saveComment(
+                              recipientSubmissionFormModel.responseId, recipientSubmissionFormModel.newComment);
                         }
                       }),
                       catchError((error: any) => {
@@ -584,7 +586,7 @@ export class SessionSubmissionPageComponent implements OnInit {
         this.questionSubmissionForms[questionIndex].recipientSubmissionForms[deleteCommentData.recipientIndex].comments;
 
     if (!comments) {
-      return
+      return;
     }
 
     const comment: FeedbackResponseCommentModel = comments[deleteCommentData.commentIndex];
@@ -592,9 +594,9 @@ export class SessionSubmissionPageComponent implements OnInit {
     this.httpRequestService.delete('/responsecomment', {
       responsecommentid: comment.commentId.toString(),
     }).subscribe(() => {
-
       comments.splice(deleteCommentData.commentIndex, 1);
-      this.questionSubmissionForms[questionIndex].recipientSubmissionForms[deleteCommentData.recipientIndex].comments = comments;
+      this.questionSubmissionForms[questionIndex].recipientSubmissionForms[deleteCommentData.recipientIndex]
+          .comments = comments;
     });
   }
 
@@ -606,7 +608,7 @@ export class SessionSubmissionPageComponent implements OnInit {
       responseid: responseId,
       intent: this.intent,
     }, {
-      commentText: commentText,
+      commentText,
       showCommentTo: [],
       showGiverNameTo: [],
     }).subscribe();
@@ -621,7 +623,7 @@ export class SessionSubmissionPageComponent implements OnInit {
       responsecommentid: commentId.toString(),
       intent: this.intent,
     }, {
-      commentText: commentText,
+      commentText,
       showCommentTo: [],
       showGiverNameTo: [],
     }).subscribe();
@@ -630,10 +632,10 @@ export class SessionSubmissionPageComponent implements OnInit {
   /**
    * Loads comments for responses
    */
-  loadCommentsForResponses(model: QuestionSubmissionFormModel, feedbackResponses: FeedbackResponse[]) {
+  loadCommentsForResponses(model: QuestionSubmissionFormModel, feedbackResponses: FeedbackResponse[]): void {
     feedbackResponses.forEach((feedbackResponse: FeedbackResponse) => {
       if (feedbackResponse.feedbackResponseId !== '') {
-        this.loadCommentsForResponse(model, feedbackResponse.feedbackResponseId)
+        this.loadCommentsForResponse(model, feedbackResponse.feedbackResponseId);
       }
     });
   }
@@ -659,6 +661,10 @@ export class SessionSubmissionPageComponent implements OnInit {
           isEditable: true,
         });
       });
+
+      if (commentsModel.length === 0) {
+        return;
+      }
 
       const recipientSubmissionFormIndex: number =
           model.recipientSubmissionForms
