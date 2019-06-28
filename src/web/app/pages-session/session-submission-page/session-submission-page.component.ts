@@ -466,11 +466,19 @@ export class SessionSubmissionPageComponent implements OnInit {
                         recipientSubmissionFormModel.responseDetails = resp.responseDetails;
                         recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
 
-                        // Update comment.
-                        if (recipientSubmissionFormModel.comment &&
-                            recipientSubmissionFormModel.comment.commentText !== '') {
-                          this.updateComment(recipientSubmissionFormModel.comment.commentId,
-                              recipientSubmissionFormModel.comment.commentText);
+                        if (recipientSubmissionFormModel.comment) {
+                          // Delete comment if it has an empty comment text.
+                          // Otherwise, update the comment.
+                          if (recipientSubmissionFormModel.comment.commentText === '') {
+                            this.httpRequestService.delete('/responsecomment', {
+                              responsecommentid: recipientSubmissionFormModel.comment.commentId.toString(),
+                            }).subscribe();
+
+                          } else {
+                            this.updateComment(recipientSubmissionFormModel.comment.commentId,
+                                recipientSubmissionFormModel.comment.commentText);
+                          }
+
                         }
 
                         // Save a new comment.
