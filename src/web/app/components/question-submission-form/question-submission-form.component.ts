@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FeedbackQuestionsService } from '../../../services/feedback-questions.service';
+import { FeedbackResponsesService } from '../../../services/feedback-responses.service';
 import { VisibilityStateMachine } from '../../../services/visibility-state-machine';
 import {
   FeedbackParticipantType,
-  FeedbackQuestionType,
+  FeedbackQuestionType, FeedbackResponseDetails,
   FeedbackTextQuestionDetails,
   FeedbackVisibilityType,
   NumberOfEntitiesToGiveFeedbackToSetting,
@@ -91,7 +92,7 @@ export class QuestionSubmissionFormComponent implements OnInit {
 
   isCommentTableExpanded: boolean[] = [];
 
-  constructor(private feedbackQuestionsService: FeedbackQuestionsService) {
+  constructor(private feedbackQuestionsService: FeedbackQuestionsService, private  feedbackResponsesService: FeedbackResponsesService) {
     this.visibilityStateMachine =
         this.feedbackQuestionsService.getNewVisibilityStateMachine(
             this.model.giverType, this.model.recipientType);
@@ -150,5 +151,12 @@ export class QuestionSubmissionFormComponent implements OnInit {
    */
   triggerDeleteCommentEvent(index: number, commentId: number): void {
     this.deleteCommentEvent.emit({ commentId, recipientIndex: index });
+  }
+
+  /**
+   * Checks whether a feedback response details is empty.
+   */
+  isFeedbackResponseDetailsEmpty(questionType: FeedbackQuestionType, details: FeedbackResponseDetails): boolean {
+    return this.feedbackResponsesService.isFeedbackResponseDetailsEmpty(questionType, details);
   }
 }

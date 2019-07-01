@@ -93,31 +93,30 @@
                                                     [isDisabled]="isDisabled"
                                                     [id]="model.feedbackQuestionId + recipientSubmissionFormModel.recipientIdentifier"
             ></tm-mcq-question-edit-answer-form>
-            <div *ngIf="model.questionType === FeedbackQuestionType.MCQ">
-              <div style="margin-top: 7px;">
-                <button class="btn btn-secondary btn-sm"
-                        *ngIf="!isCommentTableExpanded[i] && !(recipientSubmissionFormModel.comment && recipientSubmissionFormModel.comment.commentText !== ''),
-                        else commentTable"
-
-                        (click)="isCommentTableExpanded[i]=true;">
-                  <i class="fas fa-comment"></i> Comment on your response
-                </button>
-                <ng-template #commentTable>
-                  <tm-comment-table
-                                    [commentTableMode] = CommentTableMode.SESSION_SUBMISSION
-                                    [comment] = recipientSubmissionFormModel.comment
-                                    (deleteCommentEvent)="triggerDeleteCommentEvent(i, $event)"
-                                    (newCommentFormChangeEvent)="triggerRecipientSubmissionFormChange(i, 'newComment', $event)"
-                                    (updateCommentEvent)="triggerRecipientSubmissionFormChange(i, 'comment', $event)"
-                  ></tm-comment-table>
-                </ng-template>
-              </div>
-            </div>
             <tm-msq-question-edit-answer-form *ngIf="model.questionType === FeedbackQuestionType.MSQ" [questionDetails]="model.questionDetails"
                                               [responseDetails]="recipientSubmissionFormModel.responseDetails"
                                               (responseDetailsChange)="triggerRecipientSubmissionFormChange(i, 'responseDetails', $event)"
                                               [isDisabled]="isDisabled"
             ></tm-msq-question-edit-answer-form>
+            <div *ngIf="(model.questionType === FeedbackQuestionType.MCQ && !isFeedbackResponseDetailsEmpty(FeedbackQuestionType.MCQ, recipientSubmissionFormModel.responseDetails))
+            || (model.questionType === FeedbackQuestionType.MSQ && !isFeedbackResponseDetailsEmpty(FeedbackQuestionType.MSQ, recipientSubmissionFormModel.responseDetails))"
+                 style="margin-top: 7px;">
+              <div *ngIf="recipientSubmissionFormModel.responseDetails"></div>
+              <button class="btn btn-secondary btn-sm"
+                      *ngIf="!isCommentTableExpanded[i] && !(recipientSubmissionFormModel.comment),
+                      else commentTable"
+                      (click)="isCommentTableExpanded[i]=true;">
+                <i class="fas fa-comment"></i> Comment on your response
+              </button>
+              <ng-template #commentTable>
+                <tm-comment-table
+                    [commentTableMode] = CommentTableMode.SESSION_SUBMISSION
+                    [comment] = recipientSubmissionFormModel.comment
+                    (deleteCommentEvent)="triggerDeleteCommentEvent(i, $event)"
+                    (updateCommentEvent)="triggerRecipientSubmissionFormChange(i, 'comment', $event)"
+                ></tm-comment-table>
+              </ng-template>
+            </div>
           </div>
         </div>
       </div>

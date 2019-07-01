@@ -23,8 +23,6 @@ export class CommentTableComponent implements OnInit {
   @Input() comments: FeedbackResponseCommentModel[] = [];
   @Input() comment: FeedbackResponseCommentModel = {
     commentId: -999999,
-    responseGiver: '',
-    responseRecipient: '',
     createdAt: '',
     editedAt: '',
     commentGiver: '',
