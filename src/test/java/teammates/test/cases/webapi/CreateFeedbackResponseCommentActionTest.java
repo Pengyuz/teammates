@@ -33,8 +33,11 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
     private FeedbackSessionAttributes session1InCourse1;
     private InstructorAttributes instructor1OfCourse1;
     private FeedbackResponseAttributes response1ForQ1S1C1;
+    private FeedbackResponseAttributes response1ForQ6S1C1;
     private StudentAttributes student1InCourse1;
+    private StudentAttributes student2InCourse1;
     private FeedbackQuestionAttributes qn1InSession1InCourse1;
+    private FeedbackQuestionAttributes qn6InSession1InCourse1;
 
     @Override
     protected String getActionUri() {
@@ -52,9 +55,14 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
         session1InCourse1 = typicalBundle.feedbackSessions.get("session1InCourse1");
         qn1InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 1);
+        qn6InSession1InCourse1 = logic.getFeedbackQuestion(
+                session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 6);
         student1InCourse1 = typicalBundle.students.get("student1InCourse1");
+        student2InCourse1 = typicalBundle.students.get("student2InCourse1");
         response1ForQ1S1C1 = logic.getFeedbackResponse(qn1InSession1InCourse1.getId(),
                 student1InCourse1.getEmail(), student1InCourse1.getEmail());
+        response1ForQ6S1C1 = logic.getFeedbackResponse(qn6InSession1InCourse1.getId(),
+                student1InCourse1.getEmail(), student2InCourse1.getEmail());
         instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
     }
 
