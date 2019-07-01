@@ -504,7 +504,7 @@ export class SessionSubmissionPageComponent implements OnInit {
                                     commentText: resp.commentText,
                                     isEditable: true,
                                   }
-                                });;
+                                });
                           }
                         }
                       }),
