@@ -474,19 +474,39 @@ export class SessionSubmissionPageComponent implements OnInit {
                               responsecommentid: recipientSubmissionFormModel.comment.commentId.toString(),
                             }).subscribe();
 
-                          } else {
-                            this.updateComment(recipientSubmissionFormModel.comment.commentId,
-                                recipientSubmissionFormModel.comment.commentText);
                           }
 
-                        }
+                          // If existing comment, update.
+                          if (recipientSubmissionFormModel.comment.commentId) {
+                            this.updateComment(recipientSubmissionFormModel.comment.commentId,
+                                recipientSubmissionFormModel.comment.commentText).subscribe(
+                                    (resp: FeedbackResponseComment) => {
+                                      recipientSubmissionFormModel.comment = {
+                                        commentId: resp.feedbackResponseCommentId,
+                                        createdAt: resp.createdAt,
+                                        editedAt: resp.updatedAt,
+                                        commentGiver: resp.commentGiver,
+                                        commentText: resp.commentText,
+                                        isEditable: true,
+                                      }
+                                    });
 
-                        // Save a new comment.
-                        if (recipientSubmissionFormModel.newComment) {
-                          this.saveComment(
-                              recipientSubmissionFormModel.responseId, recipientSubmissionFormModel.newComment);
+                          // If new comment, save.
+                          } else {
+                            this.saveComment(recipientSubmissionFormModel.responseId,
+                                recipientSubmissionFormModel.comment.commentText).subscribe(
+                                (resp: FeedbackResponseComment) => {
+                                  recipientSubmissionFormModel.comment = {
+                                    commentId: resp.feedbackResponseCommentId,
+                                    createdAt: resp.createdAt,
+                                    editedAt: resp.updatedAt,
+                                    commentGiver: resp.commentGiver,
+                                    commentText: resp.commentText,
+                                    isEditable: true,
+                                  }
+                                });;
+                          }
                         }
-
                       }),
                       catchError((error: any) => {
                         this.statusMessageService.showErrorMessage((error as ErrorMessageOutput).error.message);
@@ -513,9 +533,19 @@ export class SessionSubmissionPageComponent implements OnInit {
                         recipientSubmissionFormModel.responseDetails = resp.responseDetails;
                         recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
 
-                        if (recipientSubmissionFormModel.newComment) {
-                          this.saveComment(
-                              recipientSubmissionFormModel.responseId, recipientSubmissionFormModel.newComment);
+                        if (recipientSubmissionFormModel.comment) {
+                          this.saveComment(recipientSubmissionFormModel.responseId,
+                              recipientSubmissionFormModel.comment.commentText).subscribe(
+                              (resp: FeedbackResponseComment) => {
+                                recipientSubmissionFormModel.comment = {
+                                  commentId: resp.feedbackResponseCommentId,
+                                  createdAt: resp.createdAt,
+                                  editedAt: resp.updatedAt,
+                                  commentGiver: resp.commentGiver,
+                                  commentText: resp.commentText,
+                                  isEditable: true,
+                                }
+                              });
                         }
                       }),
                       catchError((error: any) => {
@@ -609,30 +639,30 @@ export class SessionSubmissionPageComponent implements OnInit {
   /**
    * Saves a comment.
    */
-  saveComment(responseId: string, commentText: string): void {
-    this.httpRequestService.post('/responsecomment', {
+  saveComment(responseId: string, commentText: string): Observable<any> {
+    return this.httpRequestService.post('/responsecomment', {
       responseid: responseId,
       intent: this.intent,
     }, {
       commentText,
       showCommentTo: [],
       showGiverNameTo: [],
-    }).subscribe();
+    });
 
   }
 
   /**
    * Updates a comment.
    */
-  updateComment(commentId: number, commentText: string): void {
-    this.httpRequestService.put('/responsecomment', {
+  updateComment(commentId: number, commentText: string): Observable<any> {
+    return this.httpRequestService.put('/responsecomment', {
       responsecommentid: commentId.toString(),
       intent: this.intent,
     }, {
       commentText,
       showCommentTo: [],
       showGiverNameTo: [],
-    }).subscribe();
+    });
   }
 
   /**
