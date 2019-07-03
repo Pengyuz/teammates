@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.http.HttpStatus;
+import org.mozilla.javascript.SymbolScriptable;
 import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
@@ -15,9 +16,18 @@ import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttribute
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
+import teammates.common.datatransfer.questions.FeedbackMcqQuestionDetails;
+import teammates.common.datatransfer.questions.FeedbackMcqResponseDetails;
+import teammates.common.datatransfer.questions.FeedbackQuestionDetails;
+import teammates.common.datatransfer.questions.FeedbackResponseDetails;
+import teammates.common.exception.EntityNotFoundException;
+import teammates.common.exception.UnauthorizedAccessException;
 import teammates.common.util.Const;
+import teammates.logic.core.FeedbackQuestionsLogic;
+import teammates.logic.core.FeedbackResponsesLogic;
 import teammates.logic.core.FeedbackSessionsLogic;
 import teammates.storage.api.FeedbackResponseCommentsDb;
+import teammates.storage.entity.FeedbackResponseComment;
 import teammates.ui.webapi.action.CreateFeedbackResponseCommentAction;
 import teammates.ui.webapi.action.Intent;
 import teammates.ui.webapi.action.JsonResult;
@@ -25,6 +35,9 @@ import teammates.ui.webapi.output.FeedbackResponseCommentData;
 import teammates.ui.webapi.output.FeedbackVisibilityType;
 import teammates.ui.webapi.output.MessageOutput;
 import teammates.ui.webapi.request.FeedbackResponseCommentCreateRequest;
+import teammates.ui.webapi.request.FeedbackResponseCreateRequest;
+
+import javax.xml.bind.SchemaOutputResolver;
 
 /**
  * SUT: {@link CreateFeedbackResponseCommentAction}.
@@ -34,6 +47,7 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
     private InstructorAttributes instructor1OfCourse1;
     private FeedbackResponseAttributes response1ForQ1S1C1;
     private FeedbackResponseAttributes response1ForQ6S1C1;
+    private FeedbackResponseAttributes response2ForQ6S1C1;
     private StudentAttributes student1InCourse1;
     private StudentAttributes student2InCourse1;
     private FeedbackQuestionAttributes qn1InSession1InCourse1;
@@ -52,23 +66,19 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
     @Override
     protected void prepareTestData() {
         removeAndRestoreTypicalDataBundle();
+        student2InCourse1 = typicalBundle.students.get("student2InCourse1");
         session1InCourse1 = typicalBundle.feedbackSessions.get("session1InCourse1");
         qn1InSession1InCourse1 = logic.getFeedbackQuestion(
                 session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 1);
-        qn6InSession1InCourse1 = logic.getFeedbackQuestion(
-                session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 6);
         student1InCourse1 = typicalBundle.students.get("student1InCourse1");
-        student2InCourse1 = typicalBundle.students.get("student2InCourse1");
         response1ForQ1S1C1 = logic.getFeedbackResponse(qn1InSession1InCourse1.getId(),
                 student1InCourse1.getEmail(), student1InCourse1.getEmail());
-        response1ForQ6S1C1 = logic.getFeedbackResponse(qn6InSession1InCourse1.getId(),
-                student1InCourse1.getEmail(), student2InCourse1.getEmail());
         instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
     }
 
     @Override
     @Test
-    public void testExecute() {
+    public void testExecute() throws Exception {
         //see individual test cases.
     }
 
@@ -242,6 +252,66 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
         assertEquals(Const.StatusMessages.FEEDBACK_RESPONSE_COMMENT_EMPTY, output.getMessage());
     }
 
+    @Test
+    protected void testExecute_typicalCaseForSubmission_shouldPass() throws Exception{
+
+        ______TS("Successful case: student submission");
+        loginAsStudent(student1InCourse1.getGoogleId());
+        createMcqQuestion();
+        createMcqResponseAsStudent();
+        String[] submissionParams = new String[] {
+          Const.ParamsNames.INTENT, Intent.STUDENT_SUBMISSION.toString(),
+          Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ6S1C1.getId(),
+        };
+
+        FeedbackResponseCommentCreateRequest requestBody = new FeedbackResponseCommentCreateRequest(
+                "Student submission comment", Arrays.asList(FeedbackVisibilityType.INSTRUCTORS),
+                Arrays.asList(FeedbackVisibilityType.INSTRUCTORS));
+        CreateFeedbackResponseCommentAction action = getAction(requestBody, submissionParams);
+        getJsonResult(action);
+
+        List<FeedbackResponseCommentAttributes> comments = logic.getFeedbackResponseCommentsForResponseFromParticipant(
+                response1ForQ6S1C1.getId(), true);
+        assertEquals(comments.size(), 1);
+        FeedbackResponseCommentAttributes comment = comments.get(0);
+        assertEquals(comment.getCommentText(), "Student submission comment");
+
+        ______TS("Successful case: instructor submission");
+        loginAsInstructor(instructor1OfCourse1.getGoogleId());
+        createMcqResponseAsInstructor();
+        submissionParams = new String[] {
+          Const.ParamsNames.INTENT, Intent.INSTRUCTOR_SUBMISSION.toString(),
+          Const.ParamsNames.FEEDBACK_RESPONSE_ID, response2ForQ6S1C1.getId(),
+        };
+
+        requestBody = new FeedbackResponseCommentCreateRequest(
+                "Instructor submission comment", Arrays.asList(FeedbackVisibilityType.INSTRUCTORS),
+                Arrays.asList(FeedbackVisibilityType.INSTRUCTORS));
+        action = getAction(requestBody, submissionParams);
+        getJsonResult(action);
+
+        comments = logic.getFeedbackResponseCommentsForResponseFromParticipant(
+                response2ForQ6S1C1.getId(), true);
+        assertEquals(comments.size(), 1);
+        comment = comments.get(0);
+        assertEquals(comment.getCommentText(), "Instructor submission comment");
+    }
+
+    @Test
+    protected void testAccessControl_submitCommentForOthersResponse_shouldFail() {
+
+        ______TS("students access other students session and give comments");
+        loginAsStudent(student2InCourse1.getGoogleId());
+        createMcqQuestion();
+        createMcqResponseAsStudent();
+        String[] submissionParams = new String[] {
+                Const.ParamsNames.INTENT, Intent.STUDENT_SUBMISSION.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ6S1C1.getId(),
+        };
+
+        assertThrows(EntityNotFoundException.class, () -> getAction(submissionParams).checkAccessControl());
+    }
+
     @Override
     @Test
     protected void testAccessControl() throws Exception {
@@ -283,4 +353,71 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
                 .collect(Collectors.toList());
     }
 
+    private void createMcqQuestion() {
+        if (qn6InSession1InCourse1 != null)
+            return;
+
+        FeedbackMcqQuestionDetails questionDetails = new FeedbackMcqQuestionDetails();
+        qn6InSession1InCourse1 = FeedbackQuestionAttributes.builder()
+                .withCourseId(session1InCourse1.getCourseId())
+                .withFeedbackSessionName(session1InCourse1.getFeedbackSessionName())
+                .withGiverType(FeedbackParticipantType.SELF)
+                .withRecipientType(FeedbackParticipantType.NONE)
+                .withNumberOfEntitiesToGiveFeedbackTo(-100)
+                .withQuestionNumber(6)
+                .withShowGiverNameTo(Arrays.asList(FeedbackParticipantType.INSTRUCTORS))
+                .withShowRecipientNameTo(Arrays.asList(FeedbackParticipantType.INSTRUCTORS))
+                .withShowResponsesTo(Arrays.asList(FeedbackParticipantType.INSTRUCTORS))
+                .withQuestionDetails(questionDetails)
+                .build();
+        try{
+            FeedbackQuestionsLogic.inst().createFeedbackQuestion(qn6InSession1InCourse1);
+            qn6InSession1InCourse1 =  FeedbackQuestionsLogic.inst().getFeedbackQuestion(session1InCourse1.getFeedbackSessionName(),
+                    session1InCourse1.getCourseId(), 6);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void createMcqResponseAsStudent() {
+        if(response1ForQ6S1C1 != null)
+            return;
+
+        FeedbackMcqResponseDetails responseDetails = new FeedbackMcqResponseDetails();
+        response1ForQ6S1C1 = FeedbackResponseAttributes.builder(qn6InSession1InCourse1.getFeedbackQuestionId(),
+                student1InCourse1.getEmail(), student1InCourse1.getEmail())
+                .withCourseId(session1InCourse1.getCourseId())
+                .withFeedbackSessionName(session1InCourse1.getFeedbackSessionName())
+                .withResponseDetails(responseDetails)
+                .withGiverSection(student1InCourse1.getSection())
+                .withRecipientSection(student1InCourse1.getSection())
+                .build();
+        try{
+            FeedbackResponsesLogic.inst().createFeedbackResponse(response1ForQ6S1C1);
+            response1ForQ6S1C1 = FeedbackResponsesLogic.inst().getFeedbackResponse(qn6InSession1InCourse1.getId(), student1InCourse1.getEmail(),
+                    student1InCourse1.getEmail());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void createMcqResponseAsInstructor() {
+        if(response2ForQ6S1C1 != null)
+            return;
+
+        FeedbackMcqResponseDetails responseDetails = new FeedbackMcqResponseDetails();
+        response2ForQ6S1C1 = FeedbackResponseAttributes.builder(qn6InSession1InCourse1.getFeedbackQuestionId(),
+                instructor1OfCourse1.getEmail(), instructor1OfCourse1.getEmail())
+                .withCourseId(session1InCourse1.getCourseId())
+                .withFeedbackSessionName(session1InCourse1.getFeedbackSessionName())
+                .withResponseDetails(responseDetails)
+                .build();
+        try {
+            FeedbackResponsesLogic.inst().createFeedbackResponse(response2ForQ6S1C1);
+            response2ForQ6S1C1 = FeedbackResponsesLogic.inst().getFeedbackResponse(qn6InSession1InCourse1.getId(), instructor1OfCourse1.getEmail(),
+                    instructor1OfCourse1.getEmail());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

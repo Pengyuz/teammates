@@ -1147,34 +1147,6 @@
         "INSTRUCTORS"
       ]
     },
-    "qn6InSession1InCourse1": {
-      "feedbackSessionName": "First feedback session",
-      "courseId": "idOfTypicalCourse1",
-      "questionDetails": {
-        "questionType": "MCQ",
-        "questionText": "Mcq Question",
-        "hasAssignedWeights": false,
-        "mcqWeights": [],
-        "numOfMcqChoices": 2,
-        "mcqChoices": ["a", "b"],
-        "otherEnabled": false,
-        "mcqOtherWeight": 0,
-        "generateOptionsFor": "NONE"
-      },
-      "questionNumber": 6,
-      "giverType": "SELF",
-      "recipientType": "NONE",
-      "numberOfEntitiesToGiveFeedbackTo": -100,
-      "showResponsesTo": [
-        "INSTRUCTORS"
-      ],
-      "showGiverNameTo": [
-        "INSTRUCTORS"
-      ],
-      "showRecipientNameTo": [
-        "INSTRUCTORS"
-      ]
-    },
     "team.feedback": {
       "feedbackSessionName": "Second feedback session",
       "courseId": "idOfTypicalCourse1",
@@ -1495,21 +1467,6 @@
       "responseDetails": {
         "questionType": "TEXT",
         "answer": "Good work, keep it up!"
-      }
-    },
-    "response1ForQ6S1C1":{
-      "feedbackSessionName": "First feedback session",
-      "courseId": "idOfTypicalCourse1",
-      "feedbackQuestionId": "6",
-      "giver": "student1InCourse1@gmail.com",
-      "recipient": "student2InCourse1@gmail.com",
-      "giverSection": "Section 1",
-      "recipientSection": "Section 1",
-      "responseDetails": {
-        "questionType": "MCQ",
-        "answer": "a",
-        "isOther": false,
-        "otherFieldsContent": null
       }
     },
     "response1ForQ1S2C1": {
