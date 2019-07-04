@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.http.HttpStatus;
-import org.mozilla.javascript.SymbolScriptable;
 import org.testng.annotations.Test;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
@@ -18,16 +17,12 @@ import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.datatransfer.questions.FeedbackMcqQuestionDetails;
 import teammates.common.datatransfer.questions.FeedbackMcqResponseDetails;
-import teammates.common.datatransfer.questions.FeedbackQuestionDetails;
-import teammates.common.datatransfer.questions.FeedbackResponseDetails;
-import teammates.common.exception.EntityNotFoundException;
-import teammates.common.exception.UnauthorizedAccessException;
+import teammates.common.exception.InvalidHttpParameterException;
 import teammates.common.util.Const;
 import teammates.logic.core.FeedbackQuestionsLogic;
 import teammates.logic.core.FeedbackResponsesLogic;
 import teammates.logic.core.FeedbackSessionsLogic;
 import teammates.storage.api.FeedbackResponseCommentsDb;
-import teammates.storage.entity.FeedbackResponseComment;
 import teammates.ui.webapi.action.CreateFeedbackResponseCommentAction;
 import teammates.ui.webapi.action.Intent;
 import teammates.ui.webapi.action.JsonResult;
@@ -35,9 +30,7 @@ import teammates.ui.webapi.output.FeedbackResponseCommentData;
 import teammates.ui.webapi.output.FeedbackVisibilityType;
 import teammates.ui.webapi.output.MessageOutput;
 import teammates.ui.webapi.request.FeedbackResponseCommentCreateRequest;
-import teammates.ui.webapi.request.FeedbackResponseCreateRequest;
 
-import javax.xml.bind.SchemaOutputResolver;
 
 /**
  * SUT: {@link CreateFeedbackResponseCommentAction}.
@@ -45,6 +38,7 @@ import javax.xml.bind.SchemaOutputResolver;
 public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<CreateFeedbackResponseCommentAction> {
     private FeedbackSessionAttributes session1InCourse1;
     private InstructorAttributes instructor1OfCourse1;
+    private InstructorAttributes instructor2OfCourse1;
     private FeedbackResponseAttributes response1ForQ1S1C1;
     private FeedbackResponseAttributes response1ForQ6S1C1;
     private FeedbackResponseAttributes response2ForQ6S1C1;
@@ -74,6 +68,7 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
         response1ForQ1S1C1 = logic.getFeedbackResponse(qn1InSession1InCourse1.getId(),
                 student1InCourse1.getEmail(), student1InCourse1.getEmail());
         instructor1OfCourse1 = typicalBundle.instructors.get("instructor1OfCourse1");
+        instructor2OfCourse1 = typicalBundle.instructors.get("instructor2OfCourse1");
     }
 
     @Override
@@ -253,7 +248,7 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
     }
 
     @Test
-    protected void testExecute_typicalCaseForSubmission_shouldPass() throws Exception{
+    protected void testExecute_typicalCaseForSubmission_shouldPass() {
 
         ______TS("Successful case: student submission");
         loginAsStudent(student1InCourse1.getGoogleId());
@@ -298,18 +293,83 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
     }
 
     @Test
+    protected void testExecute_invalidIntent_shouldFail() {
+
+        ______TS("invalid intent STUDENT_RESULT");
+        createMcqQuestion();
+        createMcqResponseAsStudent();
+        String[] invalidIntent1 = new String[] {
+                Const.ParamsNames.INTENT, Intent.STUDENT_RESULT.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ6S1C1.getId(),
+        };
+        verifyHttpParameterFailure(invalidIntent1);
+
+        ______TS("invalid intent FULL_DETAIL");
+        String[] invalidIntent2 = new String[] {
+                Const.ParamsNames.INTENT, Intent.FULL_DETAIL.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ6S1C1.getId(),
+        };
+        verifyHttpParameterFailure(invalidIntent2);
+    }
+
+    @Test
     protected void testAccessControl_submitCommentForOthersResponse_shouldFail() {
 
         ______TS("students access other students session and give comments");
         loginAsStudent(student2InCourse1.getGoogleId());
         createMcqQuestion();
         createMcqResponseAsStudent();
-        String[] submissionParams = new String[] {
+        String[] submissionParamsStudentToStudents = new String[] {
                 Const.ParamsNames.INTENT, Intent.STUDENT_SUBMISSION.toString(),
                 Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ6S1C1.getId(),
         };
+        verifyCannotAccess(submissionParamsStudentToStudents);
 
-        assertThrows(EntityNotFoundException.class, () -> getAction(submissionParams).checkAccessControl());
+        ______TS("students access instructor's session and give comments");
+        createMcqResponseAsInstructor();
+        String[] submissionParamsStudentToInstructor = new String[] {
+                Const.ParamsNames.INTENT, Intent.INSTRUCTOR_SUBMISSION.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response2ForQ6S1C1.getId(),
+        };
+
+        verifyCannotAccess(submissionParamsStudentToInstructor);
+
+        ______TS("instructors access other instructor's session and give comments");
+        loginAsInstructor(instructor2OfCourse1.getGoogleId());
+        String[] submissionParamsInstructorToInstructor = new String[] {
+                Const.ParamsNames.INTENT, Intent.INSTRUCTOR_SUBMISSION.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response2ForQ6S1C1.getId(),
+        };
+        verifyCannotAccess(submissionParamsInstructorToInstructor);
+
+        ______TS("instructor access student's session and give comments");
+        loginAsInstructor(instructor1OfCourse1.getGoogleId());
+        String[] submissionParamsInstructorToStudent = new String[] {
+                Const.ParamsNames.INTENT, Intent.INSTRUCTOR_SUBMISSION.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ6S1C1.getId(),
+        };
+        verifyCannotAccess(submissionParamsInstructorToStudent);
+
+    }
+
+    @Test
+    protected void testAccessControl_invalidIntent_shouldFail() {
+
+        ______TS("invalid intent STUDENT_RESULT");
+        createMcqQuestion();
+        createMcqResponseAsStudent();
+        String[] invalidIntent1 = new String[] {
+                Const.ParamsNames.INTENT, Intent.STUDENT_RESULT.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ6S1C1.getId(),
+        };
+        assertThrows(InvalidHttpParameterException.class, () -> getAction(invalidIntent1).checkAccessControl());
+
+        ______TS("invalid intent FULL_DETAIL");
+        String[] invalidIntent2 = new String[] {
+                Const.ParamsNames.INTENT, Intent.FULL_DETAIL.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ6S1C1.getId(),
+        };
+        assertThrows(InvalidHttpParameterException.class, () -> getAction(invalidIntent2).checkAccessControl());
     }
 
     @Override
@@ -354,8 +414,6 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
     }
 
     private void createMcqQuestion() {
-        if (qn6InSession1InCourse1 != null)
-            return;
 
         FeedbackMcqQuestionDetails questionDetails = new FeedbackMcqQuestionDetails();
         qn6InSession1InCourse1 = FeedbackQuestionAttributes.builder()
@@ -380,8 +438,6 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
     }
 
     private void createMcqResponseAsStudent() {
-        if(response1ForQ6S1C1 != null)
-            return;
 
         FeedbackMcqResponseDetails responseDetails = new FeedbackMcqResponseDetails();
         response1ForQ6S1C1 = FeedbackResponseAttributes.builder(qn6InSession1InCourse1.getFeedbackQuestionId(),
@@ -402,8 +458,6 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
     }
 
     private void createMcqResponseAsInstructor() {
-        if(response2ForQ6S1C1 != null)
-            return;
 
         FeedbackMcqResponseDetails responseDetails = new FeedbackMcqResponseDetails();
         response2ForQ6S1C1 = FeedbackResponseAttributes.builder(qn6InSession1InCourse1.getFeedbackQuestionId(),

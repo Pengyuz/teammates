@@ -216,4 +216,22 @@ public abstract class BasicFeedbackSubmissionAction extends Action {
 
     }
 
+    /**
+     * Verify response ownership.
+     */
+    protected  void verifyResponseOwnerShipForStudent(StudentAttributes student, FeedbackResponseAttributes response) {
+        if(response.getGiver() != student.getEmail()) {
+            throw new UnauthorizedAccessException("Response [" + response.getId() + "] is not accessible to "
+                + student.getName());
+        }
+    }
+
+    protected  void verifyResponseOwnerShipForInstructor(InstructorAttributes instructor, FeedbackResponseAttributes response) {
+        if(response.getGiver() != instructor.getEmail()) {
+            throw new UnauthorizedAccessException("Response [" + response.getId() + "] is not accessible to "
+                    + instructor.getName());
+        }
+    }
+
+
 }

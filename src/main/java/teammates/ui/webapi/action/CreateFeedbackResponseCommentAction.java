@@ -49,6 +49,7 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
             gateKeeper.verifyAccessible(studentAttributes, session);
             validQuestionTypeForCommentInSubmission(questionType);
             verifyCommentNotExist(feedbackResponseId);
+            verifyResponseOwnerShipForStudent(studentAttributes, response);
             break;
         case INSTRUCTOR_SUBMISSION:
             InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.getId());
@@ -58,6 +59,7 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
                     Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
             validQuestionTypeForCommentInSubmission(questionType);
             verifyCommentNotExist(feedbackResponseId);
+            verifyResponseOwnerShipForInstructor(instructor, response);
             break;
         case INSTRUCTOR_RESULT:
             InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId, userInfo.getId());
