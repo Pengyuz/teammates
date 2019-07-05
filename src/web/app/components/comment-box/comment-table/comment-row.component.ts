@@ -25,7 +25,6 @@ export class CommentRowComponent implements OnInit {
     isEditable: false,
   };
 
-  @Output() closeCommentEditFormEvent: EventEmitter<any> = new EventEmitter();
   @Output() editCommentEvent: EventEmitter<any> = new EventEmitter();
   @Output() deleteCommentEvent: EventEmitter<any> = new EventEmitter();
   @Output() saveCommentEvent: EventEmitter<any> = new EventEmitter();
@@ -50,7 +49,7 @@ export class CommentRowComponent implements OnInit {
    * Disable edit mode.
    */
   triggerCloseCommentEditForm(): void {
-    this.closeCommentEditFormEvent.emit();
+    this.isInEditMode = false;
   }
 
   /**
