@@ -1,4 +1,4 @@
-<tm-comment-edit-form *ngIf="isInEditMode"
+<tm-comment-edit-form *ngIf="isInEditMode, else displayComment"
                       [commentText]="commentModel.commentText"
                       [isVisibilityOptionEnabled]="isVisibilityOptionEnabled"
                       [isDiscardButtonEnabled]="isDiscardButtonEnabled"
@@ -7,7 +7,7 @@
                       (closeCommentBoxEvent)="triggerCloseCommentEditForm()"
                       (saveCommentEvent)="triggerSaveCommentEvent($event)"></tm-comment-edit-form>
 
-<div *ngIf="!isInEditMode">
+<ng-template #displayComment>
   From: {{commentModel.commentGiver}}
   <i class="fa fa-eye-slash" aria-hidden="true" ngbTooltip="This comment is visible to PLACEHOLDER"></i>
   <div class="float-right comment-row">
@@ -17,4 +17,4 @@
             (click)="triggerDeleteCommentEvent()"><i class="fas fa-trash"></i> Delete</button>
   </div>
   <div>{{commentModel.commentText}}</div>
-</div>
+</ng-template>
