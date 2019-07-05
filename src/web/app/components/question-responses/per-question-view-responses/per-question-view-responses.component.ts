@@ -70,7 +70,7 @@ export class PerQuestionViewResponsesComponent implements OnInit, OnChanges {
   /**
    * Opens the comments table modal.
    */
-  triggerAddCommentEvent(response: any): void {
+  triggerShowCommentTableEvent(response: any): void {
     const modalRef: NgbModalRef = this.modalService.open(CommentTableModalComponent);
     modalRef.componentInstance.response = response;
     modalRef.componentInstance.questionDetails = this.questionDetails;
