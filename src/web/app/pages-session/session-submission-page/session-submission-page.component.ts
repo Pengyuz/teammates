@@ -532,8 +532,8 @@ export class SessionSubmissionPageComponent implements OnInit {
     let hasSubmissionConfirmationError: boolean = false;
     forkJoin(savingRequests).pipe(
         // Save comments after responses are saved.
-        tap(() => {
-          forkJoin(savingCommentRequests).subscribe();
+        switchMap(() => {
+          return forkJoin(savingCommentRequests);
         }),
         switchMap(() => {
           if (failToSaveQuestions.size === 0) {
@@ -588,7 +588,7 @@ export class SessionSubmissionPageComponent implements OnInit {
 
   /**
    * Creates a request to change a comment.
-   * The request can be either of the following: DELETE, CREATE, UPDATE.
+   * The request can be either of the following: DELETE, CREATE or UPDATE.
    */
   private createCommentChangeRequest(
       recipientSubmissionFormModel: FeedbackResponseRecipientSubmissionFormModel): Observable<any> {
