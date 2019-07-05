@@ -91,7 +91,8 @@ export class QuestionSubmissionFormComponent implements OnInit {
 
   isCommentTableExpanded: boolean[] = [];
 
-  constructor(private feedbackQuestionsService: FeedbackQuestionsService, private  feedbackResponsesService: FeedbackResponsesService) {
+  constructor(private feedbackQuestionsService: FeedbackQuestionsService,
+              private  feedbackResponsesService: FeedbackResponsesService) {
     this.visibilityStateMachine =
         this.feedbackQuestionsService.getNewVisibilityStateMachine(
             this.model.giverType, this.model.recipientType);

@@ -470,11 +470,12 @@ export class SessionSubmissionPageComponent implements OnInit {
                         savingCommentRequests.push(this.createCommentChangeRequest(recipientSubmissionFormModel)
                             .pipe(
                                 catchError((error: any) => {
-                                  this.statusMessageService.showErrorMessage((error as ErrorMessageOutput).error.message);
+                                  this.statusMessageService.showErrorMessage(
+                                      (error as ErrorMessageOutput).error.message);
                                   failToSaveQuestions.add(questionSubmissionFormModel.questionNumber);
                                   return of(error);
-                                })
-                            )
+                                }),
+                            ),
                         );
 
                       }),
@@ -506,11 +507,12 @@ export class SessionSubmissionPageComponent implements OnInit {
                         savingCommentRequests.push(this.createCommentChangeRequest(recipientSubmissionFormModel)
                             .pipe(
                                 catchError((error: any) => {
-                                  this.statusMessageService.showErrorMessage((error as ErrorMessageOutput).error.message);
+                                  this.statusMessageService.showErrorMessage(
+                                      (error as ErrorMessageOutput).error.message);
                                   failToSaveQuestions.add(questionSubmissionFormModel.questionNumber);
                                   return of(error);
-                                })
-                            )
+                                }),
+                            ),
                         );
                       }),
                       catchError((error: any) => {
@@ -617,25 +619,25 @@ export class SessionSubmissionPageComponent implements OnInit {
                 commentGiver: resp.commentGiver,
                 commentText: resp.commentText,
                 isEditable: true,
-              }
+              };
             }),
           );
-    } else {
-      // If new comment, create save request.
-      return this.saveComment(recipientSubmissionFormModel.responseId,
-          recipientSubmissionFormModel.comment.commentText).pipe(
-            tap((resp: FeedbackResponseComment) => {
-              recipientSubmissionFormModel.comment = {
-                commentId: resp.feedbackResponseCommentId,
-                createdAt: resp.createdAt,
-                editedAt: resp.updatedAt,
-                commentGiver: resp.commentGiver,
-                commentText: resp.commentText,
-                isEditable: true,
-              }
-            })
-      );
     }
+
+    // If new comment, create save request.
+    return this.saveComment(recipientSubmissionFormModel.responseId,
+        recipientSubmissionFormModel.comment.commentText).pipe(
+          tap((resp: FeedbackResponseComment) => {
+            recipientSubmissionFormModel.comment = {
+              commentId: resp.feedbackResponseCommentId,
+              createdAt: resp.createdAt,
+              editedAt: resp.updatedAt,
+              commentGiver: resp.commentGiver,
+              commentText: resp.commentText,
+              isEditable: true,
+            };
+          }),
+    );
   }
 
   /**
@@ -669,7 +671,6 @@ export class SessionSubmissionPageComponent implements OnInit {
       showCommentTo: [],
       showGiverNameTo: [],
     });
-
   }
 
   /**
@@ -701,7 +702,7 @@ export class SessionSubmissionPageComponent implements OnInit {
    * Loads comments for a feedback response.
    */
   loadCommentsForResponse(model: QuestionSubmissionFormModel, responseId: string): void {
-    let commentModel: FeedbackResponseCommentModel | undefined;
+    let commentModel: FeedbackResponseCommentModel;
 
     this.httpRequestService.get('/responsecomment', {
       responseid: responseId,
