@@ -85,7 +85,6 @@ export class QuestionSubmissionFormComponent implements OnInit {
     showResponsesTo: [],
   };
 
-  @Output() saveCommentEvent: EventEmitter<any> = new EventEmitter();
   @Output() deleteCommentEvent: EventEmitter<any> = new EventEmitter();
 
   visibilityStateMachine: VisibilityStateMachine;
