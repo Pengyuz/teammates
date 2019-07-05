@@ -46,6 +46,7 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
         switch (intent) {
         case STUDENT_SUBMISSION:
             StudentAttributes studentAttributes = logic.getStudentForGoogleId(courseId, userInfo.getId());
+            Assumption.assertNotNull(studentAttributes);
             gateKeeper.verifyAccessible(studentAttributes, session);
             validQuestionTypeForCommentInSubmission(questionType);
             verifyCommentNotExist(feedbackResponseId);
@@ -53,6 +54,7 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
             break;
         case INSTRUCTOR_SUBMISSION:
             InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.getId());
+            Assumption.assertNotNull(instructor);
             gateKeeper.verifyAccessible(instructor, session, response.giverSection,
                     Const.ParamsNames.INSTRUCTOR_PERMISSION_SUBMIT_SESSION_IN_SECTIONS);
             gateKeeper.verifyAccessible(instructor, session, response.recipientSection,

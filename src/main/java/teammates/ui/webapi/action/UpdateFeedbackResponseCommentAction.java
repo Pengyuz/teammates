@@ -23,7 +23,7 @@ import teammates.ui.webapi.request.FeedbackResponseCommentUpdateRequest;
 /**
  * Updates a feedback response comment.
  */
-public class UpdateFeedbackResponseCommentAction extends Action {
+public class UpdateFeedbackResponseCommentAction extends BasicFeedbackSubmissionAction {
 
     @Override
     protected AuthType getMinAuthLevel() {
@@ -47,6 +47,7 @@ public class UpdateFeedbackResponseCommentAction extends Action {
         FeedbackSessionAttributes session = logic.getFeedbackSession(feedbackSessionName, courseId);
         Assumption.assertNotNull(response);
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
+
         switch (intent) {
         case STUDENT_SUBMISSION:
             StudentAttributes student = logic.getStudentForGoogleId(courseId, userInfo.id);

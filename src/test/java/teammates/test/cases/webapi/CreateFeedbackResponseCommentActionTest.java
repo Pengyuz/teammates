@@ -325,37 +325,21 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
         };
         verifyCannotAccess(submissionParamsStudentToStudents);
 
-        ______TS("students access instructor's session and give comments");
-        createMcqResponseAsInstructor();
-        String[] submissionParamsStudentToInstructor = new String[] {
-                Const.ParamsNames.INTENT, Intent.INSTRUCTOR_SUBMISSION.toString(),
-                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response2ForQ6S1C1.getId(),
-        };
-
-        verifyCannotAccess(submissionParamsStudentToInstructor);
-
         ______TS("instructors access other instructor's session and give comments");
         loginAsInstructor(instructor2OfCourse1.getGoogleId());
+        createMcqResponseAsInstructor();
         String[] submissionParamsInstructorToInstructor = new String[] {
                 Const.ParamsNames.INTENT, Intent.INSTRUCTOR_SUBMISSION.toString(),
                 Const.ParamsNames.FEEDBACK_RESPONSE_ID, response2ForQ6S1C1.getId(),
         };
         verifyCannotAccess(submissionParamsInstructorToInstructor);
-
-        ______TS("instructor access student's session and give comments");
-        loginAsInstructor(instructor1OfCourse1.getGoogleId());
-        String[] submissionParamsInstructorToStudent = new String[] {
-                Const.ParamsNames.INTENT, Intent.INSTRUCTOR_SUBMISSION.toString(),
-                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ6S1C1.getId(),
-        };
-        verifyCannotAccess(submissionParamsInstructorToStudent);
-
     }
 
     @Test
     protected void testAccessControl_invalidIntent_shouldFail() {
 
         ______TS("invalid intent STUDENT_RESULT");
+        loginAsStudent(student1InCourse1.getGoogleId());
         createMcqQuestion();
         createMcqResponseAsStudent();
         String[] invalidIntent1 = new String[] {
