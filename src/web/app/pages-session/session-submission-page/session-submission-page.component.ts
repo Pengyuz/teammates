@@ -419,6 +419,7 @@ export class SessionSubmissionPageComponent implements OnInit {
     const notYetAnsweredQuestions: Set<number> = new Set();
     const failToSaveQuestions: Set<number> = new Set();
     const savingRequests: Observable<any>[] = [];
+    const savingCommentRequests: Observable<any>[] = [];
 
     this.questionSubmissionForms.forEach((questionSubmissionFormModel: QuestionSubmissionFormModel) => {
       let isQuestionFullyAnswered: boolean = true;
@@ -466,47 +467,16 @@ export class SessionSubmissionPageComponent implements OnInit {
                         recipientSubmissionFormModel.responseDetails = resp.responseDetails;
                         recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
 
-                        if (recipientSubmissionFormModel.comment) {
-                          // Delete comment if it has an empty comment text.
-                          // Otherwise, update the comment.
-                          if (recipientSubmissionFormModel.comment.commentText === '') {
-                            this.httpRequestService.delete('/responsecomment', {
-                              responsecommentid: recipientSubmissionFormModel.comment.commentId.toString(),
-                            }).subscribe();
+                        savingCommentRequests.push(this.createCommentChangeRequest(recipientSubmissionFormModel)
+                            .pipe(
+                                catchError((error: any) => {
+                                  this.statusMessageService.showErrorMessage((error as ErrorMessageOutput).error.message);
+                                  failToSaveQuestions.add(questionSubmissionFormModel.questionNumber);
+                                  return of(error);
+                                })
+                            )
+                        );
 
-                          }
-
-                          // If existing comment, update.
-                          if (recipientSubmissionFormModel.comment.commentId) {
-                            this.updateComment(recipientSubmissionFormModel.comment.commentId,
-                                recipientSubmissionFormModel.comment.commentText).subscribe(
-                                    (resp: FeedbackResponseComment) => {
-                                      recipientSubmissionFormModel.comment = {
-                                        commentId: resp.feedbackResponseCommentId,
-                                        createdAt: resp.createdAt,
-                                        editedAt: resp.updatedAt,
-                                        commentGiver: resp.commentGiver,
-                                        commentText: resp.commentText,
-                                        isEditable: true,
-                                      }
-                                    });
-
-                          // If new comment, save.
-                          } else {
-                            this.saveComment(recipientSubmissionFormModel.responseId,
-                                recipientSubmissionFormModel.comment.commentText).subscribe(
-                                (resp: FeedbackResponseComment) => {
-                                  recipientSubmissionFormModel.comment = {
-                                    commentId: resp.feedbackResponseCommentId,
-                                    createdAt: resp.createdAt,
-                                    editedAt: resp.updatedAt,
-                                    commentGiver: resp.commentGiver,
-                                    commentText: resp.commentText,
-                                    isEditable: true,
-                                  }
-                                });
-                          }
-                        }
                       }),
                       catchError((error: any) => {
                         this.statusMessageService.showErrorMessage((error as ErrorMessageOutput).error.message);
@@ -533,20 +503,15 @@ export class SessionSubmissionPageComponent implements OnInit {
                         recipientSubmissionFormModel.responseDetails = resp.responseDetails;
                         recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
 
-                        if (recipientSubmissionFormModel.comment) {
-                          this.saveComment(recipientSubmissionFormModel.responseId,
-                              recipientSubmissionFormModel.comment.commentText).subscribe(
-                              (resp: FeedbackResponseComment) => {
-                                recipientSubmissionFormModel.comment = {
-                                  commentId: resp.feedbackResponseCommentId,
-                                  createdAt: resp.createdAt,
-                                  editedAt: resp.updatedAt,
-                                  commentGiver: resp.commentGiver,
-                                  commentText: resp.commentText,
-                                  isEditable: true,
-                                }
-                              });
-                        }
+                        savingCommentRequests.push(this.createCommentChangeRequest(recipientSubmissionFormModel)
+                            .pipe(
+                                catchError((error: any) => {
+                                  this.statusMessageService.showErrorMessage((error as ErrorMessageOutput).error.message);
+                                  failToSaveQuestions.add(questionSubmissionFormModel.questionNumber);
+                                  return of(error);
+                                })
+                            )
+                        );
                       }),
                       catchError((error: any) => {
                         this.statusMessageService.showErrorMessage((error as ErrorMessageOutput).error.message);
@@ -566,6 +531,10 @@ export class SessionSubmissionPageComponent implements OnInit {
     this.isSavingResponses = true;
     let hasSubmissionConfirmationError: boolean = false;
     forkJoin(savingRequests).pipe(
+        // Save comments after responses are saved.
+        tap(() => {
+          forkJoin(savingCommentRequests).subscribe();
+        }),
         switchMap(() => {
           if (failToSaveQuestions.size === 0) {
             this.statusMessageService.showSuccessMessage('All responses submitted successfully!');
@@ -615,6 +584,58 @@ export class SessionSubmissionPageComponent implements OnInit {
       hasSubmissionConfirmationError = true;
       this.statusMessageService.showErrorMessage(resp.error.message);
     });
+  }
+
+  /**
+   * Creates a request to change a comment.
+   * The request can be either of the following: DELETE, CREATE, UPDATE.
+   */
+  private createCommentChangeRequest(
+      recipientSubmissionFormModel: FeedbackResponseRecipientSubmissionFormModel): Observable<any> {
+
+    if (!recipientSubmissionFormModel.comment) {
+      return of({});
+    }
+
+    // Create delete comment request if it has an empty comment text.
+    if (recipientSubmissionFormModel.comment.commentText === '') {
+      return this.httpRequestService.delete('/responsecomment', {
+        responsecommentid: recipientSubmissionFormModel.comment.commentId.toString(),
+      });
+
+    }
+
+    // If existing comment, create update request.
+    if (recipientSubmissionFormModel.comment.commentId) {
+      return this.updateComment(recipientSubmissionFormModel.comment.commentId,
+          recipientSubmissionFormModel.comment.commentText).pipe(
+            tap((resp: FeedbackResponseComment) => {
+              recipientSubmissionFormModel.comment = {
+                commentId: resp.feedbackResponseCommentId,
+                createdAt: resp.createdAt,
+                editedAt: resp.updatedAt,
+                commentGiver: resp.commentGiver,
+                commentText: resp.commentText,
+                isEditable: true,
+              }
+            }),
+          );
+    } else {
+      // If new comment, create save request.
+      return this.saveComment(recipientSubmissionFormModel.responseId,
+          recipientSubmissionFormModel.comment.commentText).pipe(
+            tap((resp: FeedbackResponseComment) => {
+              recipientSubmissionFormModel.comment = {
+                commentId: resp.feedbackResponseCommentId,
+                createdAt: resp.createdAt,
+                editedAt: resp.updatedAt,
+                commentGiver: resp.commentGiver,
+                commentText: resp.commentText,
+                isEditable: true,
+              }
+            })
+      );
+    }
   }
 
   /**
