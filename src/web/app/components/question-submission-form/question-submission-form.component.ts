@@ -4,7 +4,7 @@ import { FeedbackResponsesService } from '../../../services/feedback-responses.s
 import { VisibilityStateMachine } from '../../../services/visibility-state-machine';
 import {
   FeedbackParticipantType,
-  FeedbackQuestionType, FeedbackResponseDetails,
+  FeedbackQuestionType,
   FeedbackTextQuestionDetails,
   FeedbackVisibilityType,
   NumberOfEntitiesToGiveFeedbackToSetting,
@@ -154,9 +154,16 @@ export class QuestionSubmissionFormComponent implements OnInit {
   }
 
   /**
-   * Checks whether a feedback response details is empty.
+   * Checks whether to show the comments table or not.
    */
-  isFeedbackResponseDetailsEmpty(questionType: FeedbackQuestionType, details: FeedbackResponseDetails): boolean {
-    return this.feedbackResponsesService.isFeedbackResponseDetailsEmpty(questionType, details);
+  isCommentsTableShown(questionType: FeedbackQuestionType,
+                       recipientSubmissionFormModel: FeedbackResponseRecipientSubmissionFormModel): boolean {
+    if (questionType !== FeedbackQuestionType.MCQ && questionType !== FeedbackQuestionType.MSQ) {
+      return false;
+    }
+
+    return !this.feedbackResponsesService.isFeedbackResponseDetailsEmpty(
+        questionType, recipientSubmissionFormModel.responseDetails)
+
   }
 }

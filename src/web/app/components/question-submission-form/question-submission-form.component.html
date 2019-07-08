@@ -98,10 +98,7 @@
                                               (responseDetailsChange)="triggerRecipientSubmissionFormChange(i, 'responseDetails', $event)"
                                               [isDisabled]="isDisabled"
             ></tm-msq-question-edit-answer-form>
-            <div *ngIf="(model.questionType === FeedbackQuestionType.MCQ
-            && !isFeedbackResponseDetailsEmpty(FeedbackQuestionType.MCQ, recipientSubmissionFormModel.responseDetails))
-            || (model.questionType === FeedbackQuestionType.MSQ
-            && !isFeedbackResponseDetailsEmpty(FeedbackQuestionType.MSQ, recipientSubmissionFormModel.responseDetails))"
+            <div *ngIf="isCommentsTableShown(model.questionType, recipientSubmissionFormModel)"
                  style="margin-top: 7px;">
               <button class="btn btn-secondary btn-sm"
                       *ngIf="!isCommentTableExpanded[i] && !(recipientSubmissionFormModel.comment),
