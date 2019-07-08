@@ -9,8 +9,7 @@
 
 <ng-template #displayComment>
   <span class="text-secondary">
-    <span>From: {{ commentModel.commentGiver }} </span>
-    <i class="fas fa-circle dot-xs align-middle"></i>
+    <span>{{ commentModel.commentGiver }} commented at </span>
     <span [ngbTooltip]="commentModel.createdAt | formatDateDetail: commentModel.timeZone">
       {{ commentModel.createdAt | formatDateBrief: commentModel.timeZone }} </span>
     <i class="fas fa-circle dot-xs align-middle"></i>
