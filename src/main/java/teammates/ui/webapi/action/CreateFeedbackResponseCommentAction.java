@@ -50,7 +50,7 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
             gateKeeper.verifyAccessible(studentAttributes, session);
             validQuestionTypeForCommentInSubmission(questionType);
             verifyCommentNotExist(feedbackResponseId);
-            verifyResponseOwnerShipForStudent(studentAttributes, response);
+            verifyResponseOwnerShipForStudent(studentAttributes, response, question);
             break;
         case INSTRUCTOR_SUBMISSION:
             InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.getId());
@@ -81,6 +81,8 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
 
         FeedbackResponseAttributes response = logic.getFeedbackResponse(feedbackResponseId);
         Assumption.assertNotNull(response);
+        String questionId = response.getFeedbackQuestionId();
+        FeedbackQuestionAttributes question = logic.getFeedbackQuestion(questionId);
 
         FeedbackResponseCommentCreateRequest comment = getAndValidateRequestBody(FeedbackResponseCommentCreateRequest.class);
 
@@ -99,17 +101,18 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
         switch (intent) {
         case STUDENT_SUBMISSION:
             StudentAttributes student = logic.getStudentForGoogleId(courseId, userInfo.getId());
-            email = student.getEmail();
+            email = question.getGiverType() == FeedbackParticipantType.TEAMS
+                    ? student.getTeam() : student.getEmail();
             isFromParticipant = true;
             isFollowingQuestionVisibility = true;
-            commentGiverType = FeedbackParticipantType.STUDENTS;
+            commentGiverType = question.getGiverType();
             break;
         case INSTRUCTOR_SUBMISSION:
             InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.getId());
             email = instructor.getEmail();
             isFromParticipant = true;
             isFollowingQuestionVisibility = true;
-            commentGiverType = FeedbackParticipantType.INSTRUCTORS;
+            commentGiverType = question.getGiverType();
             break;
         case INSTRUCTOR_RESULT:
             InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId, userInfo.getId());
