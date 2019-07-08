@@ -5,6 +5,7 @@ export interface FeedbackResponseCommentModel {
   commentId: number;
   createdAt: number;
   editedAt?: number;
+  timeZone: string;
   commentGiver: string;
   commentText: string;
   isEditable: boolean;

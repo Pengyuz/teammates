@@ -21,6 +21,7 @@ export class CommentRowComponent implements OnInit {
     createdAt: -999999,
     commentText: '',
     commentGiver: '',
+    timeZone: '',
     isEditable: true,
   };
 

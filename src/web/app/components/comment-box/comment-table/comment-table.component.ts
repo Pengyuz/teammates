@@ -26,6 +26,7 @@ export class CommentTableComponent implements OnInit {
     createdAt: -999999,
     commentGiver: '',
     commentText: '',
+    timeZone: '',
     isEditable: true,
   };
 
