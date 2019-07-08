@@ -7,7 +7,6 @@ import java.util.List;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import org.xbill.DNS.Update;
 import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
@@ -24,7 +23,6 @@ import teammates.logic.core.FeedbackQuestionsLogic;
 import teammates.logic.core.FeedbackResponseCommentsLogic;
 import teammates.logic.core.FeedbackResponsesLogic;
 import teammates.logic.core.FeedbackSessionsLogic;
-import teammates.storage.entity.FeedbackResponseComment;
 import teammates.ui.webapi.action.Intent;
 import teammates.ui.webapi.action.JsonResult;
 import teammates.ui.webapi.action.UpdateFeedbackResponseCommentAction;
@@ -49,7 +47,6 @@ public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<Upda
     private FeedbackResponseCommentAttributes comment1FromT1C1ToR1Q1S1C1;
     private FeedbackResponseCommentAttributes comment1FromT1C1ToR1Q6S1C1;
     private FeedbackResponseCommentAttributes comment1FromT1C1ToR2Q6S1C1;
-
 
     @Override
     protected String getActionUri() {
@@ -76,7 +73,6 @@ public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<Upda
                 student1InCourse1.getEmail(), student1InCourse1.getEmail());
         comment1FromT1C1ToR1Q1S1C1 = typicalBundle.feedbackResponseComments.get("comment1FromT1C1ToR1Q1S1C1");
     }
-
 
     @Override
     @Test
@@ -147,8 +143,8 @@ public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<Upda
         createMcqResponseAsInstructor();
         createCommentForInstructorResponse();
         submissionParams = new String[] {
-          Const.ParamsNames.INTENT, Intent.INSTRUCTOR_SUBMISSION.toString(),
-          Const.ParamsNames.FEEDBACK_RESPONSE_COMMENT_ID, comment1FromT1C1ToR2Q6S1C1.getId().toString(),
+                Const.ParamsNames.INTENT, Intent.INSTRUCTOR_SUBMISSION.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_COMMENT_ID, comment1FromT1C1ToR2Q6S1C1.getId().toString(),
         };
         requestBody = new FeedbackResponseCommentUpdateRequest(
                 comment1FromT1C1ToR2Q6S1C1.getCommentText() + " (Edited)",
@@ -178,7 +174,7 @@ public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<Upda
         };
 
         FeedbackResponseCommentUpdateRequest requestBody = new FeedbackResponseCommentUpdateRequest(
-               comment1FromT1C1ToR1Q1S1C1.commentText + " (Edited)", new ArrayList<>(), new ArrayList<>());
+                comment1FromT1C1ToR1Q1S1C1.commentText + " (Edited)", new ArrayList<>(), new ArrayList<>());
         UpdateFeedbackResponseCommentAction action = getAction(requestBody, submissionParams);
         getJsonResult(action);
     }
@@ -197,8 +193,8 @@ public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<Upda
                 Const.ParamsNames.FEEDBACK_RESPONSE_COMMENT_ID, comment1FromT1C1ToR1Q1S1C1.getId().toString(),
         };
 
-        FeedbackResponseCommentUpdateRequest requestBody = new FeedbackResponseCommentUpdateRequest(comment1FromT1C1ToR1Q1S1C1.commentText + " (Edited)",
-                new ArrayList<>(), new ArrayList<>());
+        FeedbackResponseCommentUpdateRequest requestBody = new FeedbackResponseCommentUpdateRequest(
+                comment1FromT1C1ToR1Q1S1C1.commentText + " (Edited)", new ArrayList<>(), new ArrayList<>());
         UpdateFeedbackResponseCommentAction action = getAction(requestBody, submissionParams);
         getJsonResult(action);
 
@@ -384,7 +380,6 @@ public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<Upda
         verifyHttpParameterFailure(invalidIntent2);
     }
 
-
     @Override
     @Test
     protected void testAccessControl() throws Exception {
@@ -522,10 +517,10 @@ public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<Upda
                 .withShowResponsesTo(Arrays.asList(FeedbackParticipantType.INSTRUCTORS))
                 .withQuestionDetails(questionDetails)
                 .build();
-        try{
+        try {
             FeedbackQuestionsLogic.inst().createFeedbackQuestion(qn6InSession1InCourse1);
-            qn6InSession1InCourse1 =  FeedbackQuestionsLogic.inst().getFeedbackQuestion(session1InCourse1.getFeedbackSessionName(),
-                    session1InCourse1.getCourseId(), 6);
+            qn6InSession1InCourse1 = FeedbackQuestionsLogic.inst().getFeedbackQuestion(
+                    session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 6);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -541,10 +536,10 @@ public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<Upda
                 .withGiverSection(student1InCourse1.getSection())
                 .withRecipientSection(student1InCourse1.getSection())
                 .build();
-        try{
+        try {
             FeedbackResponsesLogic.inst().createFeedbackResponse(response1ForQ6S1C1);
-            response1ForQ6S1C1 = FeedbackResponsesLogic.inst().getFeedbackResponse(qn6InSession1InCourse1.getId(), student1InCourse1.getEmail(),
-                    student1InCourse1.getEmail());
+            response1ForQ6S1C1 = FeedbackResponsesLogic.inst().getFeedbackResponse(
+                    qn6InSession1InCourse1.getId(), student1InCourse1.getEmail(), student1InCourse1.getEmail());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -560,8 +555,8 @@ public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<Upda
                 .build();
         try {
             FeedbackResponsesLogic.inst().createFeedbackResponse(response2ForQ6S1C1);
-            response2ForQ6S1C1 = FeedbackResponsesLogic.inst().getFeedbackResponse(qn6InSession1InCourse1.getId(), instructor1OfCourse1.getEmail(),
-                    instructor1OfCourse1.getEmail());
+            response2ForQ6S1C1 = FeedbackResponsesLogic.inst().getFeedbackResponse(
+                    qn6InSession1InCourse1.getId(), instructor1OfCourse1.getEmail(), instructor1OfCourse1.getEmail());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -585,8 +580,8 @@ public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<Upda
                 .build();
         try {
             FeedbackResponseCommentsLogic.inst().createFeedbackResponseComment(comment1FromT1C1ToR1Q6S1C1);
-            List<FeedbackResponseCommentAttributes> comments = FeedbackResponseCommentsLogic.inst().
-                    getFeedbackResponseCommentForResponseFromParticipant(response1ForQ6S1C1.getId(), true);
+            List<FeedbackResponseCommentAttributes> comments = FeedbackResponseCommentsLogic.inst()
+                    .getFeedbackResponseCommentForResponseFromParticipant(response1ForQ6S1C1.getId(), true);
             comment1FromT1C1ToR1Q6S1C1 = comments.get(0);
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -609,8 +604,8 @@ public class UpdateFeedbackResponseCommentActionTest extends BaseActionTest<Upda
                 .build();
         try {
             FeedbackResponseCommentsLogic.inst().createFeedbackResponseComment(comment1FromT1C1ToR2Q6S1C1);
-            List<FeedbackResponseCommentAttributes> comments = FeedbackResponseCommentsLogic.inst().
-                    getFeedbackResponseCommentForResponseFromParticipant(response2ForQ6S1C1.getId(), true);
+            List<FeedbackResponseCommentAttributes> comments = FeedbackResponseCommentsLogic.inst()
+                    .getFeedbackResponseCommentForResponseFromParticipant(response2ForQ6S1C1.getId(), true);
             comment1FromT1C1ToR2Q6S1C1 = comments.get(0);
         } catch (Exception e) {
             System.out.println(e.getMessage());

@@ -50,15 +50,15 @@ public class UpdateFeedbackResponseCommentAction extends BasicFeedbackSubmission
         String questionId = response.getFeedbackQuestionId();
         FeedbackQuestionAttributes question = logic.getFeedbackQuestion(questionId);
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
-        String giverIndentifier;
+        String giverIdentifier;
 
         switch (intent) {
         case STUDENT_SUBMISSION:
             StudentAttributes student = logic.getStudentForGoogleId(courseId, userInfo.id);
             Assumption.assertNotNull(student);
-            giverIndentifier = question.getGiverType() == FeedbackParticipantType.TEAMS
-                    ? student.getTeam(): student.getEmail();
-            gateKeeper.verifyOwnership(frc, giverIndentifier);
+            giverIdentifier = question.getGiverType() == FeedbackParticipantType.TEAMS
+                    ? student.getTeam() : student.getEmail();
+            gateKeeper.verifyOwnership(frc, giverIdentifier);
             break;
         case INSTRUCTOR_SUBMISSION:
             InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId, userInfo.id);
