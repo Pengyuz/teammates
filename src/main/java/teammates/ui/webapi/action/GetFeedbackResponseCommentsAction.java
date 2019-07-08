@@ -57,12 +57,12 @@ public class GetFeedbackResponseCommentsAction extends BasicFeedbackSubmissionAc
         FeedbackResponseCommentsData result;
         switch (intent) {
         case STUDENT_SUBMISSION:
-        case STUDENT_RESULT:
         case INSTRUCTOR_SUBMISSION:
             result = new FeedbackResponseCommentsData(
               logic.getFeedbackResponseCommentsForResponseFromParticipant(feedbackResponseId, true)
             );
             break;
+        case STUDENT_RESULT:
         case INSTRUCTOR_RESULT:
             result = new FeedbackResponseCommentsData(
                 logic.getFeedbackResponseCommentsForResponse(feedbackResponseId)

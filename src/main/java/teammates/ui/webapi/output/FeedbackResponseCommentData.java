@@ -15,8 +15,8 @@ public class FeedbackResponseCommentData extends ApiOutput {
     private long feedbackResponseCommentId;
     private String commentText;
     private String commentGiver;
-    private String createdAt;
-    private String updatedAt;
+    private final long createdAt;
+    private long updatedAt;
 
     private List<FeedbackVisibilityType> showGiverNameTo;
     private List<FeedbackVisibilityType> showCommentTo;
@@ -27,8 +27,8 @@ public class FeedbackResponseCommentData extends ApiOutput {
         this.commentGiver = frc.getCommentGiver();
         this.showGiverNameTo = convertToFeedbackVisibilityType(frc.getShowGiverNameTo());
         this.showCommentTo = convertToFeedbackVisibilityType(frc.getShowCommentTo());
-        this.createdAt = frc.getCreatedAt().toString();
-        this.updatedAt = frc.getLastEditedAt().toString();
+        this.createdAt = frc.getCreatedAt().toEpochMilli();
+        this.updatedAt = frc.getLastEditedAt().toEpochMilli();
     }
 
     /**
@@ -78,11 +78,11 @@ public class FeedbackResponseCommentData extends ApiOutput {
         return showCommentTo;
     }
 
-    public String getCreatedAt() {
+    public long getCreatedAt() {
         return createdAt;
     }
 
-    public String getUpdatedAt() {
+    public long getUpdatedAt() {
         return updatedAt;
     }
 }

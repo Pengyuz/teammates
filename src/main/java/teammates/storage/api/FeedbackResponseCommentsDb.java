@@ -189,7 +189,6 @@ public class FeedbackResponseCommentsDb extends EntitiesDb<FeedbackResponseComme
                 && this.<List<FeedbackParticipantType>>hasSameValue(
                         frc.getShowGiverNameTo(), newAttributes.getShowGiverNameTo())
                 && this.<String>hasSameValue(frc.getLastEditorEmail(), newAttributes.getLastEditorEmail())
-                && this.<Instant>hasSameValue(frc.getLastEditedAt(), newAttributes.getLastEditedAt())
                 && this.<String>hasSameValue(frc.getGiverSection(), newAttributes.getGiverSection())
                 && this.<String>hasSameValue(frc.getReceiverSection(), newAttributes.getReceiverSection());
         if (hasSameAttributes) {
