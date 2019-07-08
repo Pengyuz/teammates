@@ -1,4 +1,4 @@
-<tm-comment-edit-form *ngIf="isInEditMode"
+<tm-comment-edit-form *ngIf="isInEditMode, else displayComment"
                       [commentText]="commentModel.commentText"
                       [isVisibilityOptionEnabled]="isVisibilityOptionEnabled"
                       [isDiscardButtonEnabled]="isDiscardButtonEnabled"
@@ -7,8 +7,9 @@
                       (closeCommentBoxEvent)="triggerCloseCommentEditForm()"
                       (saveCommentEvent)="triggerSaveCommentEvent($event)"></tm-comment-edit-form>
 
-<div *ngIf="!isInEditMode">
-  From: {{commentModel.commentGiver}}
+<ng-template #displayComment>
+  <!-- TODO format and display createdAt and editedAt time-->
+  <span class="text-secondary">From: {{commentModel.commentGiver}} </span>
   <i class="fa fa-eye-slash" aria-hidden="true" ngbTooltip="This comment is visible to PLACEHOLDER"></i>
   <div class="float-right comment-row">
     <button type="button" class="btn btn-secondary btn-sm"  ngbTooltip='Edit this comment'
@@ -17,4 +18,4 @@
             (click)="triggerDeleteCommentEvent()"><i class="fas fa-trash"></i> Delete</button>
   </div>
   <div>{{commentModel.commentText}}</div>
-</div>
+</ng-template>

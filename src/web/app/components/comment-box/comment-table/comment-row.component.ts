@@ -10,14 +10,14 @@ import { FeedbackResponseCommentModel } from './comment-table-model';
   styleUrls: ['./comment-row.component.scss'],
 })
 export class CommentRowComponent implements OnInit {
-  @Input() isInEditMode: boolean = false;
+  @Input() isInEditModeInitialValue: boolean = false;
   @Input() isVisibilityOptionEnabled: boolean = true;
   @Input() isDiscardButtonEnabled: boolean = true;
   @Input() isSaveButtonEnabled: boolean = true;
 
   @Input()
   commentModel: FeedbackResponseCommentModel = {
-    commentId: -1,
+    commentId: -999999,
     commentText: '',
     commentGiver: '',
     createdAt: '',
@@ -25,15 +25,17 @@ export class CommentRowComponent implements OnInit {
     isEditable: false,
   };
 
-  @Output() closeCommentEditFormEvent: EventEmitter<any> = new EventEmitter();
   @Output() editCommentEvent: EventEmitter<any> = new EventEmitter();
   @Output() deleteCommentEvent: EventEmitter<any> = new EventEmitter();
   @Output() saveCommentEvent: EventEmitter<any> = new EventEmitter();
   @Output() commentFormChangeEvent: EventEmitter<any> = new EventEmitter();
 
+  isInEditMode: boolean = false;
+
   constructor() { }
 
   ngOnInit(): void {
+    this.isInEditMode = this.isInEditModeInitialValue;
   }
 
   /**
@@ -47,7 +49,7 @@ export class CommentRowComponent implements OnInit {
    * Disable edit mode.
    */
   triggerCloseCommentEditForm(): void {
-    this.closeCommentEditFormEvent.emit();
+    this.isInEditMode = false;
   }
 
   /**

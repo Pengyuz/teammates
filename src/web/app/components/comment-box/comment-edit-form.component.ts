@@ -29,6 +29,7 @@ export class CommentEditFormComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log("EDIT MODE");
     this.updatedCommentText = this.commentText;
   }
 
@@ -42,8 +43,8 @@ export class CommentEditFormComponent implements OnInit {
   /**
    * Triggers close comment box event.
    */
-  triggerCloseCommentBoxEvent(data: any): void {
-    this.closeCommentBoxEvent.emit(data);
+  triggerCloseCommentBoxEvent(): void {
+    this.closeCommentBoxEvent.emit();
   }
 
   /**
