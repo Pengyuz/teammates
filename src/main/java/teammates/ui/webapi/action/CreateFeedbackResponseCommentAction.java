@@ -103,14 +103,15 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
                     ? student.getTeam() : student.getEmail();
             isFromParticipant = true;
             isFollowingQuestionVisibility = true;
-            commentGiverType = question.getGiverType();
+            commentGiverType = question.getGiverType() == FeedbackParticipantType.TEAMS
+                    ? FeedbackParticipantType.TEAMS : FeedbackParticipantType.STUDENTS;
             break;
         case INSTRUCTOR_SUBMISSION:
             InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.getId());
             email = instructor.getEmail();
             isFromParticipant = true;
             isFollowingQuestionVisibility = true;
-            commentGiverType = question.getGiverType();
+            commentGiverType = FeedbackParticipantType.INSTRUCTORS;
             break;
         case INSTRUCTOR_RESULT:
             InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId, userInfo.getId());

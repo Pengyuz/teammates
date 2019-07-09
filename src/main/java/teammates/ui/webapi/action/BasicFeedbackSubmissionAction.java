@@ -222,14 +222,13 @@ public abstract class BasicFeedbackSubmissionAction extends Action {
     protected void verifyResponseOwnerShipForStudent(StudentAttributes student, FeedbackResponseAttributes response,
                                                       FeedbackQuestionAttributes question) {
 
-        if (question.getGiverType() == FeedbackParticipantType.STUDENTS
-                && !response.getGiver().equals(student.getEmail())) {
-            throw new UnauthorizedAccessException("Response [" + response.getId() + "] is not accessible to "
-                + student.getName());
-        } else if (question.getGiverType() == FeedbackParticipantType.TEAMS
+        if (question.getGiverType() == FeedbackParticipantType.TEAMS
                 && !response.getGiver().equals(student.getTeam())) {
             throw new UnauthorizedAccessException("Response [" + response.getId() + "] is not accessible to "
                     + student.getTeam());
+        } else if (!response.getGiver().equals(student.getEmail())) {
+            throw new UnauthorizedAccessException("Response [" + response.getId() + "] is not accessible to "
+                    + student.getName());
         }
     }
 

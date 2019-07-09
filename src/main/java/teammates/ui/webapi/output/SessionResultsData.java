@@ -131,7 +131,7 @@ public class SessionResultsData extends ApiOutput {
                 List<FeedbackResponseCommentAttributes> comments = commentMap.get(response.getId());
                 ResponseOutput responseOutput = new ResponseOutput(displayedGiverName, null, response.giverSection,
                         recipientName, null, response.recipientSection, response.responseDetails);
-                responseOutput.allComments = buildComments(comments, bundle);
+                responseOutput.allComments = buildComments(comments);
 
                 // Student does not need to know the teams for giver and/or recipient
                 output.add(responseOutput);
@@ -164,7 +164,7 @@ public class SessionResultsData extends ApiOutput {
                 List<FeedbackResponseCommentAttributes> comments = commentsMap.get(response.getId());
                 ResponseOutput responseOutput = new ResponseOutput(giverName, giverTeam, response.giverSection,
                         recipientName, recipientTeam, response.recipientSection, response.responseDetails);
-                responseOutput.allComments = buildComments(comments, bundle);
+                responseOutput.allComments = buildComments(comments);
 
                 output.add(responseOutput);
             }
@@ -174,7 +174,7 @@ public class SessionResultsData extends ApiOutput {
     }
 
     private List<ResponseCommentOutput> buildComments(
-            List<FeedbackResponseCommentAttributes> comments, FeedbackSessionResultsBundle bundle) {
+            List<FeedbackResponseCommentAttributes> comments) {
         List<ResponseCommentOutput> output = new ArrayList<>();
         for (FeedbackResponseCommentAttributes comment : comments) {
             ResponseCommentOutput commentOutput = new ResponseCommentOutput(
