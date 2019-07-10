@@ -192,6 +192,11 @@ public class SessionResultsData extends ApiOutput {
     private List<ResponseCommentOutput> buildComments(
             List<FeedbackResponseCommentAttributes> comments) {
         List<ResponseCommentOutput> output = new ArrayList<>();
+
+        if (comments == null) {
+            return output;
+        }
+
         for (FeedbackResponseCommentAttributes comment : comments) {
             ResponseCommentOutput commentOutput = new ResponseCommentOutput(
                     comment.getCommentGiver(), comment.getCommentText(), comment.isCommentFromFeedbackParticipant,
@@ -325,7 +330,6 @@ public class SessionResultsData extends ApiOutput {
         private final boolean isFromFeedbackParticipant;
         private final long createdAt;
         private long updatedAt;
-
 
         ResponseCommentOutput(String commentGiver, String commentText, boolean isFromFeedbackParticipant,
                               Instant createdAt, Instant updatedAt) {
