@@ -1,5 +1,6 @@
 package teammates.ui.webapi.output;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -131,8 +132,15 @@ public class SessionResultsData extends ApiOutput {
                 List<FeedbackResponseCommentAttributes> comments = commentMap.get(response.getId());
                 ResponseOutput responseOutput = new ResponseOutput(displayedGiverName, null, response.giverSection,
                         recipientName, null, response.recipientSection, response.responseDetails);
-                responseOutput.allComments = buildComments(comments);
-
+                List<ResponseCommentOutput> commentOutputs = buildComments(comments);
+                for (ResponseCommentOutput commentOutput : commentOutputs) {
+                    if (commentOutput.isFromFeedbackParticipant) {
+                        responseOutput.commentFromParicipant = commentOutput;
+                    } else {
+                        responseOutput.commentFromInstructors.add(commentOutput);
+                    }
+                }
+                responseOutput.allComments = commentOutputs;
                 // Student does not need to know the teams for giver and/or recipient
                 output.add(responseOutput);
             }
@@ -164,7 +172,15 @@ public class SessionResultsData extends ApiOutput {
                 List<FeedbackResponseCommentAttributes> comments = commentsMap.get(response.getId());
                 ResponseOutput responseOutput = new ResponseOutput(giverName, giverTeam, response.giverSection,
                         recipientName, recipientTeam, response.recipientSection, response.responseDetails);
-                responseOutput.allComments = buildComments(comments);
+                List<ResponseCommentOutput> commentOutputs = buildComments(comments);
+                for (ResponseCommentOutput commentOutput : commentOutputs) {
+                    if (commentOutput.isFromFeedbackParticipant) {
+                        responseOutput.commentFromParicipant = commentOutput;
+                    } else {
+                        responseOutput.commentFromInstructors.add(commentOutput);
+                    }
+                }
+                responseOutput.allComments = commentOutputs;
 
                 output.add(responseOutput);
             }
@@ -176,9 +192,15 @@ public class SessionResultsData extends ApiOutput {
     private List<ResponseCommentOutput> buildComments(
             List<FeedbackResponseCommentAttributes> comments) {
         List<ResponseCommentOutput> output = new ArrayList<>();
+
+        if (comments == null) {
+            return output;
+        }
+
         for (FeedbackResponseCommentAttributes comment : comments) {
             ResponseCommentOutput commentOutput = new ResponseCommentOutput(
-                    comment.getCommentGiver(), comment.getCommentText());
+                    comment.getCommentGiver(), comment.getCommentText(), comment.isCommentFromFeedbackParticipant,
+                    comment.getCreatedAt(), comment.getLastEditedAt());
             output.add(commentOutput);
         }
         return output;
@@ -305,10 +327,17 @@ public class SessionResultsData extends ApiOutput {
     private static class ResponseCommentOutput {
         private final String commentGiver;
         private final String commentText;
+        private final boolean isFromFeedbackParticipant;
+        private final long createdAt;
+        private long updatedAt;
 
-        ResponseCommentOutput(String commentGiver, String commentText) {
+        ResponseCommentOutput(String commentGiver, String commentText, boolean isFromFeedbackParticipant,
+                              Instant createdAt, Instant updatedAt) {
             this.commentGiver = commentGiver;
             this.commentText = commentText;
+            this.isFromFeedbackParticipant = isFromFeedbackParticipant;
+            this.createdAt = createdAt.toEpochMilli();
+            this.updatedAt = updatedAt.toEpochMilli();
         }
 
         public String getCommentGiver() {
@@ -317,6 +346,18 @@ public class SessionResultsData extends ApiOutput {
 
         public String getCommentText() {
             return commentText;
+        }
+
+        public boolean isFromFeedbackParticipant() {
+            return isFromFeedbackParticipant;
+        }
+
+        public long getCreatedAt() {
+            return createdAt;
+        }
+
+        public long getUpdatedAt() {
+            return updatedAt;
         }
     }
 
