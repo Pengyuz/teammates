@@ -11,6 +11,7 @@ import teammates.common.datatransfer.FeedbackSessionResultsBundle;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
+import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.datatransfer.questions.FeedbackQuestionDetails;
@@ -132,7 +133,7 @@ public class SessionResultsData extends ApiOutput {
                 List<FeedbackResponseCommentAttributes> comments = commentMap.get(response.getId());
                 ResponseOutput responseOutput = new ResponseOutput(displayedGiverName, null, response.giverSection,
                         recipientName, null, response.recipientSection, response.responseDetails);
-                List<ResponseCommentOutput> commentOutputs = buildComments(comments);
+                List<ResponseCommentOutput> commentOutputs = buildComments(comments, bundle);
                 for (ResponseCommentOutput commentOutput : commentOutputs) {
                     if (commentOutput.isFromFeedbackParticipant) {
                         responseOutput.commentFromParicipant = commentOutput;
@@ -172,7 +173,7 @@ public class SessionResultsData extends ApiOutput {
                 List<FeedbackResponseCommentAttributes> comments = commentsMap.get(response.getId());
                 ResponseOutput responseOutput = new ResponseOutput(giverName, giverTeam, response.giverSection,
                         recipientName, recipientTeam, response.recipientSection, response.responseDetails);
-                List<ResponseCommentOutput> commentOutputs = buildComments(comments);
+                List<ResponseCommentOutput> commentOutputs = buildComments(comments, bundle);
                 for (ResponseCommentOutput commentOutput : commentOutputs) {
                     if (commentOutput.isFromFeedbackParticipant) {
                         responseOutput.commentFromParicipant = commentOutput;
@@ -190,7 +191,7 @@ public class SessionResultsData extends ApiOutput {
     }
 
     private List<ResponseCommentOutput> buildComments(
-            List<FeedbackResponseCommentAttributes> comments) {
+            List<FeedbackResponseCommentAttributes> comments, FeedbackSessionResultsBundle bundle) {
         List<ResponseCommentOutput> output = new ArrayList<>();
 
         if (comments == null) {
@@ -198,9 +199,11 @@ public class SessionResultsData extends ApiOutput {
         }
 
         for (FeedbackResponseCommentAttributes comment : comments) {
+            FeedbackSessionAttributes session = bundle.getFeedbackSession();
             ResponseCommentOutput commentOutput = new ResponseCommentOutput(
-                    comment.getCommentGiver(), comment.getCommentText(), comment.isCommentFromFeedbackParticipant,
-                    comment.getCreatedAt(), comment.getLastEditedAt());
+                    comment.getId(), comment.getCommentGiver(), comment.getCommentText(),
+                    comment.isCommentFromFeedbackParticipant, comment.getCreatedAt(), comment.getLastEditedAt(),
+                    session.getTimeZone().getId());
             output.add(commentOutput);
         }
         return output;
@@ -325,19 +328,28 @@ public class SessionResultsData extends ApiOutput {
     }
 
     private static class ResponseCommentOutput {
+        private final long commentId;
         private final String commentGiver;
         private final String commentText;
         private final boolean isFromFeedbackParticipant;
         private final long createdAt;
         private long updatedAt;
+        private final String timezone;
 
-        ResponseCommentOutput(String commentGiver, String commentText, boolean isFromFeedbackParticipant,
-                              Instant createdAt, Instant updatedAt) {
+        ResponseCommentOutput(long commentId, String commentGiver, String commentText,
+                              boolean isFromFeedbackParticipant, Instant createdAt, Instant updatedAt,
+                              String timezone) {
+            this.commentId = commentId;
             this.commentGiver = commentGiver;
             this.commentText = commentText;
             this.isFromFeedbackParticipant = isFromFeedbackParticipant;
             this.createdAt = createdAt.toEpochMilli();
             this.updatedAt = updatedAt.toEpochMilli();
+            this.timezone = timezone;
+        }
+
+        public long getCommentId() {
+            return commentId;
         }
 
         public String getCommentGiver() {
@@ -358,6 +370,10 @@ public class SessionResultsData extends ApiOutput {
 
         public long getUpdatedAt() {
             return updatedAt;
+        }
+
+        public String getTimezone() {
+            return timezone;
         }
     }
 
