@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommentTableMode, FeedbackResponseCommentModel } from '../comment-table/comment-table-model';
 
@@ -16,6 +16,10 @@ export class CommentTableModalComponent implements OnInit {
   @Input() questionDetails: any = '';
   @Input() comments: FeedbackResponseCommentModel[] = [];
 
+  @Output() deleteCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() updateCommentEvent: EventEmitter<any> = new EventEmitter();
+  @Output() saveCommentEvent: EventEmitter<any> = new EventEmitter();
+
   commentTableMode: CommentTableMode = CommentTableMode.INSTRUCTOR_RESULT;
 
   constructor(public activeModal: NgbActiveModal) { }
@@ -26,21 +30,21 @@ export class CommentTableModalComponent implements OnInit {
   /**
    * Triggers the delete comment event
    */
-  triggerDeleteCommentEvent(): void {
-    // TODO
+  triggerDeleteCommentEvent(commentId: number): void {
+    this.deleteCommentEvent.emit(commentId);
   }
 
   /**
    * Triggers the update comment event.
    */
-  triggerUpdateCommentEvent(): void {
-    // TODO
+  triggerUpdateCommentEvent(commentData: any): void {
+    this.updateCommentEvent.emit(commentData);
   }
 
   /**
    * Triggers the add new comment event.
    */
-  triggerSaveNewCommentEvent(): void {
-    // TODO
+  triggerSaveNewCommentEvent(commentText: string): void {
+    this.saveCommentEvent.emit(commentText);
   }
 }
