@@ -131,8 +131,9 @@ public class SessionResultsData extends ApiOutput {
 
                 // TODO fetch feedback response comments
                 List<FeedbackResponseCommentAttributes> comments = commentMap.get(response.getId());
-                ResponseOutput responseOutput = new ResponseOutput(displayedGiverName, null, response.giverSection,
-                        recipientName, null, response.recipientSection, response.responseDetails);
+                ResponseOutput responseOutput = new ResponseOutput(response.getId(), displayedGiverName, null,
+                        response.giverSection, recipientName, null, response.recipientSection,
+                        response.responseDetails);
                 List<ResponseCommentOutput> commentOutputs = buildComments(comments, bundle);
                 for (ResponseCommentOutput commentOutput : commentOutputs) {
                     if (commentOutput.isFromFeedbackParticipant) {
@@ -171,8 +172,9 @@ public class SessionResultsData extends ApiOutput {
 
                 // TODO fetch feedback response comments
                 List<FeedbackResponseCommentAttributes> comments = commentsMap.get(response.getId());
-                ResponseOutput responseOutput = new ResponseOutput(giverName, giverTeam, response.giverSection,
-                        recipientName, recipientTeam, response.recipientSection, response.responseDetails);
+                ResponseOutput responseOutput = new ResponseOutput(response.getId(), giverName, giverTeam,
+                        response.giverSection, recipientName, recipientTeam, response.recipientSection,
+                        response.responseDetails);
                 List<ResponseCommentOutput> commentOutputs = buildComments(comments, bundle);
                 for (ResponseCommentOutput commentOutput : commentOutputs) {
                     if (commentOutput.isFromFeedbackParticipant) {
@@ -261,6 +263,7 @@ public class SessionResultsData extends ApiOutput {
 
     private static class ResponseOutput {
 
+        private final String responseId;
         private final String giver;
         private final String giverTeam;
         private final String giverSection;
@@ -274,8 +277,9 @@ public class SessionResultsData extends ApiOutput {
         private ResponseCommentOutput commentFromParicipant;
         private List<ResponseCommentOutput> commentFromInstructors = new ArrayList<>();
 
-        ResponseOutput(String giver, String giverTeam, String giverSection, String recipient,
+        ResponseOutput(String responseId, String giver, String giverTeam, String giverSection, String recipient,
                 String recipientTeam, String recipientSection, FeedbackResponseDetails responseDetails) {
+            this.responseId = responseId;
             this.giver = giver;
             this.giverTeam = giverTeam;
             this.giverSection = giverSection;
@@ -283,6 +287,10 @@ public class SessionResultsData extends ApiOutput {
             this.recipientTeam = recipientTeam;
             this.recipientSection = recipientSection;
             this.responseDetails = responseDetails;
+        }
+
+        public String getResponseId() {
+            return responseId;
         }
 
         public String getGiver() {
