@@ -1,5 +1,6 @@
 package teammates.ui.webapi.output;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -193,7 +194,8 @@ public class SessionResultsData extends ApiOutput {
         List<ResponseCommentOutput> output = new ArrayList<>();
         for (FeedbackResponseCommentAttributes comment : comments) {
             ResponseCommentOutput commentOutput = new ResponseCommentOutput(
-                    comment.getCommentGiver(), comment.getCommentText(), comment.isCommentFromFeedbackParticipant);
+                    comment.getCommentGiver(), comment.getCommentText(), comment.isCommentFromFeedbackParticipant,
+                    comment.getCreatedAt(), comment.getLastEditedAt());
             output.add(commentOutput);
         }
         return output;
@@ -321,11 +323,17 @@ public class SessionResultsData extends ApiOutput {
         private final String commentGiver;
         private final String commentText;
         private final boolean isFromFeedbackParticipant;
+        private final long createdAt;
+        private long updatedAt;
 
-        ResponseCommentOutput(String commentGiver, String commentText, boolean isFromFeedbackParticipant) {
+
+        ResponseCommentOutput(String commentGiver, String commentText, boolean isFromFeedbackParticipant,
+                              Instant createdAt, Instant updatedAt) {
             this.commentGiver = commentGiver;
             this.commentText = commentText;
             this.isFromFeedbackParticipant = isFromFeedbackParticipant;
+            this.createdAt = createdAt.toEpochMilli();
+            this.updatedAt = updatedAt.toEpochMilli();
         }
 
         public String getCommentGiver() {
@@ -338,6 +346,14 @@ public class SessionResultsData extends ApiOutput {
 
         public boolean isFromFeedbackParticipant() {
             return isFromFeedbackParticipant;
+        }
+
+        public long getCreatedAt() {
+            return createdAt;
+        }
+
+        public long getUpdatedAt() {
+            return updatedAt;
         }
     }
 
