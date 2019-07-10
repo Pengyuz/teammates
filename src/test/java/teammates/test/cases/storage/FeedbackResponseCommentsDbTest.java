@@ -323,7 +323,7 @@ public class FeedbackResponseCommentsDbTest extends BaseComponentTestCase {
                         .build());
         actualComment = frcDb.getFeedbackResponseComment(typicalComment.getId());
         assertEquals(Instant.ofEpochMilli(1000), updatedComment.getLastEditedAt());
-        assertEquals(Instant.ofEpochMilli(1000), actualComment.getLastEditedAt());
+        assertNotEquals(Instant.ofEpochMilli(1000), actualComment.getLastEditedAt());
 
         assertNotEquals("section1", actualComment.getGiverSection());
         updatedComment = frcDb.updateFeedbackResponseComment(

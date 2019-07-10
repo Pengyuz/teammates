@@ -81,16 +81,14 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
 
         FeedbackResponseAttributes response = logic.getFeedbackResponse(feedbackResponseId);
         Assumption.assertNotNull(response);
-        String questionId = response.getFeedbackQuestionId();
-        FeedbackQuestionAttributes question = logic.getFeedbackQuestion(questionId);
-
         FeedbackResponseCommentCreateRequest comment = getAndValidateRequestBody(FeedbackResponseCommentCreateRequest.class);
 
         String commentText = comment.getCommentText();
         if (commentText.trim().isEmpty()) {
             return new JsonResult(Const.StatusMessages.FEEDBACK_RESPONSE_COMMENT_EMPTY, HttpStatus.SC_BAD_REQUEST);
         }
-
+        String questionId = response.getFeedbackQuestionId();
+        FeedbackQuestionAttributes question = logic.getFeedbackQuestion(questionId);
         String courseId = response.courseId;
         String email;
 
@@ -105,14 +103,15 @@ public class CreateFeedbackResponseCommentAction extends BasicFeedbackSubmission
                     ? student.getTeam() : student.getEmail();
             isFromParticipant = true;
             isFollowingQuestionVisibility = true;
-            commentGiverType = question.getGiverType();
+            commentGiverType = question.getGiverType() == FeedbackParticipantType.TEAMS
+                    ? FeedbackParticipantType.TEAMS : FeedbackParticipantType.STUDENTS;
             break;
         case INSTRUCTOR_SUBMISSION:
             InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.getId());
             email = instructor.getEmail();
             isFromParticipant = true;
             isFollowingQuestionVisibility = true;
-            commentGiverType = question.getGiverType();
+            commentGiverType = FeedbackParticipantType.INSTRUCTORS;
             break;
         case INSTRUCTOR_RESULT:
             InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId, userInfo.getId());

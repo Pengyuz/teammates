@@ -31,7 +31,6 @@ import teammates.ui.webapi.output.FeedbackVisibilityType;
 import teammates.ui.webapi.output.MessageOutput;
 import teammates.ui.webapi.request.FeedbackResponseCommentCreateRequest;
 
-
 /**
  * SUT: {@link CreateFeedbackResponseCommentAction}.
  */
@@ -124,8 +123,8 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
                 Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ1S1C1.getId(),
         };
 
-        FeedbackResponseCommentCreateRequest requestBody = new FeedbackResponseCommentCreateRequest("Empty giver permissions",
-                new ArrayList<>(), new ArrayList<>());
+        FeedbackResponseCommentCreateRequest requestBody = new FeedbackResponseCommentCreateRequest(
+                "Empty giver permissions", new ArrayList<>(), new ArrayList<>());
         CreateFeedbackResponseCommentAction action = getAction(requestBody, submissionParams);
         getJsonResult(action);
     }
@@ -141,8 +140,8 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
                 Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ1S1C1.getId(),
         };
 
-        FeedbackResponseCommentCreateRequest requestBody = new FeedbackResponseCommentCreateRequest("Null comment permissions",
-                new ArrayList<>(), new ArrayList<>());
+        FeedbackResponseCommentCreateRequest requestBody = new FeedbackResponseCommentCreateRequest(
+                "Null comment permissions", new ArrayList<>(), new ArrayList<>());
         CreateFeedbackResponseCommentAction action = getAction(requestBody, submissionParams);
         getJsonResult(action);
 
@@ -255,8 +254,8 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
         createMcqQuestion();
         createMcqResponseAsStudent();
         String[] submissionParams = new String[] {
-          Const.ParamsNames.INTENT, Intent.STUDENT_SUBMISSION.toString(),
-          Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ6S1C1.getId(),
+                Const.ParamsNames.INTENT, Intent.STUDENT_SUBMISSION.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response1ForQ6S1C1.getId(),
         };
 
         FeedbackResponseCommentCreateRequest requestBody = new FeedbackResponseCommentCreateRequest(
@@ -275,8 +274,8 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
         loginAsInstructor(instructor1OfCourse1.getGoogleId());
         createMcqResponseAsInstructor();
         submissionParams = new String[] {
-          Const.ParamsNames.INTENT, Intent.INSTRUCTOR_SUBMISSION.toString(),
-          Const.ParamsNames.FEEDBACK_RESPONSE_ID, response2ForQ6S1C1.getId(),
+                Const.ParamsNames.INTENT, Intent.INSTRUCTOR_SUBMISSION.toString(),
+                Const.ParamsNames.FEEDBACK_RESPONSE_ID, response2ForQ6S1C1.getId(),
         };
 
         requestBody = new FeedbackResponseCommentCreateRequest(
@@ -412,10 +411,10 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
                 .withShowResponsesTo(Arrays.asList(FeedbackParticipantType.INSTRUCTORS))
                 .withQuestionDetails(questionDetails)
                 .build();
-        try{
+        try {
             FeedbackQuestionsLogic.inst().createFeedbackQuestion(qn6InSession1InCourse1);
-            qn6InSession1InCourse1 =  FeedbackQuestionsLogic.inst().getFeedbackQuestion(session1InCourse1.getFeedbackSessionName(),
-                    session1InCourse1.getCourseId(), 6);
+            qn6InSession1InCourse1 = FeedbackQuestionsLogic.inst().getFeedbackQuestion(
+                    session1InCourse1.getFeedbackSessionName(), session1InCourse1.getCourseId(), 6);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -432,10 +431,10 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
                 .withGiverSection(student1InCourse1.getSection())
                 .withRecipientSection(student1InCourse1.getSection())
                 .build();
-        try{
+        try {
             FeedbackResponsesLogic.inst().createFeedbackResponse(response1ForQ6S1C1);
-            response1ForQ6S1C1 = FeedbackResponsesLogic.inst().getFeedbackResponse(qn6InSession1InCourse1.getId(), student1InCourse1.getEmail(),
-                    student1InCourse1.getEmail());
+            response1ForQ6S1C1 = FeedbackResponsesLogic.inst().getFeedbackResponse(
+                    qn6InSession1InCourse1.getId(), student1InCourse1.getEmail(), student1InCourse1.getEmail());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -452,8 +451,8 @@ public class CreateFeedbackResponseCommentActionTest extends BaseActionTest<Crea
                 .build();
         try {
             FeedbackResponsesLogic.inst().createFeedbackResponse(response2ForQ6S1C1);
-            response2ForQ6S1C1 = FeedbackResponsesLogic.inst().getFeedbackResponse(qn6InSession1InCourse1.getId(), instructor1OfCourse1.getEmail(),
-                    instructor1OfCourse1.getEmail());
+            response2ForQ6S1C1 = FeedbackResponsesLogic.inst().getFeedbackResponse(
+                    qn6InSession1InCourse1.getId(), instructor1OfCourse1.getEmail(), instructor1OfCourse1.getEmail());
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

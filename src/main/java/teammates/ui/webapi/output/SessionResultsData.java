@@ -9,6 +9,7 @@ import teammates.common.datatransfer.FeedbackParticipantType;
 import teammates.common.datatransfer.FeedbackSessionResultsBundle;
 import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
+import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.InstructorAttributes;
 import teammates.common.datatransfer.attributes.StudentAttributes;
 import teammates.common.datatransfer.questions.FeedbackQuestionDetails;
@@ -85,6 +86,7 @@ public class SessionResultsData extends ApiOutput {
             FeedbackQuestionAttributes question, List<FeedbackResponseAttributes> responses,
             FeedbackSessionResultsBundle bundle, StudentAttributes student) {
         Map<String, List<FeedbackResponseAttributes>> responsesMap = new HashMap<>();
+        Map<String, List<FeedbackResponseCommentAttributes>> commentMap = new HashMap<>();
 
         for (FeedbackResponseAttributes response : responses) {
             responsesMap.computeIfAbsent(response.recipient, k -> new ArrayList<>()).add(response);
@@ -126,10 +128,13 @@ public class SessionResultsData extends ApiOutput {
                 }
 
                 // TODO fetch feedback response comments
+                List<FeedbackResponseCommentAttributes> comments = commentMap.get(response.getId());
+                ResponseOutput responseOutput = new ResponseOutput(displayedGiverName, null, response.giverSection,
+                        recipientName, null, response.recipientSection, response.responseDetails);
+                responseOutput.allComments = buildComments(comments);
 
                 // Student does not need to know the teams for giver and/or recipient
-                output.add(new ResponseOutput(displayedGiverName, null, response.giverSection,
-                        recipientName, null, response.recipientSection, response.responseDetails));
+                output.add(responseOutput);
             }
 
         });
@@ -139,6 +144,7 @@ public class SessionResultsData extends ApiOutput {
     private List<ResponseOutput> buildResponses(
             List<FeedbackResponseAttributes> responses, FeedbackSessionResultsBundle bundle) {
         Map<String, List<FeedbackResponseAttributes>> responsesMap = new HashMap<>();
+        Map<String, List<FeedbackResponseCommentAttributes>> commentsMap = bundle.getResponseComments();
 
         for (FeedbackResponseAttributes response : responses) {
             responsesMap.computeIfAbsent(response.recipient, k -> new ArrayList<>()).add(response);
@@ -155,12 +161,26 @@ public class SessionResultsData extends ApiOutput {
                 String giverTeam = bundle.getTeamNameForEmail(response.giver);
 
                 // TODO fetch feedback response comments
+                List<FeedbackResponseCommentAttributes> comments = commentsMap.get(response.getId());
+                ResponseOutput responseOutput = new ResponseOutput(giverName, giverTeam, response.giverSection,
+                        recipientName, recipientTeam, response.recipientSection, response.responseDetails);
+                responseOutput.allComments = buildComments(comments);
 
-                output.add(new ResponseOutput(giverName, giverTeam, response.giverSection,
-                        recipientName, recipientTeam, response.recipientSection, response.responseDetails));
+                output.add(responseOutput);
             }
 
         });
+        return output;
+    }
+
+    private List<ResponseCommentOutput> buildComments(
+            List<FeedbackResponseCommentAttributes> comments) {
+        List<ResponseCommentOutput> output = new ArrayList<>();
+        for (FeedbackResponseCommentAttributes comment : comments) {
+            ResponseCommentOutput commentOutput = new ResponseCommentOutput(
+                    comment.getCommentGiver(), comment.getCommentText());
+            output.add(commentOutput);
+        }
         return output;
     }
 
@@ -223,6 +243,11 @@ public class SessionResultsData extends ApiOutput {
         private final String recipientTeam;
         private final String recipientSection;
         private final FeedbackResponseDetails responseDetails;
+        //for instructor view
+        private List<ResponseCommentOutput> allComments = new ArrayList<>();
+        //for students view
+        private ResponseCommentOutput commentFromParicipant;
+        private List<ResponseCommentOutput> commentFromInstructors = new ArrayList<>();
 
         ResponseOutput(String giver, String giverTeam, String giverSection, String recipient,
                 String recipientTeam, String recipientSection, FeedbackResponseDetails responseDetails) {
@@ -263,6 +288,36 @@ public class SessionResultsData extends ApiOutput {
             return responseDetails;
         }
 
+        public List<ResponseCommentOutput> getAllComments() {
+            return allComments;
+        }
+
+        public List<ResponseCommentOutput> getCommentFromInstructors() {
+            return commentFromInstructors;
+        }
+
+        public ResponseCommentOutput getCommentFromParicipant() {
+            return commentFromParicipant;
+        }
+
+    }
+
+    private static class ResponseCommentOutput {
+        private final String commentGiver;
+        private final String commentText;
+
+        ResponseCommentOutput(String commentGiver, String commentText) {
+            this.commentGiver = commentGiver;
+            this.commentText = commentText;
+        }
+
+        public String getCommentGiver() {
+            return commentGiver;
+        }
+
+        public String getCommentText() {
+            return commentText;
+        }
     }
 
 }

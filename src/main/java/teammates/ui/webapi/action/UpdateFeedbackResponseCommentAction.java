@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.http.HttpStatus;
 
 import teammates.common.datatransfer.FeedbackParticipantType;
+import teammates.common.datatransfer.attributes.FeedbackQuestionAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseAttributes;
 import teammates.common.datatransfer.attributes.FeedbackResponseCommentAttributes;
 import teammates.common.datatransfer.attributes.FeedbackSessionAttributes;
@@ -46,13 +47,18 @@ public class UpdateFeedbackResponseCommentAction extends BasicFeedbackSubmission
         String feedbackSessionName = frc.feedbackSessionName;
         FeedbackSessionAttributes session = logic.getFeedbackSession(feedbackSessionName, courseId);
         Assumption.assertNotNull(response);
+        String questionId = response.getFeedbackQuestionId();
+        FeedbackQuestionAttributes question = logic.getFeedbackQuestion(questionId);
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
+        String giverIdentifier;
 
         switch (intent) {
         case STUDENT_SUBMISSION:
             StudentAttributes student = logic.getStudentForGoogleId(courseId, userInfo.id);
             Assumption.assertNotNull(student);
-            gateKeeper.verifyOwnership(frc, student.email);
+            giverIdentifier = question.getGiverType() == FeedbackParticipantType.TEAMS
+                    ? student.getTeam() : student.getEmail();
+            gateKeeper.verifyOwnership(frc, giverIdentifier);
             break;
         case INSTRUCTOR_SUBMISSION:
             InstructorAttributes instructor1 = logic.getInstructorForGoogleId(courseId, userInfo.id);
