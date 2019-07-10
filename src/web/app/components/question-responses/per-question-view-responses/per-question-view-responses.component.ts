@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { ResponseCommentOutput } from '../../../../types/api-output';
 import {
   InstructorSessionResultSectionType,
 } from '../../../pages-instructor/instructor-session-result-page/instructor-session-result-section-type.enum';
 import { CommentTableModalComponent } from '../../comment-box/comment-table-modal/comment-table-modal.component';
-
 /**
  * Component to display list of responses for one question.
  */
@@ -72,6 +72,18 @@ export class PerQuestionViewResponsesComponent implements OnInit, OnChanges {
    */
   triggerShowCommentTableEvent(response: any): void {
     const modalRef: NgbModalRef = this.modalService.open(CommentTableModalComponent);
+
+    modalRef.componentInstance.comments = response.allComments.map((comment: ResponseCommentOutput) => {
+      return {
+        commentId: 0,
+        createdAt: comment.createdAt,
+        editedAt: comment.updatedAt,
+        timeZone: 'Asia/Singapore',
+        commentGiver: comment.commentGiver,
+        commentText: comment.commentText,
+        isEditable: true,
+      };
+    });
     modalRef.componentInstance.response = response;
     modalRef.componentInstance.questionDetails = this.questionDetails;
   }

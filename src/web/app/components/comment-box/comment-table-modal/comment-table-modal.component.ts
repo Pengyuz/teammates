@@ -14,14 +14,15 @@ export class CommentTableModalComponent implements OnInit {
 
   @Input() response: any = '';
   @Input() questionDetails: any = '';
+  @Input() comments: FeedbackResponseCommentModel[] = [];
 
-  comments: FeedbackResponseCommentModel[] = [];
   commentTableMode: CommentTableMode = CommentTableMode.INSTRUCTOR_RESULT;
 
   constructor(public activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
   }
+
   /**
    * Triggers the delete comment event
    */
