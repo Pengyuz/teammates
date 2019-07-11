@@ -128,7 +128,7 @@ export class InstructorSessionResultPageComponent implements OnInit {
               isEditable: true,
             };
           })
-        })
+        });
       }
     }, (resp: ErrorMessageOutput) => {
       this.statusMessageService.showErrorMessage(resp.error.message);
@@ -151,6 +151,22 @@ export class InstructorSessionResultPageComponent implements OnInit {
     };
     this.httpRequestService.get('/result', paramMap).subscribe((resp: SessionResults) => {
       this.sectionsModel[sectionName].questions = resp.questions;
+      // Map comments from ResponseCommentOutput to FeedbackResponseCommentModel
+      this.sectionsModel[sectionName].questions.forEach((question: any) =>
+          question.allResponses.forEach((response: any) => {
+            response.allComments = response.allComments.map((comment: ResponseCommentOutput) => {
+              return {
+                commentId: comment.commentId,
+                createdAt: comment.createdAt,
+                editedAt: comment.updatedAt,
+                timeZone: comment.timezone,
+                commentGiver: comment.commentGiver,
+                commentText: comment.commentText,
+                isEditable: true,
+              };
+            })
+          })
+      );
       this.sectionsModel[sectionName].hasPopulated = true;
     }, (resp: ErrorMessageOutput) => {
       this.statusMessageService.showErrorMessage(resp.error.message);
