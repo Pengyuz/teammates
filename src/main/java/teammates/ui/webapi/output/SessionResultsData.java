@@ -88,7 +88,7 @@ public class SessionResultsData extends ApiOutput {
             FeedbackQuestionAttributes question, List<FeedbackResponseAttributes> responses,
             FeedbackSessionResultsBundle bundle, StudentAttributes student) {
         Map<String, List<FeedbackResponseAttributes>> responsesMap = new HashMap<>();
-        Map<String, List<FeedbackResponseCommentAttributes>> commentMap = new HashMap<>();
+        Map<String, List<FeedbackResponseCommentAttributes>> commentMap = bundle.getResponseComments();
 
         for (FeedbackResponseAttributes response : responses) {
             responsesMap.computeIfAbsent(response.recipient, k -> new ArrayList<>()).add(response);
