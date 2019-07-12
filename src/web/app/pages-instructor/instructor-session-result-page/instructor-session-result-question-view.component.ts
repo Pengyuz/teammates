@@ -31,7 +31,6 @@ export class InstructorSessionResultQuestionViewComponent extends InstructorSess
   }
 
   ngOnInit(): void {
-    console.log("init questions view");
     for (const questionId of Object.keys(this.responses)) {
       const response: any = this.responses[questionId];
       this.questionsOrder[response.questionNumber] = response;

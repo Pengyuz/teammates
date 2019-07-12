@@ -186,17 +186,5 @@ export class InstructorSessionResultPageComponent implements OnInit {
         }
       });
     }
-    /**
-     *
-    for (let key in this.sectionsModel) {
-      this.sectionsModel[key].questions.forEach((question: any, questionIndex: number) => {
-        question.allResponses.forEach((response: any, responseIndex: number) => {
-          if (response.responseId === responseToUpdate.responseid) {
-            this.sectionsModel[key].questions[questionIndex].allResponses[responseIndex] = responseToUpdate;
-          }
-        });
-      });
-    }
-     */
   }
 }

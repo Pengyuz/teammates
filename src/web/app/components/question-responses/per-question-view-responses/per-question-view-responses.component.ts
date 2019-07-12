@@ -23,7 +23,8 @@ export class PerQuestionViewResponsesComponent implements OnInit, OnChanges {
   @Input() indicateMissingResponses: boolean = true;
   @Input() showGiver: boolean = true;
   @Input() showRecipient: boolean = true;
-
+  @Input() isCommentsShown: boolean = false;
+  
   @Output() commentsChangeInResponse: EventEmitter<any> = new EventEmitter();
 
   responsesToShow: any[] = [];
