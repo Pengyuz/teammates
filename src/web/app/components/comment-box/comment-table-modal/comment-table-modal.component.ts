@@ -47,7 +47,12 @@ export class CommentTableModalComponent implements OnInit {
    * Triggers the update comment event.
    */
   triggerUpdateCommentEvent(commentData: any): void {
-    this.commentService.updateComment(commentData.commentId, commentData.commentText, Intent.INSTRUCTOR_RESULT)
+    // TODO set visibility options from user input
+    const showCommentTo: FeedbackVisibilityType[] = [FeedbackVisibilityType.GIVER, FeedbackVisibilityType.RECIPIENT];
+    const showGiverNameTo: FeedbackVisibilityType[] = [FeedbackVisibilityType.GIVER, FeedbackVisibilityType.RECIPIENT];
+
+    this.commentService.updateComment(commentData.commentId, commentData.commentText, Intent.INSTRUCTOR_RESULT,
+        showCommentTo, showGiverNameTo)
         .subscribe((comment: FeedbackResponseComment) => {
           const updatedComments: FeedbackResponseCommentModel[] = this.comments.slice();
           const commentToUpdateIndex: number =
@@ -66,8 +71,8 @@ export class CommentTableModalComponent implements OnInit {
    */
   triggerSaveNewCommentEvent(commentText: string): void {
     // TODO set visibility options from user input
-    const showCommentTo: FeedbackVisibilityType[] = [FeedbackVisibilityType.GIVER];
-    const showGiverNameTo: FeedbackVisibilityType[] = [FeedbackVisibilityType.GIVER];
+    const showCommentTo: FeedbackVisibilityType[] = [FeedbackVisibilityType.GIVER, FeedbackVisibilityType.RECIPIENT];
+    const showGiverNameTo: FeedbackVisibilityType[] = [FeedbackVisibilityType.GIVER, FeedbackVisibilityType.RECIPIENT];
 
     this.commentService.saveComment(this.response.responseId, commentText,
         Intent.INSTRUCTOR_RESULT, showCommentTo, showGiverNameTo)
