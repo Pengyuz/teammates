@@ -11,9 +11,26 @@ import { CommentTableMode, FeedbackResponseCommentModel } from '../../comment-bo
   styleUrls: ['./student-view-responses.component.scss'],
 })
 export class StudentViewResponsesComponent implements OnInit {
+  private _responses: any[] = [];
 
   @Input() questionDetails: any = {};
-  @Input() responses: any[] = [];
+  @Input('responses')
+  set responses(value: any[]) {
+    this._responses = value;
+    this._responses.forEach((response: any) => {
+      if (!response.allComments) {
+        return;
+      }
+      response.allComments = response.allComments.map((comment: any) => {
+        return this.mapComments(comment)
+      });
+    });
+  }
+
+  get responses(): any[] {
+    return this._responses;
+  }
+
   @Input() isSelfResponses: boolean = false;
 
   // enum
@@ -27,17 +44,19 @@ export class StudentViewResponsesComponent implements OnInit {
     this.recipient = this.responses.length ? this.responses[0].recipient : '';
   }
 
-  mapComments(comments: ResponseCommentOutput[]): FeedbackResponseCommentModel[] {
-    return comments.map((comment: ResponseCommentOutput) => {
-      return {
-        commentId: comment.commentId,
-        createdAt: comment.createdAt,
-        editedAt: comment.updatedAt,
-        timeZone: comment.timezone,
-        commentGiver: comment.commentGiver,
-        commentText: comment.commentText,
-        isEditable: true,
-      };
-    });
+  /**
+   * Maps a comments from ResponseCommentOutput to FeedbackResponseCommentModel
+   * @param comment
+   */
+  mapComments(comment: ResponseCommentOutput): FeedbackResponseCommentModel {
+    return {
+      commentId: comment.commentId,
+      createdAt: comment.createdAt,
+      editedAt: comment.updatedAt,
+      timeZone: comment.timezone,
+      commentGiver: comment.commentGiver,
+      commentText: comment.commentText,
+      isEditable: true,
+    };
   }
 }
