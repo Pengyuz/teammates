@@ -32,14 +32,15 @@ export class FeedbackResponseCommentService {
   /**
    * Updates a comment by calling API.
    */
-  updateComment(commentId: number, commentText: string, intent: Intent): Observable<any> {
+  updateComment(commentId: number, commentText: string, intent: Intent,
+                showCommentTo?: FeedbackVisibilityType[], showGiverNameTo?: FeedbackVisibilityType[]): Observable<any> {
     return this.httpRequestService.put('/responsecomment', {
       intent,
       responsecommentid: commentId.toString(),
     }, {
       commentText,
-      showCommentTo: [],
-      showGiverNameTo: [],
+      showCommentTo: showCommentTo? showCommentTo: [],
+      showGiverNameTo: showGiverNameTo? showGiverNameTo: [],
     });
   }
 

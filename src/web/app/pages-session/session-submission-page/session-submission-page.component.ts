@@ -22,6 +22,7 @@ import {
   NumberOfEntitiesToGiveFeedbackToSetting,
   Student,
 } from '../../../types/api-output';
+import { FeedbackVisibilityType } from '../../../types/api-request';
 import { FeedbackResponseCommentModel } from '../../components/comment-box/comment-table/comment-table-model';
 import {
   FeedbackResponseRecipient,
@@ -599,6 +600,9 @@ export class SessionSubmissionPageComponent implements OnInit {
   private createCommentChangeRequest(
       recipientSubmissionFormModel: FeedbackResponseRecipientSubmissionFormModel): Observable<any> {
 
+    const showCommentTo: FeedbackVisibilityType[] = [FeedbackVisibilityType.GIVER, FeedbackVisibilityType.RECIPIENT];
+    const showGiverNameTo: FeedbackVisibilityType[] = [FeedbackVisibilityType.GIVER, FeedbackVisibilityType.RECIPIENT];
+
     if (!recipientSubmissionFormModel.comment) {
       return of({});
     }
@@ -611,7 +615,7 @@ export class SessionSubmissionPageComponent implements OnInit {
     // If existing comment, create update request.
     if (recipientSubmissionFormModel.comment.commentId) {
       return this.commentService.updateComment(recipientSubmissionFormModel.comment.commentId,
-          recipientSubmissionFormModel.comment.commentText, this.intent).pipe(
+          recipientSubmissionFormModel.comment.commentText, this.intent, showCommentTo, showGiverNameTo).pipe(
             tap((resp: FeedbackResponseComment) => {
               recipientSubmissionFormModel.comment = {
                 commentId: resp.feedbackResponseCommentId,
@@ -628,7 +632,7 @@ export class SessionSubmissionPageComponent implements OnInit {
 
     // If new comment, create save request.
     return this.commentService.saveComment(recipientSubmissionFormModel.responseId,
-        recipientSubmissionFormModel.comment.commentText, this.intent).pipe(
+        recipientSubmissionFormModel.comment.commentText, this.intent, showCommentTo, showGiverNameTo).pipe(
           tap((resp: FeedbackResponseComment) => {
             recipientSubmissionFormModel.comment = {
               commentId: resp.feedbackResponseCommentId,
