@@ -18,7 +18,7 @@
           </tr>
           <tr *ngIf="response.allComments.length > 0">
             <td>
-              <tm-comment-table [commentTableMode]="CommentTableMode.STUDENT_RESULT" [comments]="mapComments(response.allComments)"></tm-comment-table>
+              <tm-comment-table [commentTableMode]="CommentTableMode.STUDENT_RESULT" [comments]="response.allComments"></tm-comment-table>
             </td>
           </tr>
         </ng-container>
