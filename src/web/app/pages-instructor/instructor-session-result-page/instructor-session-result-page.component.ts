@@ -176,8 +176,27 @@ export class InstructorSessionResultPageComponent implements OnInit {
   /**
    * Updates questionsModel when there's a change in the comments table.
    */
-  commentsChangeHandler(responsesData: any): void {
-    //this.questionsModel[responsesData.questionId].responses = responsesData.responses;
-    this.questionsModel = responsesData;
+  commentsChangeHandler(responseToUpdate: any): void {
+    for (let key in this.questionsModel) {
+      this.questionsModel[key].responses.forEach((response: any, index: number) => {
+        if (response.responseId === responseToUpdate.responseId) {
+          this.questionsModel[key].responses[index] = responseToUpdate;
+          this.questionsModel = {...this.questionsModel};
+          return;
+        }
+      });
+    }
+    /**
+     *
+    for (let key in this.sectionsModel) {
+      this.sectionsModel[key].questions.forEach((question: any, questionIndex: number) => {
+        question.allResponses.forEach((response: any, responseIndex: number) => {
+          if (response.responseId === responseToUpdate.responseid) {
+            this.sectionsModel[key].questions[questionIndex].allResponses[responseIndex] = responseToUpdate;
+          }
+        });
+      });
+    }
+     */
   }
 }
