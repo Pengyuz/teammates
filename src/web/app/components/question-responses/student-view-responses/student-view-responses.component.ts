@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CommentTableMode } from '../../comment-box/comment-table/comment-table-model';
+import { ResponseCommentOutput } from '../../../../types/api-output';
+import { CommentTableMode, FeedbackResponseCommentModel } from '../../comment-box/comment-table/comment-table-model';
 
 /**
  * Feedback response in student results page view.
@@ -26,4 +27,17 @@ export class StudentViewResponsesComponent implements OnInit {
     this.recipient = this.responses.length ? this.responses[0].recipient : '';
   }
 
+  mapComments(comments: ResponseCommentOutput[]): FeedbackResponseCommentModel[] {
+    return comments.map((comment: ResponseCommentOutput) => {
+      return {
+        commentId: comment.commentId,
+        createdAt: comment.createdAt,
+        editedAt: comment.updatedAt,
+        timeZone: comment.timezone,
+        commentGiver: comment.commentGiver,
+        commentText: comment.commentText,
+        isEditable: true,
+      };
+    });
+  }
 }
