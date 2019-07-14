@@ -128,7 +128,7 @@ export class InstructorSessionResultPageComponent implements OnInit {
               isEditable: true,
             };
           })
-        });
+        })
       }
     }, (resp: ErrorMessageOutput) => {
       this.statusMessageService.showErrorMessage(resp.error.message);
