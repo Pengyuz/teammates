@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import {
   InstructorSessionResultSectionType,
 } from '../../../pages-instructor/instructor-session-result-page/instructor-session-result-section-type.enum';
@@ -19,8 +19,11 @@ export class GqrRqgViewResponsesComponent implements OnInit, OnChanges {
   @Input() groupByTeam: boolean = true;
   @Input() showStatistics: boolean = true;
   @Input() indicateMissingResponses: boolean = true;
+  @Input() timeZone: string = '';
 
   @Input() isGqr: boolean = true;
+
+  @Output() commentsChangeInResponse: EventEmitter<any> = new EventEmitter();
 
   teamsToUsers: { [key: string]: string[] } = {};
   teamExpanded: { [key: string]: boolean } = {};
@@ -125,4 +128,21 @@ export class GqrRqgViewResponsesComponent implements OnInit, OnChanges {
     }
   }
 
+  triggerCommentChangeInResponseEvent(responseToUpdate: any) {
+    this.commentsChangeInResponse.emit(responseToUpdate);
+
+    for (const key of Object.keys(this.responsesToShow)) {
+      this.responsesToShow[key].forEach((question: any, questionIndex: number) => {
+        question.allResponses.forEach((response: any, responseIndex: number) => {
+              if (response.responseId === responseToUpdate.responseId) {
+                const updatedResponses: any[] = this.responsesToShow[key][questionIndex].allResponses.slice();
+                updatedResponses[responseIndex] = responseToUpdate;
+                this.responsesToShow[key][questionIndex].allResponses = updatedResponses;
+                return;
+              }
+            }
+        );
+      });
+    }
+  }
 }

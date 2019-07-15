@@ -19,6 +19,7 @@ export class GrqRgqViewResponsesComponent implements OnInit, OnChanges {
   @Input() groupByTeam: boolean = true;
   @Input() showStatistics: boolean = true;
   @Input() indicateMissingResponses: boolean = true;
+  @Input() timeZone: string = '';
 
   @Input() isGrq: boolean = true;
 
