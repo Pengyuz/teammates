@@ -598,7 +598,7 @@ export class SessionSubmissionPageComponent implements OnInit {
    * Creates a request to change a comment.
    * The request can be either of the following: DELETE, CREATE or UPDATE.
    */
-  private createCommentChangeRequest( questionSubmissionFormModel: QuestionSubmissionFormModel,
+  private createCommentChangeRequest(questionSubmissionFormModel: QuestionSubmissionFormModel,
       recipientSubmissionFormModel: FeedbackResponseRecipientSubmissionFormModel): Observable<any> {
 
     if (!recipientSubmissionFormModel.comment) {

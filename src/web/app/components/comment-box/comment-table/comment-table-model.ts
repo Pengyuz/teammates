@@ -40,5 +40,5 @@ export enum CommentModelDefaultValues {
   /**
    * Represents an invalid comment ID.
    */
-  INVALID_COMMENT_ID = -1,
+  INVALID_VALUE = -1,
 }
