@@ -3,7 +3,7 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import {
   ConfirmDeleteCommentModalComponent,
 } from '../confirm-delete-comment-modal/confirm-delete-comment-modal.component';
-import { CommentTableMode, FeedbackResponseCommentModel } from './comment-table-model';
+import { CommentTableMode, FeedbackResponseCommentModel, CommentModelDefaultValues } from './comment-table-model';
 
 /**
  * Component for the comments table
@@ -22,10 +22,12 @@ export class CommentTableComponent implements OnInit {
 
   @Input() comments: FeedbackResponseCommentModel[] = [];
   @Input() comment: FeedbackResponseCommentModel = {
-    commentId: -999999,
-    createdAt: -999999,
+    commentId: CommentModelDefaultValues.INVALID_COMMENT_ID,
+    createdAt: CommentModelDefaultValues.INVALID_COMMENT_ID,
     commentGiver: '',
     commentText: '',
+    showGiverNameTo: [],
+    showCommentTo: [],
     timeZone: '',
     isEditable: true,
   };

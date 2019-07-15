@@ -24,7 +24,8 @@ export class PerQuestionViewResponsesComponent implements OnInit, OnChanges {
   @Input() showGiver: boolean = true;
   @Input() showRecipient: boolean = true;
   @Input() isCommentsShown: boolean = false;
-  
+  @Input() timeZone: string = '';
+
   @Output() commentsChangeInResponse: EventEmitter<any> = new EventEmitter();
 
   responsesToShow: any[] = [];
@@ -78,6 +79,7 @@ export class PerQuestionViewResponsesComponent implements OnInit, OnChanges {
     modalRef.componentInstance.comments = responseToUpdate.allComments;
     modalRef.componentInstance.response = responseToUpdate;
     modalRef.componentInstance.questionDetails = this.questionDetails;
+    modalRef.componentInstance.timeZone = this.timeZone;
     modalRef.componentInstance.commentsChange.subscribe((comments: FeedbackResponseCommentModel[]) => {
       // Update parent
       const response:any = this.responses.find((response: any) => response.responseId === responseToUpdate.responseId);

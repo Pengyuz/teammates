@@ -22,7 +22,6 @@ import {
   NumberOfEntitiesToGiveFeedbackToSetting,
   Student,
 } from '../../../types/api-output';
-import { FeedbackVisibilityType } from '../../../types/api-request';
 import { FeedbackResponseCommentModel } from '../../components/comment-box/comment-table/comment-table-model';
 import {
   FeedbackResponseRecipient,
@@ -472,7 +471,8 @@ export class SessionSubmissionPageComponent implements OnInit {
                         recipientSubmissionFormModel.responseDetails = resp.responseDetails;
                         recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
 
-                        savingCommentRequests.push(this.createCommentChangeRequest(recipientSubmissionFormModel)
+                        savingCommentRequests.push(
+                            this.createCommentChangeRequest(questionSubmissionFormModel, recipientSubmissionFormModel)
                             .pipe(
                                 catchError((error: any) => {
                                   this.statusMessageService.showErrorMessage(
@@ -509,7 +509,8 @@ export class SessionSubmissionPageComponent implements OnInit {
                         recipientSubmissionFormModel.responseDetails = resp.responseDetails;
                         recipientSubmissionFormModel.recipientIdentifier = resp.recipientIdentifier;
 
-                        savingCommentRequests.push(this.createCommentChangeRequest(recipientSubmissionFormModel)
+                        savingCommentRequests.push(
+                            this.createCommentChangeRequest(questionSubmissionFormModel, recipientSubmissionFormModel)
                             .pipe(
                                 catchError((error: any) => {
                                   this.statusMessageService.showErrorMessage(
@@ -597,11 +598,8 @@ export class SessionSubmissionPageComponent implements OnInit {
    * Creates a request to change a comment.
    * The request can be either of the following: DELETE, CREATE or UPDATE.
    */
-  private createCommentChangeRequest(
+  private createCommentChangeRequest( questionSubmissionFormModel: QuestionSubmissionFormModel,
       recipientSubmissionFormModel: FeedbackResponseRecipientSubmissionFormModel): Observable<any> {
-
-    const showCommentTo: FeedbackVisibilityType[] = [FeedbackVisibilityType.GIVER, FeedbackVisibilityType.RECIPIENT];
-    const showGiverNameTo: FeedbackVisibilityType[] = [FeedbackVisibilityType.GIVER, FeedbackVisibilityType.RECIPIENT];
 
     if (!recipientSubmissionFormModel.comment) {
       return of({});
@@ -614,8 +612,9 @@ export class SessionSubmissionPageComponent implements OnInit {
 
     // If existing comment, create update request.
     if (recipientSubmissionFormModel.comment.commentId) {
-      return this.commentService.updateComment(recipientSubmissionFormModel.comment.commentId,
-          recipientSubmissionFormModel.comment.commentText, this.intent, showCommentTo, showGiverNameTo).pipe(
+      return this.commentService.updateComment(
+          recipientSubmissionFormModel.comment.commentId, recipientSubmissionFormModel.comment.commentText,
+          this.intent, questionSubmissionFormModel.showResponsesTo, questionSubmissionFormModel.showGiverNameTo).pipe(
             tap((resp: FeedbackResponseComment) => {
               recipientSubmissionFormModel.comment = {
                 commentId: resp.feedbackResponseCommentId,
@@ -624,6 +623,8 @@ export class SessionSubmissionPageComponent implements OnInit {
                 timeZone: this.timeZone,
                 commentGiver: resp.commentGiver,
                 commentText: resp.commentText,
+                showCommentTo: questionSubmissionFormModel.showResponsesTo,
+                showGiverNameTo: questionSubmissionFormModel.showGiverNameTo,
                 isEditable: true,
               };
             }),
@@ -631,8 +632,9 @@ export class SessionSubmissionPageComponent implements OnInit {
     }
 
     // If new comment, create save request.
-    return this.commentService.saveComment(recipientSubmissionFormModel.responseId,
-        recipientSubmissionFormModel.comment.commentText, this.intent, showCommentTo, showGiverNameTo).pipe(
+    return this.commentService.saveComment(
+        recipientSubmissionFormModel.responseId, recipientSubmissionFormModel.comment.commentText,
+        this.intent, questionSubmissionFormModel.showResponsesTo, questionSubmissionFormModel.showGiverNameTo).pipe(
           tap((resp: FeedbackResponseComment) => {
             recipientSubmissionFormModel.comment = {
               commentId: resp.feedbackResponseCommentId,
@@ -641,6 +643,8 @@ export class SessionSubmissionPageComponent implements OnInit {
               timeZone: this.timeZone,
               commentGiver: resp.commentGiver,
               commentText: resp.commentText,
+              showCommentTo: questionSubmissionFormModel.showResponsesTo,
+              showGiverNameTo: questionSubmissionFormModel.showGiverNameTo,
               isEditable: true,
             };
           }),
@@ -684,7 +688,6 @@ export class SessionSubmissionPageComponent implements OnInit {
     this.commentService.loadCommentsForResponse(responseId, this.intent)
         .subscribe((comments: FeedbackResponseComments) => {
 
-          // For submission, responsecomment/GET will return a list of a single comment.
           const comment: FeedbackResponseComment = comments.comments[0];
 
           if (!comment) {
@@ -698,6 +701,8 @@ export class SessionSubmissionPageComponent implements OnInit {
             timeZone: this.timeZone,
             commentGiver: comment.commentGiver,
             commentText: comment.commentText,
+            showCommentTo: model.showResponsesTo,
+            showGiverNameTo: model.showGiverNameTo,
             isEditable: true,
           };
 
