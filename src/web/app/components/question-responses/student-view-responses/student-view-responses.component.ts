@@ -56,6 +56,8 @@ export class StudentViewResponsesComponent implements OnInit {
       timeZone: comment.timezone,
       commentGiver: comment.commentGiver,
       commentText: comment.commentText,
+      showCommentTo: [],
+      showGiverNameTo: [],
       isEditable: true,
     };
   }

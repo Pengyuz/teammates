@@ -19,6 +19,7 @@ export class CommentTableModalComponent implements OnInit {
   @Input() response: any = '';
   @Input() questionDetails: any = '';
   @Input() comments: FeedbackResponseCommentModel[] = [];
+  @Input() timeZone: string = '';
 
   @Output() commentsChange: EventEmitter<FeedbackResponseCommentModel[]> = new EventEmitter();
 
@@ -82,10 +83,11 @@ export class CommentTableModalComponent implements OnInit {
             commentId: comment.feedbackResponseCommentId,
             createdAt: comment.createdAt,
             editedAt: comment.updatedAt,
-            // TODO change this once FeedbackResponseComment is updated to return timezone
-            timeZone: 'Asia/Singapore',
+            timeZone: this.timeZone,
             commentGiver: comment.commentGiver,
             commentText: comment.commentText,
+            showCommentTo: showCommentTo,
+            showGiverNameTo: showGiverNameTo,
             isEditable: true,
           });
           this.commentsChange.emit(updatedComments);
