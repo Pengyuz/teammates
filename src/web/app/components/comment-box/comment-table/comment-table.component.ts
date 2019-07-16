@@ -29,7 +29,6 @@ export class CommentTableComponent implements OnInit {
     showGiverNameTo: [],
     showCommentTo: [],
     timeZone: '',
-    isEditable: true,
   };
 
   @Output() saveNewCommentEvent: EventEmitter<any> = new EventEmitter();

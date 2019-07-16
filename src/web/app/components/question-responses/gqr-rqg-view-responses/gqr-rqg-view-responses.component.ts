@@ -128,21 +128,10 @@ export class GqrRqgViewResponsesComponent implements OnInit, OnChanges {
     }
   }
 
-  triggerCommentChangeInResponseEvent(responseToUpdate: any) {
+  /**
+   * Triggers the comment change in response event
+   */
+  triggerCommentChangeInResponseEvent(responseToUpdate: any): void {
     this.commentsChangeInResponse.emit(responseToUpdate);
-
-    for (const key of Object.keys(this.responsesToShow)) {
-      this.responsesToShow[key].forEach((question: any, questionIndex: number) => {
-        question.allResponses.forEach((response: any, responseIndex: number) => {
-              if (response.responseId === responseToUpdate.responseId) {
-                const updatedResponses: any[] = this.responsesToShow[key][questionIndex].allResponses.slice();
-                updatedResponses[responseIndex] = responseToUpdate;
-                this.responsesToShow[key][questionIndex].allResponses = updatedResponses;
-                return;
-              }
-            }
-        );
-      });
-    }
   }
 }

@@ -19,7 +19,12 @@
             <tm-single-response [responseDetails]="response.allResponses[0].responseDetails" [questionDetails]="response.questionDetails"></tm-single-response>
           </div>
           <div style="margin-top: 1rem;">
-            <tm-comment-table [commentTableMode]="CommentTableMode.INSTRUCTOR_RESULT" [comments]="response.allResponses[0].mappedComments"></tm-comment-table>
+            <tm-comment-table [commentTableMode]="CommentTableMode.INSTRUCTOR_RESULT"
+                              [comments]="response.allResponses[0].mappedComments"
+                              (saveNewCommentEvent)="triggerSaveNewCommentEvent($event, response)"
+                              (updateCommentEvent)="triggerUpdateCommentEvent($event, response)"
+                              (deleteCommentEvent)="triggerDeleteCommentEvent($event, response)"
+            ></tm-comment-table>
           </div>
         </div>
       </div>
