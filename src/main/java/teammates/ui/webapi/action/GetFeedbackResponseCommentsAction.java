@@ -34,13 +34,11 @@ public class GetFeedbackResponseCommentsAction extends BasicFeedbackSubmissionAc
                         feedbackResponseAttributes.getCourseId());
         Intent intent = Intent.valueOf(getNonNullRequestParamValue(Const.ParamsNames.INTENT));
         switch (intent) {
-        case STUDENT_RESULT:
         case STUDENT_SUBMISSION:
             StudentAttributes student = logic.getStudentForGoogleId(courseId, userInfo.getId());
             checkAccessControlForStudentFeedbackSubmission(student, feedbackSession);
             break;
         case INSTRUCTOR_SUBMISSION:
-        case INSTRUCTOR_RESULT:
             InstructorAttributes instructor = logic.getInstructorForGoogleId(courseId, userInfo.getId());
             checkAccessControlForInstructorFeedbackSubmission(instructor, feedbackSession);
             break;
@@ -60,12 +58,6 @@ public class GetFeedbackResponseCommentsAction extends BasicFeedbackSubmissionAc
         case INSTRUCTOR_SUBMISSION:
             result = new FeedbackResponseCommentsData(
               logic.getFeedbackResponseCommentsForResponseFromParticipant(feedbackResponseId, true)
-            );
-            break;
-        case STUDENT_RESULT:
-        case INSTRUCTOR_RESULT:
-            result = new FeedbackResponseCommentsData(
-                logic.getFeedbackResponseCommentsForResponse(feedbackResponseId)
             );
             break;
         default:
