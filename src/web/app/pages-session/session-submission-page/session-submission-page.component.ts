@@ -598,7 +598,7 @@ export class SessionSubmissionPageComponent implements OnInit {
    * Creates a request to change a comment.
    * The request can be either of the following: DELETE, CREATE or UPDATE.
    */
-  private createCommentChangeRequest( questionSubmissionFormModel: QuestionSubmissionFormModel,
+  private createCommentChangeRequest(questionSubmissionFormModel: QuestionSubmissionFormModel,
       recipientSubmissionFormModel: FeedbackResponseRecipientSubmissionFormModel): Observable<any> {
 
     if (!recipientSubmissionFormModel.comment) {
@@ -625,7 +625,6 @@ export class SessionSubmissionPageComponent implements OnInit {
                 commentText: resp.commentText,
                 showCommentTo: questionSubmissionFormModel.showResponsesTo,
                 showGiverNameTo: questionSubmissionFormModel.showGiverNameTo,
-                isEditable: true,
               };
             }),
           );
@@ -645,7 +644,6 @@ export class SessionSubmissionPageComponent implements OnInit {
               commentText: resp.commentText,
               showCommentTo: questionSubmissionFormModel.showResponsesTo,
               showGiverNameTo: questionSubmissionFormModel.showGiverNameTo,
-              isEditable: true,
             };
           }),
     );
@@ -703,7 +701,6 @@ export class SessionSubmissionPageComponent implements OnInit {
             commentText: comment.commentText,
             showCommentTo: model.showResponsesTo,
             showGiverNameTo: model.showGiverNameTo,
-            isEditable: true,
           };
 
           const recipientSubmissionFormIndex: number = model.recipientSubmissionForms.findIndex(

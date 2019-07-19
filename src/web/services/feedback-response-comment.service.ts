@@ -24,8 +24,8 @@ export class FeedbackResponseCommentService {
       responseid: responseId,
     }, {
       commentText,
-      showCommentTo: showCommentTo? showCommentTo: [],
-      showGiverNameTo: showGiverNameTo? showGiverNameTo: [],
+      showCommentTo: showCommentTo ? showCommentTo : [],
+      showGiverNameTo: showGiverNameTo ? showGiverNameTo : [],
     });
   }
 
@@ -39,8 +39,8 @@ export class FeedbackResponseCommentService {
       responsecommentid: commentId.toString(),
     }, {
       commentText,
-      showCommentTo: showCommentTo? showCommentTo: [],
-      showGiverNameTo: showGiverNameTo? showGiverNameTo: [],
+      showCommentTo: showCommentTo ? showCommentTo : [],
+      showGiverNameTo: showGiverNameTo ? showGiverNameTo : [],
     });
   }
 

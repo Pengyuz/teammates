@@ -39,7 +39,7 @@ export class CommentTableModalComponent implements OnInit {
   triggerDeleteCommentEvent(commentId: number): void {
     this.commentService.deleteComment(commentId).subscribe(() => {
       const updatedComments: FeedbackResponseCommentModel[] =
-          this.comments.filter((comment: FeedbackResponseCommentModel) => comment.commentId != commentId);
+          this.comments.filter((comment: FeedbackResponseCommentModel) => comment.commentId !== commentId);
       this.commentsChange.emit(updatedComments);
     });
   }
@@ -54,14 +54,14 @@ export class CommentTableModalComponent implements OnInit {
 
     this.commentService.updateComment(commentData.commentId, commentData.commentText, Intent.INSTRUCTOR_RESULT,
         showCommentTo, showGiverNameTo)
-        .subscribe((comment: FeedbackResponseComment) => {
+        .subscribe((commentResponse: FeedbackResponseComment) => {
           const updatedComments: FeedbackResponseCommentModel[] = this.comments.slice();
           const commentToUpdateIndex: number =
               updatedComments.findIndex((comment: FeedbackResponseCommentModel) =>
                   comment.commentId === commentData.commentId);
           updatedComments[commentToUpdateIndex] = {...updatedComments[commentToUpdateIndex],
-            editedAt: comment.updatedAt,
-            commentText: comment.commentText,
+            editedAt: commentResponse.updatedAt,
+            commentText: commentResponse.commentText,
           };
           this.commentsChange.emit(updatedComments);
         });
@@ -80,15 +80,14 @@ export class CommentTableModalComponent implements OnInit {
         .subscribe((comment: FeedbackResponseComment) => {
           const updatedComments: FeedbackResponseCommentModel[] = this.comments.slice();
           updatedComments.push({
+            showCommentTo,
+            showGiverNameTo,
             commentId: comment.feedbackResponseCommentId,
             createdAt: comment.createdAt,
             editedAt: comment.updatedAt,
             timeZone: this.timeZone,
             commentGiver: comment.commentGiver,
             commentText: comment.commentText,
-            showCommentTo: showCommentTo,
-            showGiverNameTo: showGiverNameTo,
-            isEditable: true,
           });
           this.commentsChange.emit(updatedComments);
         });

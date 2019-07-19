@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { ResponseCommentOutput } from '../../../../types/api-output';
 import {
   InstructorSessionResultSectionType,
 } from '../../../pages-instructor/instructor-session-result-page/instructor-session-result-section-type.enum';
@@ -23,7 +24,6 @@ export class PerQuestionViewResponsesComponent implements OnInit, OnChanges {
   @Input() indicateMissingResponses: boolean = true;
   @Input() showGiver: boolean = true;
   @Input() showRecipient: boolean = true;
-  @Input() isCommentsShown: boolean = false;
   @Input() timeZone: string = '';
 
   @Output() commentsChangeInResponse: EventEmitter<any> = new EventEmitter();
@@ -74,18 +74,43 @@ export class PerQuestionViewResponsesComponent implements OnInit, OnChanges {
   /**
    * Opens the comments table modal.
    */
-  triggerShowCommentTableEvent(responseToUpdate: any): void {
+  triggerShowCommentTableEvent(selectedResponse: any): void {
     const modalRef: NgbModalRef = this.modalService.open(CommentTableModalComponent);
-    modalRef.componentInstance.comments = responseToUpdate.allComments;
-    modalRef.componentInstance.response = responseToUpdate;
+
+    modalRef.componentInstance.comments = selectedResponse.allComments.map((comment: ResponseCommentOutput) => {
+      return {
+        commentId: comment.commentId,
+        createdAt: comment.createdAt,
+        editedAt: comment.updatedAt,
+        timeZone: comment.timezone,
+        commentGiver: comment.commentGiver,
+        commentText: comment.commentText,
+        isEditable: true,
+      };
+    });
+
+    modalRef.componentInstance.response = selectedResponse;
     modalRef.componentInstance.questionDetails = this.questionDetails;
     modalRef.componentInstance.timeZone = this.timeZone;
     modalRef.componentInstance.commentsChange.subscribe((comments: FeedbackResponseCommentModel[]) => {
-      // Update parent
-      const response:any = this.responses.find((response: any) => response.responseId === responseToUpdate.responseId);
-      this.commentsChangeInResponse.emit({...response, allComments: comments});
       // Update modal
       modalRef.componentInstance.comments = comments;
+
+      // Update parent
+      const updatedResponse: any = this.responses.find(
+          (response: any) => response.responseId === selectedResponse.responseId);
+      const updatedComments: any[] = comments.map((comment: FeedbackResponseCommentModel) => {
+        return {
+          commentId: comment.commentId,
+          commentGiver: comment.commentGiver,
+          commentText: comment.commentText,
+          isFromFeedbackParticipant: false,
+          createdAt: comment.createdAt,
+          updatedAt: comment.editedAt,
+          timezone: comment.timeZone,
+        };
+      });
+      this.commentsChangeInResponse.emit({ ...updatedResponse, allComments: updatedComments });
     });
   }
 }

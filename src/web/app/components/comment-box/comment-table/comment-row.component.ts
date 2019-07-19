@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FeedbackResponseCommentModel, CommentModelDefaultValues } from './comment-table-model';
+import { CommentModelDefaultValues, FeedbackResponseCommentModel } from './comment-table-model';
 
 /**
  * Comment row component to be used in a comment table
@@ -18,12 +18,11 @@ export class CommentRowComponent implements OnInit {
 
   @Input()
   commentModel: FeedbackResponseCommentModel = {
-    commentId: CommentModelDefaultValues.INVALID_COMMENT_ID,
-    createdAt: CommentModelDefaultValues.INVALID_COMMENT_ID,
+    commentId: CommentModelDefaultValues.INVALID_VALUE,
+    createdAt: CommentModelDefaultValues.INVALID_VALUE,
     commentText: '',
     commentGiver: '',
     timeZone: '',
-    isEditable: true,
     showCommentTo: [],
     showGiverNameTo: [],
   };

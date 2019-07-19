@@ -10,7 +10,6 @@ export interface FeedbackResponseCommentModel {
   timeZone: string;
   commentGiver: string;
   commentText: string;
-  isEditable: boolean;
   showCommentTo: FeedbackVisibilityType[];
   showGiverNameTo: FeedbackVisibilityType[];
 }
@@ -40,5 +39,5 @@ export enum CommentModelDefaultValues {
   /**
    * Represents an invalid comment ID.
    */
-  INVALID_COMMENT_ID = -1,
+  INVALID_VALUE = -1,
 }
