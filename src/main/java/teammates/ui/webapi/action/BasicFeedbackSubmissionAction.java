@@ -226,8 +226,8 @@ public abstract class BasicFeedbackSubmissionAction extends Action {
                 && !response.getGiver().equals(student.getTeam())) {
             throw new UnauthorizedAccessException("Response [" + response.getId() + "] is not accessible to "
                     + student.getTeam());
-        } else if (question.getGiverType() == FeedbackParticipantType.STUDENTS &&
-                !response.getGiver().equals(student.getEmail())) {
+        } else if (question.getGiverType() == FeedbackParticipantType.STUDENTS
+                && !response.getGiver().equals(student.getEmail())) {
             throw new UnauthorizedAccessException("Response [" + response.getId() + "] is not accessible to "
                     + student.getName());
         }
