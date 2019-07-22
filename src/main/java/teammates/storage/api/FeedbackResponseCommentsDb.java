@@ -128,7 +128,6 @@ public class FeedbackResponseCommentsDb extends EntitiesDb<FeedbackResponseComme
     public List<FeedbackResponseCommentAttributes> getFeedbackResponseCommentForResponseFromParticipant(
             String feedbackResponseId, boolean isFromParticipant) {
         Assumption.assertNotNull(Const.StatusCodes.DBLEVEL_NULL_INPUT, feedbackResponseId);
-        Assumption.assertNotNull(Const.StatusCodes.DBLEVEL_NULL_INPUT, isFromParticipant);
         return makeAttributes(getFeedbackResponseCommentEntitiesForResponseFromParticipant(feedbackResponseId,
                 isFromParticipant));
     }
