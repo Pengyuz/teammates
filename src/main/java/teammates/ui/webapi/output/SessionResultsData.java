@@ -129,7 +129,6 @@ public class SessionResultsData extends ApiOutput {
                     recipientName = bundle.getNameForEmail(response.recipient);
                 }
 
-                // TODO fetch feedback response comments
                 List<FeedbackResponseCommentAttributes> comments = commentMap.get(response.getId());
                 ResponseOutput responseOutput = new ResponseOutput(response.getId(), displayedGiverName, null,
                         response.giverSection, recipientName, null, response.recipientSection,
@@ -137,7 +136,7 @@ public class SessionResultsData extends ApiOutput {
                 List<ResponseCommentOutput> commentOutputs = buildComments(comments, bundle);
                 for (ResponseCommentOutput commentOutput : commentOutputs) {
                     if (commentOutput.isFromFeedbackParticipant) {
-                        responseOutput.commentFromParicipant = commentOutput;
+                        responseOutput.commentFromParticipant = commentOutput;
                     } else {
                         responseOutput.commentFromInstructors.add(commentOutput);
                     }
@@ -178,7 +177,7 @@ public class SessionResultsData extends ApiOutput {
                 List<ResponseCommentOutput> commentOutputs = buildComments(comments, bundle);
                 for (ResponseCommentOutput commentOutput : commentOutputs) {
                     if (commentOutput.isFromFeedbackParticipant) {
-                        responseOutput.commentFromParicipant = commentOutput;
+                        responseOutput.commentFromParticipant = commentOutput;
                     } else {
                         responseOutput.commentFromInstructors.add(commentOutput);
                     }
@@ -274,7 +273,7 @@ public class SessionResultsData extends ApiOutput {
         //for instructor view
         private List<ResponseCommentOutput> allComments = new ArrayList<>();
         //for students view
-        private ResponseCommentOutput commentFromParicipant;
+        private ResponseCommentOutput commentFromParticipant;
         private List<ResponseCommentOutput> commentFromInstructors = new ArrayList<>();
 
         ResponseOutput(String responseId, String giver, String giverTeam, String giverSection, String recipient,
@@ -330,7 +329,7 @@ public class SessionResultsData extends ApiOutput {
         }
 
         public ResponseCommentOutput getCommentFromParicipant() {
-            return commentFromParicipant;
+            return commentFromParticipant;
         }
 
     }
